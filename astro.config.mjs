@@ -4,6 +4,12 @@ import starlight from '@astrojs/starlight';
 export default defineConfig({
   site: 'https://crimson-desert-guide.dannyconroy.workers.dev',
   trailingSlash: 'always',
+  build: {
+    // The guide must remain fully styled even when a browser or edge cache
+    // fails to retrieve a hashed CSS asset. This is intentionally set to
+    // always for the static, relatively small guide surface.
+    inlineStylesheets: 'always',
+  },
   integrations: [
     starlight({
       title: 'Crimson Desert Guide',
