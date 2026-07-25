@@ -8,8 +8,11 @@
   },
   "scripts": {
     "dev": "astro dev",
+    "predev": "node scripts/generate-completion-data.mjs",
     "build": "astro build",
+    "prebuild": "node scripts/generate-completion-data.mjs",
     "preview": "astro preview",
+    "generate:completion": "node scripts/generate-completion-data.mjs",
     "audit:content": "node scripts/content-audit.mjs",
     "audit:world": "node scripts/world-data-audit.mjs",
     "audit:completion": "node scripts/completion-data-audit.mjs",
@@ -21,7 +24,7 @@
     "smoke:deployment": "node scripts/deployment-smoke.mjs",
     "health:content": "node scripts/content-health.mjs",
     "export:steam": "node scripts/export-steam.mjs",
-    "check:all": "npm run audit:content && npm run audit:world && npm run audit:completion && npm run audit:database && npm run audit:technical && npm run audit:theme && npm run audit:site-theme && npm run test:completion && npm run build && npm run smoke:deployment && npm run export:steam"
+    "check:all": "npm run generate:completion && npm run audit:content && npm run audit:world && npm run audit:completion && npm run audit:database && npm run audit:technical && npm run audit:theme && npm run audit:site-theme && npm run test:completion && npm run build && npm run smoke:deployment && npm run export:steam"
   },
   "dependencies": {
     "@astrojs/starlight": "0.39.2",
