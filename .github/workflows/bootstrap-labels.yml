@@ -1,0 +1,51 @@
+name: Bootstrap Repository Labels
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/bootstrap-labels.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  labels:
+    name: Ensure Labels
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Create missing labels
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          existing="$(gh api --paginate "repos/${GH_REPO}/labels?per_page=100" --jq '.[].name')"
+
+          while IFS='|' read -r name colour description; do
+            if grep -Fxq "$name" <<<"$existing"; then
+              echo "Label already exists: $name"
+              continue
+            fi
+
+            gh api --method POST "repos/${GH_REPO}/labels" \
+              -f name="$name" \
+              -f color="$colour" \
+              -f description="$description" >/dev/null
+            echo "Created label: $name"
+          done <<'LABELS'
+          bug|d73a4a|Website or automation defect
+          content: correction|b60205|Incorrect or outdated guide information
+          research: discovery|5319e7|Community finding awaiting verification
+          patch-watch|fbca04|New official patch detected
+          content-review|f9d0c4|Page needs evidence or patch re-verification
+          documentation|0075ca|Guide structure or prose work
+          automation|1d76db|Workflow, bot or scheduled task
+          spoiler|6f42c1|Contribution contains major spoilers
+          LABELS

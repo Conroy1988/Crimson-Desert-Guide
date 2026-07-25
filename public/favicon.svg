@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">Crimson Desert Guide crest</title>
+  <desc id="desc">An original angular compass crest with a central ember.</desc>
+  <defs>
+    <linearGradient id="ember" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#8f1d14"/>
+      <stop offset="0.55" stop-color="#d25a2d"/>
+      <stop offset="1" stop-color="#e7b56a"/>
+    </linearGradient>
+  </defs>
+  <path fill="#110d0a" d="M64 4 119 32v64l-55 28L9 96V32z"/>
+  <path fill="none" stroke="#e7b56a" stroke-width="5" d="M64 12 111 36v56l-47 24-47-24V36z"/>
+  <path fill="url(#ember)" d="m64 25 11 25 28 14-28 14-11 25-11-25-28-14 28-14z"/>
+  <circle cx="64" cy="64" r="10" fill="#110d0a" stroke="#f3d59b" stroke-width="4"/>
+</svg>

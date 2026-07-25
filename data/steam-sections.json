@@ -1,0 +1,21 @@
+{
+  "title": "(WIP) Crimson Desert Guide – Beginner Systems, Combat, Gear, Mounts & Completion",
+  "sections": [
+    {
+      "heading": "Update Log",
+      "source": "src/content/docs/update-log.md"
+    },
+    {
+      "heading": "Patch Notes",
+      "source": "src/content/docs/patch-notes.md"
+    },
+    {
+      "heading": "1. Beginner Roadmap",
+      "source": "src/content/docs/start-here/beginner-roadmap.md"
+    },
+    {
+      "heading": "2. Essential Settings",
+      "source": "src/content/docs/start-here/essential-settings.md"
+    }
+  ]
+}
