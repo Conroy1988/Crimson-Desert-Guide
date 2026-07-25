@@ -6,38 +6,10 @@ lastVerified: "2026-07-25"
 evidence: official
 spoilerLevel: none
 patchStatus: current
+template: splash
+tableOfContents: false
 ---
 
+import HomeExperience from '../../components/HomeExperience.astro';
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
-
-<span class="patch-status">Verified baseline · Patch 1.14.00 · 25 July 2026</span>
-
-This project is being built as a **single dependable knowledge system**: every page records its patch baseline, verification date, evidence grade and spoiler level.
-
-<CardGrid>
-  <Card title="Start intelligently" icon="rocket">
-    Use the beginner roadmap to avoid high-cost mistakes without exposing major story spoilers.
-  </Card>
-  <Card title="Understand the systems" icon="puzzle">
-    Combat, equipment, mounts, resources and progression will be documented as connected mechanics.
-  </Card>
-  <Card title="Track completion" icon="open-book">
-    Checklists and route planning will eventually persist locally without requiring an account.
-  </Card>
-  <Card title="Trust the evidence" icon="information">
-    Official facts, tested findings, community reports and provisional leads are explicitly separated.
-  </Card>
-</CardGrid>
-
-## Build status
-
-The platform foundation is live. Initial pages define the structure and research standard; deep gameplay coverage will be expanded systematically.
-
-## Current operating rules
-
-1. A new official patch triggers an automated review issue.
-2. Pages are never silently treated as current after a potentially relevant update.
-3. Exact claims require a source or reproducible test.
-4. Major spoilers must be isolated and labelled.
-5. The website remains the canonical guide; Steam receives a condensed export.
+<HomeExperience />
