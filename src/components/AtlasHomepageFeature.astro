@@ -1,0 +1,25 @@
+---
+const image = 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3321460/d889c95c5f37b3a081cc7be68daf4ad2ffb9e291/ss_d889c95c5f37b3a081cc7be68daf4ad2ffb9e291.1920x1080.jpg?t=1781661893';
+---
+
+<section class="atlas-home-feature" style={`--atlas-home-art:url('${image}')`} aria-labelledby="atlas-home-title">
+  <div class="atlas-home-feature__art" aria-hidden="true"></div>
+  <div class="atlas-home-feature__content">
+    <span>New world-intelligence system</span>
+    <h2 id="atlas-home-title">Open the Pywel Atlas.</h2>
+    <p>Search verified settlements and services, track visited locations, test documented Nexus links and get an explicit no-route result whenever the evidence is incomplete.</p>
+    <div>
+      <a href="/atlas/">Enter the Atlas <strong aria-hidden="true">→</strong></a>
+      <a href="/database/">Open the Content Archive</a>
+    </div>
+  </div>
+  <dl>
+    <div><dt>Locations</dt><dd>12</dd></div>
+    <div><dt>Services</dt><dd>16</dd></div>
+    <div><dt>Speculative routes</dt><dd>0</dd></div>
+  </dl>
+</section>
+
+<style>
+  .atlas-home-feature{position:relative;isolation:isolate;display:grid;grid-template-columns:minmax(0,1.4fr) auto;gap:2rem;align-items:end;min-height:28rem;overflow:hidden;margin:clamp(2rem,5vw,5rem) auto;padding:clamp(1.3rem,4vw,3rem);border:1px solid rgb(203 151 63 / 34%);border-radius:.8rem;background:#090907;box-shadow:0 2rem 5rem rgb(0 0 0 / 34%);color:#e8ddc8}.atlas-home-feature__art{position:absolute;inset:0;z-index:-2;background-image:var(--atlas-home-art);background-position:center;background-size:cover}.atlas-home-feature::after{position:absolute;inset:0;z-index:-1;content:'';background:linear-gradient(90deg,rgb(6 6 5 / 97%),rgb(8 8 6 / 82%) 48%,rgb(8 8 6 / 32%)),linear-gradient(0deg,rgb(5 5 4 / 88%),transparent 65%)}.atlas-home-feature__content{max-width:44rem}.atlas-home-feature__content>span{font-size:.7rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#d1a85e}.atlas-home-feature h2{margin:.5rem 0;font-family:var(--cd-font-display);font-size:clamp(2.4rem,5vw,4.8rem);font-weight:500;line-height:.95;color:#fff4df}.atlas-home-feature p{max-width:38rem;color:#c2b6a3;line-height:1.65}.atlas-home-feature__content>div{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1.3rem}.atlas-home-feature a{display:inline-flex;gap:.7rem;align-items:center;min-height:3rem;padding:.65rem .9rem;border:1px solid #73562c;border-radius:.4rem;background:rgb(15 15 12 / 82%);color:#eed08e;font-size:.75rem;font-weight:800;letter-spacing:.07em;text-decoration:none;text-transform:uppercase}.atlas-home-feature a:first-child{border-color:#8b3325;background:linear-gradient(135deg,#7d2119,#42120f);color:#fff1d5}.atlas-home-feature a:hover{transform:translateY(-2px)}.atlas-home-feature dl{display:grid;gap:.55rem;margin:0}.atlas-home-feature dl div{display:grid;min-width:8.5rem;padding:.75rem;border:1px solid rgb(204 154 69 / 30%);background:rgb(7 7 6 / 68%);text-align:center}.atlas-home-feature dt{font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:#aa9d89}.atlas-home-feature dd{margin:0;font-family:var(--cd-font-display);font-size:1.8rem;color:#efcd87}:global(:root[data-theme='light']) .atlas-home-feature{border-color:#ae9165;background:#f8f0e5;color:#2d1e15}:global(:root[data-theme='light']) .atlas-home-feature__art{filter:sepia(.18) saturate(.7) brightness(1.2)}:global(:root[data-theme='light']) .atlas-home-feature::after{background:linear-gradient(90deg,rgb(255 252 246 / 98%),rgb(249 239 226 / 91%) 55%,rgb(249 239 226 / 54%)),linear-gradient(0deg,rgb(255 252 246 / 95%),transparent 65%)}:global(:root[data-theme='light']) .atlas-home-feature h2{color:#27170f}:global(:root[data-theme='light']) .atlas-home-feature p{color:#4e3b2e}:global(:root[data-theme='light']) .atlas-home-feature dl div{background:rgb(255 252 246 / 84%)}@media(max-width:48rem){.atlas-home-feature{grid-template-columns:1fr;min-height:32rem}.atlas-home-feature dl{grid-template-columns:repeat(3,1fr)}.atlas-home-feature dl div{min-width:0}}@media(max-width:30rem){.atlas-home-feature dl{grid-template-columns:1fr}}
+</style>
