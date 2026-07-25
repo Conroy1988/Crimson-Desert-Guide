@@ -76,6 +76,13 @@ const themes: Record<string, SectionTheme> = {
     icon: '♞',
     image: art.world,
   },
+  database: {
+    id: 'database',
+    label: 'Content Archive',
+    kicker: 'Quests, bosses, challenges and completion records',
+    icon: '◫',
+    image: art.completion,
+  },
   completion: {
     id: 'completion',
     label: 'Completion Archive',
@@ -111,7 +118,9 @@ const section = routeId === 'update-log' || routeId === 'patch-notes'
           ? themes.world
           : routeId.startsWith('mounts/') || routeId === 'mounts'
             ? themes.mounts
-            : routeId.startsWith('completion/') || routeId === 'completion'
+            : routeId.startsWith('database/') || routeId === 'database'
+      ? themes.database
+      : routeId.startsWith('completion/') || routeId === 'completion'
               ? themes.completion
               : routeId.startsWith('technical/') || routeId === 'technical'
                 ? themes.technical
