@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://crimson-desert-guide.pages.dev/sitemap-index.xml
+Sitemap: https://crimson-desert-guide.dannyconroy.workers.dev/sitemap-index.xml

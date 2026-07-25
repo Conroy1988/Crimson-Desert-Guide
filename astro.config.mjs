@@ -2,7 +2,7 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 
 export default defineConfig({
-  site: 'https://crimson-desert-guide.pages.dev',
+  site: 'https://crimson-desert-guide.dannyconroy.workers.dev',
   trailingSlash: 'always',
   integrations: [
     starlight({
