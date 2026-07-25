@@ -1,5 +1,5 @@
 {
-  "title": "(WIP) Crimson Desert Guide – Beginner Systems, Combat, Gear, Mounts, Completion, Database & Technical",
+  "title": "(WIP) Crimson Desert Guide – Beginner Systems, Combat, Gear, Mounts, Completion, Database, Atlas & Technical",
   "sections": [
     {"heading":"Update Log","source":"src/content/docs/update-log.md"},
     {"heading":"Patch Notes","source":"src/content/docs/patch-notes.md"},
@@ -16,6 +16,7 @@
     {"heading":"11. Completion Companion","source":"steam/completion-companion.md"},
     {"heading":"12. Technical & Performance","source":"steam/technical-performance.md"},
     {"heading":"13. Quests & Activities","source":"steam/quests-activities.md"},
-    {"heading":"14. Bosses, Abysses & Strongholds","source":"steam/bosses-strongholds.md"}
+    {"heading":"14. Bosses, Abysses & Strongholds","source":"steam/bosses-strongholds.md"},
+    {"heading":"15. Pywel Atlas & Route Intelligence","source":"steam/pywel-atlas.md"}
   ]
 }
