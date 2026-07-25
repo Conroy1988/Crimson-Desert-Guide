@@ -1,7 +1,7 @@
 ---
 title: Gear, Refinement & Extraction
 description: Structured guide to equipment, sockets, refinement, materials and extraction.
-currentPatch: 1.14.00
+currentPatch: 1.15.00
 lastVerified: "2026-07-25"
 evidence: official
 spoilerLevel: none

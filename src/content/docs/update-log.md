@@ -1,7 +1,7 @@
 ---
 title: Update Log
 description: Chronological record of material changes made to the Crimson Desert Guide.
-currentPatch: 1.14.00
+currentPatch: 1.15.00
 lastVerified: "2026-07-25"
 evidence: verified
 spoilerLevel: none

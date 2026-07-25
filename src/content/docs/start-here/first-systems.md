@@ -1,7 +1,7 @@
 ---
 title: Your First Systems Circuit
 description: Learn the early services, travel, gear, mount and progression systems in the order they become useful.
-currentPatch: 1.14.00
+currentPatch: 1.15.00
 lastVerified: "2026-07-25"
 evidence: community
 spoilerLevel: none

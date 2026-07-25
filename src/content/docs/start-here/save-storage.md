@@ -1,7 +1,7 @@
 ---
 title: Save, Storage & Inventory Safety
 description: Protect progress, configure cross-save, use Private Storage and avoid destructive inventory mistakes.
-currentPatch: 1.14.00
+currentPatch: 1.15.00
 lastVerified: "2026-07-25"
 evidence: official
 spoilerLevel: none

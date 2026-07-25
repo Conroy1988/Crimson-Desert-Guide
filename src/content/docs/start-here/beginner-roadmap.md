@@ -1,7 +1,7 @@
 ---
 title: Beginner Roadmap
 description: A low-spoiler route through Crimson Desert's opening hours, early priorities and first meaningful system choices.
-currentPatch: 1.14.00
+currentPatch: 1.15.00
 lastVerified: "2026-07-25"
 evidence: community
 spoilerLevel: none

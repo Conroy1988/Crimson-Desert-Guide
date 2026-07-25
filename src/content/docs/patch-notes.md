@@ -1,7 +1,7 @@
 ---
 title: Patch Notes
 description: Current official Crimson Desert patch baseline and guide-impact tracking.
-currentPatch: 1.14.00
+currentPatch: 1.15.00
 lastVerified: "2026-07-25"
 evidence: official
 spoilerLevel: none
