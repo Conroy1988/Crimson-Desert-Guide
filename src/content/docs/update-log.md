@@ -8,6 +8,15 @@ spoilerLevel: none
 patchStatus: current
 ---
 
+## 25 July 2026 — Beginner guide expansion
+
+- Replaced the provisional beginner roadmap with a complete low-spoiler opening route.
+- Added platform-specific readability, accessibility, controller and performance guidance.
+- Added a dedicated save, cross-save, Private Storage and inventory-safety guide.
+- Added the first systems circuit covering travel, smithies, refinement, extraction, vendors, mounts and camp progression.
+- Re-verified all precise beginner claims against Patch 1.14.00, official support notices and current known issues.
+- Expanded the generated Steam BBCode guide from two beginner sections to four.
+
 ## 25 July 2026 — Premium guide experience
 
 - Replaced the documentation-style homepage with a purpose-built cinematic guide interface.
