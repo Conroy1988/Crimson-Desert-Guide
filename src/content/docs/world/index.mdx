@@ -1,0 +1,110 @@
+---
+title: World Navigation & Service Hubs
+description: A patch-aware field system for revealing regions, activating travel routes and auditing settlement services.
+currentPatch: 1.15.00
+lastVerified: "2026-07-25"
+evidence: community
+spoilerLevel: none
+patchStatus: current
+---
+
+import world from '../../../../data/world-locations.json';
+
+Crimson Desert becomes easier to navigate when every new region is treated as an **information and logistics problem**, not merely a road to the next quest marker.
+
+## Regional arrival protocol
+
+Use this order whenever you enter a substantial new area:
+
+1. reveal local map information before committing to a route;
+2. identify the nearest **Abyss Nexus** or other usable travel point;
+3. mark a safe resupply or storage hub;
+4. inspect the smithy before spending materials;
+5. inspect saddlery stock if a special mount is part of the route;
+6. check provisioners, equipment shops, specialists and requests;
+7. leave with a manual save and a clear return point.
+
+This procedure reduces repeated cross-region travel and protects materials from being spent before the local service options are understood.
+
+## Discovery and travel systems
+
+### Bell towers and map information
+
+City bell towers and similar map-information interactions are useful first stops because they reveal regional context and nearby points of interest. Treat revealed markers as **leads**, not proof that every service or reward is immediately accessible.
+
+### Mysterious Energy
+
+A Mysterious Energy location may lead to an Abyss Nexus, an Abyss puzzle or another traversal interaction. Investigate the area before assuming the marker is only decorative.
+
+### Abyss Nexuses
+
+Abyss Nexuses form the principal teleportation network. Post-launch patches expanded the network and relaxed activation restrictions:
+
+- Patch 1.02.00 added an Abyss Nexus in Pailune and improved activation while moving slightly;
+- Patch 1.03.00 allowed teleportation while mounted, falling, swimming or climbing walls;
+- restored Abyss Skybridge Gates can also function as teleport destinations where available.
+
+:::caution[Travel-state exceptions]
+Patch behaviour has changed repeatedly. If a Nexus refuses activation, stop combat actions, dismount or leave restricted content before treating the location as broken.
+:::
+
+## Structured service records
+
+The table below is generated from `data/world-locations.json`. **Official** rows are supported directly by Pearl Abyss patch material. **Community** rows are operational guide records that still need precise coordinates or current-patch screenshots before being upgraded.
+
+<table>
+  <thead>
+    <tr>
+      <th>Location</th>
+      <th>Service</th>
+      <th>Evidence</th>
+      <th>Operational use</th>
+    </tr>
+  </thead>
+  <tbody>
+    {world.locations.flatMap((location) =>
+      location.services.map((service) => (
+        <tr>
+          <td>{location.name}</td>
+          <td>{service.name}</td>
+          <td>{service.status}</td>
+          <td>{service.purpose}</td>
+        </tr>
+      )),
+    )}
+  </tbody>
+</table>
+
+## Settlement audit template
+
+Record new hubs with the same minimum fields:
+
+```text
+Location:
+Patch:
+Map reveal point:
+Nearest travel point:
+Private Storage:
+Smithy:
+Saddlery:
+Provisioner/general vendor:
+Equipment/specialist shops:
+Request board or local missions:
+Screenshot or source:
+Unverified route notes:
+```
+
+A route recommendation remains **community** evidence until its travel time, prerequisites and service availability are recorded on the current patch.
+
+## Current service hubs
+
+- [Hernand](/world/hernand/) — regional service-hub record with official saddlery and shop additions.
+- **Equinsher** — currently retained as an official saddlery inventory record.
+- **Calphade** — currently retained as an official saddlery inventory record.
+
+## Sources
+
+- [Patch 1.02.00 — Pailune Nexus and travel activation changes](https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=80&pubDate=20260405)
+- [Patch 1.03.00 — teleportation while mounted, falling, swimming or climbing](https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=81&pubDate=20260411)
+- [Patch 1.06.00 — official saddlery inventories](https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511)
+- [Patch 1.11.00 — Hernand shop additions](https://crimsondesert.pearlabyss.com/en-us/News/Notice/Detail?_boardNo=99)

@@ -1,0 +1,102 @@
+{
+  "currentPatch": "1.15.00",
+  "lastVerified": "2026-07-25",
+  "locations": [
+    {
+      "id": "hernand",
+      "name": "Hernand",
+      "kind": "regional-service-hub",
+      "spoilerLevel": "minor",
+      "evidence": "community",
+      "services": [
+        {
+          "id": "private-storage",
+          "name": "Private Storage",
+          "status": "community",
+          "purpose": "Deposit equipment, duplicate weapons, mount food and materials before continuing a route."
+        },
+        {
+          "id": "smithy",
+          "name": "Smithy",
+          "status": "community",
+          "purpose": "Compare, refine and extract equipment after creating a manual save."
+        },
+        {
+          "id": "saddlery",
+          "name": "Saddlery",
+          "status": "official",
+          "purpose": "Sells special-mount saddles for Wolves and Bears.",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511"
+        },
+        {
+          "id": "provisioner",
+          "name": "Provisioner's Shop",
+          "status": "official",
+          "purpose": "Stocks general provisions; the Flower Basket was added in Patch 1.11.00.",
+          "source": "https://crimsondesert.pearlabyss.com/en-us/News/Notice/Detail?_boardNo=99"
+        },
+        {
+          "id": "equipment-shop",
+          "name": "Equipment Shop",
+          "status": "official",
+          "purpose": "Stocks equipment and the book Ranged Weapons of the World - Bows, Vol. I added in Patch 1.11.00.",
+          "source": "https://crimsondesert.pearlabyss.com/en-us/News/Notice/Detail?_boardNo=99"
+        },
+        {
+          "id": "requests-and-vendors",
+          "name": "Requests and general vendors",
+          "status": "community",
+          "purpose": "Check local requests and specialist vendors before leaving the settlement."
+        }
+      ],
+      "arrivalChecklist": [
+        "Reveal local map information before planning a route.",
+        "Activate or identify the nearest usable travel point.",
+        "Deposit overflow in Private Storage.",
+        "Inspect the smithy before spending refinement materials.",
+        "Inspect saddlery stock if using a Wolf or Bear special mount.",
+        "Check provisioner, equipment shop and local requests."
+      ]
+    },
+    {
+      "id": "equinsher",
+      "name": "Equinsher",
+      "kind": "saddlery-record",
+      "spoilerLevel": "minor",
+      "evidence": "official",
+      "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511",
+      "services": [
+        {
+          "id": "saddlery",
+          "name": "Saddlery",
+          "status": "official",
+          "purpose": "Sells special-mount saddles for Deer and Wolves.",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511"
+        }
+      ],
+      "arrivalChecklist": [
+        "Inspect Deer and Wolf saddle stock if either mount is registered."
+      ]
+    },
+    {
+      "id": "calphade",
+      "name": "Calphade",
+      "kind": "saddlery-record",
+      "spoilerLevel": "minor",
+      "evidence": "official",
+      "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511",
+      "services": [
+        {
+          "id": "saddlery",
+          "name": "Saddlery",
+          "status": "official",
+          "purpose": "Sells special-mount saddles for Bears and Kuku Birds.",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511"
+        }
+      ],
+      "arrivalChecklist": [
+        "Inspect Bear and Kuku Bird saddle stock if either mount is registered."
+      ]
+    }
+  ]
+}

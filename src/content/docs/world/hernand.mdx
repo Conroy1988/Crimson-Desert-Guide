@@ -1,0 +1,130 @@
+---
+title: Hernand Service Hub
+description: A structured field guide to Hernand's confirmed shops, practical services and settlement-arrival circuit.
+currentPatch: 1.15.00
+lastVerified: "2026-07-25"
+evidence: community
+spoilerLevel: minor
+patchStatus: current
+---
+
+import world from '../../../../data/world-locations.json';
+
+export const hernand = world.locations.find((location) => location.id === 'hernand');
+
+Hernand is treated as a **regional service hub**: a place to stabilise inventory, inspect equipment, prepare a mount and collect local work before continuing into the surrounding region.
+
+:::note[Evidence boundary]
+The existence of the Hernand Saddlery and the listed shop additions is supported by official patch material. Exact door-to-door routes, coordinates and fastest circuits remain community guidance until current-patch screenshots and timed runs are recorded.
+:::
+
+## First-arrival circuit
+
+Follow this sequence on the first visit:
+
+{hernand.arrivalChecklist.map((item, index) => (
+  <p><strong>{index + 1}.</strong> {item}</p>
+))}
+
+The order matters. Depositing overflow before shopping prevents accidental sales, while inspecting the smithy before refining prevents duplicate-equipment or Abyss Artifact gates from being discovered after materials are committed.
+
+## Service register
+
+This table is generated from the canonical world data record.
+
+<table>
+  <thead>
+    <tr>
+      <th>Service</th>
+      <th>Evidence</th>
+      <th>Use</th>
+    </tr>
+  </thead>
+  <tbody>
+    {hernand.services.map((service) => (
+      <tr>
+        <td>{service.name}</td>
+        <td>{service.status}</td>
+        <td>{service.purpose}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+## Confirmed shop intelligence
+
+### Hernand Saddlery
+
+Patch 1.06.00 identifies Hernand as the saddlery for **Wolf** and **Bear** special-mount saddles. These saddles are separate equipment; special mounts no longer display a saddle as part of their default appearance.
+
+Use Hernand when:
+
+- a Wolf or Bear has already been registered;
+- the mount needs its own equipment rather than character or horse tack;
+- comparing special-mount equipment before committing a long overland route.
+
+### Provisioner's Shop
+
+Patch 1.11.00 added the **Flower Basket** to the Hernand Provisioner's Shop. The guide records this as a confirmed stock change, not as an essential purchase.
+
+### Equipment Shop
+
+Patch 1.11.00 added **Ranged Weapons of the World - Bows, Vol. I** to the Hernand Equipment Shop. Check the shop when auditing books, knowledge or ranged-equipment availability.
+
+## Smithy workflow
+
+The smithy should be treated as a decision point, not a routine upgrade station:
+
+1. make a manual save;
+2. compare the proposed item against the active character and task;
+3. confirm whether identical-equipment refinement is still available at the current level;
+4. inspect any Abyss Artifact requirement;
+5. choose between refine, extract, store or leave unchanged;
+6. verify the result before continuing.
+
+See [Gear, Refinement & Extraction](/systems/gear/) for the complete material decision model.
+
+## Storage and restock policy
+
+Deposit:
+
+- duplicate weapons or armour kept for comparison;
+- special refinement materials;
+- mount food not needed on the current route;
+- books, quest-adjacent items or unusual equipment whose value is unclear;
+- resources collected for later settlement or camp work.
+
+Carry:
+
+- one deliberate combat loadout;
+- the healing and mount food needed for the next route;
+- only the refinement materials being used immediately;
+- enough free capacity for rewards and gathered materials.
+
+## Route-planning value
+
+Hernand is most useful as a **reset point** between activities. Before leaving, answer four questions:
+
+1. Where is the nearest activated travel return point?
+2. Is the next activity combat, gathering, exploration or mount handling?
+3. Is the active character carrying the correct equipment and resistance profile?
+4. Is there enough free inventory space to complete the route without destroying or selling uncertain items?
+
+A route is not efficient if it saves two minutes of travel but forces a long return because storage, mount equipment or healing was ignored.
+
+## Verification backlog
+
+The following remain deliberately unpromoted:
+
+- exact coordinates for every service entrance;
+- shortest timed loop through storage, smithy, saddlery and shops;
+- faction, bounty and request-board refresh behaviour;
+- nearby gathering routes and their current yields;
+- opening hours or state-based access restrictions, if any.
+
+These require current-patch screenshots or reproducible route logs.
+
+## Sources
+
+- [Patch 1.06.00 — Hernand Saddlery stock](https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511)
+- [Patch 1.11.00 — Hernand provisioner and equipment-shop additions](https://crimsondesert.pearlabyss.com/en-us/News/Notice/Detail?_boardNo=99)

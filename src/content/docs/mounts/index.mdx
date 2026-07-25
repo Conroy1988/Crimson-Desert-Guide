@@ -1,0 +1,176 @@
+---
+title: Mounts & Traversal
+description: A spoiler-controlled guide to horses, special mounts, trust, feeding, saddles, quickslots and terrain-based mount choice.
+currentPatch: 1.15.00
+lastVerified: "2026-07-25"
+evidence: official
+spoilerLevel: minor
+patchStatus: current
+---
+
+import mounts from '../../../../data/mounts.json';
+import world from '../../../../data/world-locations.json';
+
+Crimson Desert uses mounts as a **travel toolkit**, not one linear upgrade ladder. A regular horse remains useful even after special or legendary traversal becomes available because handling, summon access, terrain and combat utility vary by task.
+
+## The three mount layers
+
+<table>
+  <thead>
+    <tr>
+      <th>Layer</th>
+      <th>Use</th>
+      <th>Evidence</th>
+    </tr>
+  </thead>
+  <tbody>
+    {mounts.systems.map((mount) => (
+      <tr>
+        <td>{mount.name}</td>
+        <td>{mount.bestFor.join(', ')}</td>
+        <td>{mount.evidence}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+### Regular horses
+
+Use a dependable horse for ordinary roads, settlement circuits and long routes where predictable handling matters more than a specialised movement mode.
+
+### Special mounts
+
+Patch 1.06.00 introduced registration for eligible animals after gaining their trust. Ferocious species can be subdued and fed; some animals require unique methods. Feeding an animal that cannot be tamed does not increase trust.
+
+Eligible species recorded by Pearl Abyss:
+
+<ul>
+  {mounts.eligibleSpecialSpecies.map((species) => <li>{species}</li>)}
+</ul>
+
+### Legendary traversal
+
+Legendary mounts should be evaluated separately because unlock conditions, summon restrictions and story context may be major spoilers. [Blackstar](/mounts/blackstar/) remains behind an explicit reveal control.
+
+## Trust, taming and registration
+
+Use this safe process:
+
+1. confirm the animal is an eligible species;
+2. approach with enough food and inventory space;
+3. subdue a ferocious animal when the game requires it;
+4. feed only after the animal is in the correct interaction state;
+5. observe whether trust actually increases;
+6. stop spending food if the value does not change;
+7. complete registration before leaving the area;
+8. test summon, dismissal and quickslot behaviour in a safe location.
+
+:::caution[Unique taming methods]
+The official patch notes state that some species require unique methods but do not define every method. The guide will not invent a universal feeding recipe.
+:::
+
+## Feeding while mounted
+
+A registered special mount can be fed while riding:
+
+1. open the inventory;
+2. select an appropriate food item;
+3. choose **Feed**;
+4. verify that one item was consumed and the intended value changed.
+
+Patch history includes a defect where feeding could consume two food items on Hard difficulty; that was fixed in Patch 1.11.00. Keep only the quantity needed for the current test until behaviour is confirmed on a new patch.
+
+## Quickslot rule
+
+The special-mount update fixed the mount quickslot so it can hold:
+
+- **one regular mount**; and
+- **one special mount**.
+
+Do not interpret a missing third mount as evidence that it has been lost. Check the regular and special mount tabs separately before changing registration or save data.
+
+## Saddles and special-mount equipment
+
+Special-mount saddles are equippable items, not part of the animal's default appearance. The official availability table is generated from `data/mounts.json`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Saddlery</th>
+      <th>Special-mount saddles</th>
+      <th>Evidence</th>
+    </tr>
+  </thead>
+  <tbody>
+    {mounts.saddleries.map((saddlery) => {
+      const location = world.locations.find((entry) => entry.id === saddlery.locationId);
+      return (
+        <tr>
+          <td>{location?.name ?? saddlery.locationId}</td>
+          <td>{saddlery.mounts.join(', ')}</td>
+          <td>{saddlery.evidence}</td>
+        </tr>
+      );
+    })}
+  </tbody>
+</table>
+
+### Equipment check
+
+Before leaving a saddlery:
+
+1. open the Special Mounts tab;
+2. confirm the correct animal is selected;
+3. equip the saddle in the mount-equipment interface;
+4. verify appearance and statistics;
+5. save manually;
+6. summon the mount and confirm the equipment persisted.
+
+## Choosing a mount by task
+
+| Task | Starting choice | Reason |
+|---|---|---|
+| Settlement circuit | Regular horse | Predictable handling and low setup overhead |
+| Open roads | Horse or fast registered special mount | Route length matters more than combat utility |
+| Rough or narrow terrain | Test a smaller or terrain-suited special mount | Body size and turn radius can matter |
+| Hostile route | Mount with understood combat and dismount behaviour | Survival matters more than headline speed |
+| Vertical traversal | Baby Wyvern or another unlocked aerial option | Bypasses some ground-route constraints |
+| Long aerial traversal | Spoiler-controlled legendary option | Access and summon restrictions must be understood first |
+
+These are operating recommendations, not a universal ranking. Test the same route with the same starting point, weather and loadout before declaring one mount faster.
+
+## Repeatable mount test
+
+```text
+Patch:
+Character:
+Mount:
+Equipment:
+Route and terrain:
+Starting stamina:
+Food used:
+Travel time:
+Forced dismounts:
+Collision or pathing problems:
+Combat interruptions:
+Summon restrictions:
+Result:
+```
+
+## Current patch cautions
+
+Relevant patch history includes:
+
+- special mounts could previously be sold; Patch 1.08.00 fixed that defect;
+- saddle comparison tooltips were corrected in Patch 1.08.00;
+- Baby Wyverns and Kuku Bird Chicks became special mounts in Patch 1.10.00;
+- Wyverns can be mounted with Axiom Force without learning Back Hang after Patch 1.11.00;
+- Patch 1.15.00 fixed Wyvern summoning while airborne and a mounted attack restriction on a quest bear.
+
+## Sources
+
+- [Patch 1.06.00 — special mounts, trust, feeding, quickslots and saddles](https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511)
+- [Patch 1.08.00 — mount and saddlery fixes](https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=93)
+- [Patch 1.10.00 — Baby Wyvern and Kuku Bird Chick special mounts](https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=96&pubDate=20260605)
+- [Patch 1.11.00 — Wyvern mounting and feeding fixes](https://crimsondesert.pearlabyss.com/en-us/News/Notice/Detail?_boardNo=99)
+- [Patch 1.15.00 — current mount-related fixes](https://crimsondesert.pearlabyss.com/en-us/News/Notice/Detail?_boardNo=109)

@@ -8,6 +8,16 @@ spoilerLevel: none
 patchStatus: current
 ---
 
+## 25 July 2026 — World and traversal compendium
+
+- Added validated structured records for settlements, services, special-mount species and saddlery inventories.
+- Added an automated world-data audit that checks patch alignment, evidence grades, official sources, unique records and saddlery cross-references.
+- Added a world-navigation guide covering regional arrival procedure, map discovery, Mysterious Energy and Abyss Nexus travel.
+- Replaced the Hernand placeholder with a generated service register and practical settlement circuit.
+- Added a complete mounts guide covering trust, taming, feeding, registration, quickslots, equipment and terrain-based selection.
+- Expanded Blackstar behind the existing major-spoiler gate using official patch history without publishing an unverified unlock sequence.
+- Expanded the generated Steam BBCode guide with World Navigation and Mounts sections.
+
 ## 25 July 2026 — Combat and gear systems
 
 - Replaced the provisional Combat page with a complete fight-control guide covering camera, positioning, defence, stamina, Spirit, stun pressure, groups, large targets and healing windows.
