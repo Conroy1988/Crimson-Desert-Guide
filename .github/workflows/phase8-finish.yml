@@ -1,0 +1,66 @@
+name: Phase 8 finishing edits
+
+on:
+  push:
+    branches: [agent/phase8-content-database]
+    paths: [.github/workflows/phase8-finish.yml]
+
+permissions:
+  contents: write
+
+jobs:
+  finish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/phase8-content-database
+          fetch-depth: 0
+      - name: Apply one-off Phase 8 edits
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          log = Path('src/content/docs/update-log.md')
+          text = log.read_text()
+          marker = '---\n\n'
+          entry = '''## 25 July 2026 — Quest, boss and content database
+
+          - Added a canonical searchable database containing 67 evidence-safe quests, bosses, strongholds, Abysses, challenges and knowledge records.
+          - Added all 34 official Steam achievement conditions as stable completion milestones.
+          - Added 17 named boss records, including five verified Memory Fragment rematches with official locations.
+          - Added 14 quest records, two named Abysses and two stronghold or liberation systems.
+          - Kept partial identities searchable while excluding them from completion percentages until their route or completion condition is verified.
+          - Generated Completion Companion entries from canonical records while preserving all existing local progress IDs.
+          - Added cross-dataset validation, source provenance notes and two new Steam Guide sections.
+
+          '''
+          if '## 25 July 2026 — Quest, boss and content database' not in text:
+              pos = text.find(marker)
+              if pos == -1:
+                  raise SystemExit('Frontmatter boundary not found')
+              pos += len(marker)
+              log.write_text(text[:pos] + entry + text[pos:])
+
+          home = Path('src/components/HomeExperience.astro')
+          text = home.read_text()
+          text = text.replace('<strong>18</strong><span>live guide pages</span>', '<strong>19</strong><span>live guide pages</span>')
+          text = text.replace("{ label: 'World & Mounts', count: 4, width: 100 },\n  { label: 'Completion', count: 1, width: 25 },", "{ label: 'World & Mounts', count: 4, width: 100 },\n  { label: 'Database', count: 1, width: 25 },\n  { label: 'Completion', count: 1, width: 25 },")
+          text = text.replace("{ label: 'Update log', detail: 'Latest changes', icon: 'scroll', href: '/update-log/' },", "{ label: 'Content database', detail: '67 verified records', icon: 'scroll', href: '/database/' },")
+          home.write_text(text)
+
+          title = Path('src/components/PageTitle.astro')
+          text = title.read_text()
+          if "database: {" not in text:
+              text = text.replace("  completion: {\n", "  database: {\n    id: 'database',\n    label: 'Content Archive',\n    kicker: 'Quests, bosses, challenges and completion records',\n    icon: '◫',\n    image: art.completion,\n  },\n  completion: {\n")
+          text = text.replace("    : routeId.startsWith('completion/') || routeId === 'completion'\n", "    : routeId.startsWith('database/') || routeId === 'database'\n      ? themes.database\n      : routeId.startsWith('completion/') || routeId === 'completion'\n")
+          title.write_text(text)
+          PY
+          rm .github/workflows/phase8-finish.yml
+      - name: Commit finishing edits
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Phase 8: publish database navigation and release record"
+          git push origin HEAD:agent/phase8-content-database
