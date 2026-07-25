@@ -8,6 +8,15 @@ spoilerLevel: none
 patchStatus: current
 ---
 
+## 25 July 2026 — Light-mode contrast remediation
+
+- Added a dedicated light-theme stylesheet without changing the established dark-theme design.
+- Strengthened secondary text, metadata and small-label colours to meet readable contrast targets.
+- Reworked the cinematic homepage hero, intelligence card, controls and metrics for pale surfaces.
+- Corrected light-theme evidence, warning, success, error and official-issue colours.
+- Improved light-theme completion controls, spoiler panels and technical troubleshooting cards.
+- Added an automated contrast audit covering canonical palette pairs and required premium component scopes.
+
 ## 25 July 2026 — Technical and performance centre
 
 - Replaced the provisional Technical page with a filterable platform and symptom troubleshooting centre.
