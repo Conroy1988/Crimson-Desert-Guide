@@ -1,0 +1,115 @@
+{
+  "currentPatch": "1.15.00",
+  "lastVerified": "2026-07-25",
+  "quickslotRule": {
+    "regularMounts": 1,
+    "specialMounts": 1,
+    "evidence": "official",
+    "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511"
+  },
+  "systems": [
+    {
+      "id": "regular-horses",
+      "name": "Horses",
+      "category": "regular",
+      "spoilerLevel": "none",
+      "evidence": "community",
+      "registration": "Use the game's regular mount registration flow after obtaining an eligible horse.",
+      "bestFor": ["general roads", "long overland routes", "predictable handling"],
+      "notes": [
+        "Use regular horses as the default travel option until a specialised terrain or combat task justifies another mount.",
+        "Horse equipment can be lost visually in rare defect states; recheck equipped tack after loading if appearance changes unexpectedly."
+      ]
+    },
+    {
+      "id": "special-mounts",
+      "name": "Special Mounts",
+      "category": "special",
+      "spoilerLevel": "minor",
+      "evidence": "official",
+      "registration": "Eligible animals can be registered after gaining their trust.",
+      "bestFor": ["terrain-specific travel", "combat utility", "species-specific handling"],
+      "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511",
+      "notes": [
+        "Ferocious animals can be subdued and fed; some species require unique taming methods.",
+        "Feeding an untamable animal does not increase trust.",
+        "A registered special mount can be fed while riding by selecting food in the inventory and choosing Feed.",
+        "Special-mount saddles are separate equipment and are not part of the default appearance."
+      ]
+    },
+    {
+      "id": "baby-wyvern",
+      "name": "Baby Wyvern",
+      "category": "special",
+      "spoilerLevel": "minor",
+      "evidence": "official",
+      "registration": "Can be used as a special mount after the relevant pet/mount conditions are met.",
+      "bestFor": ["special traversal", "vertical movement"],
+      "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=96&pubDate=20260605",
+      "notes": [
+        "Patch 1.10.00 enabled Baby Wyverns to be used as special mounts."
+      ]
+    },
+    {
+      "id": "kuku-bird-chick",
+      "name": "Kuku Bird Chick",
+      "category": "special",
+      "spoilerLevel": "minor",
+      "evidence": "official",
+      "registration": "Can be used as a special mount after the relevant pet/mount conditions are met.",
+      "bestFor": ["special traversal", "compact terrain"],
+      "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=96&pubDate=20260605",
+      "notes": [
+        "Patch 1.10.00 enabled the Kuku Bird Chick to be used as a special mount."
+      ]
+    },
+    {
+      "id": "blackstar",
+      "name": "Blackstar",
+      "category": "legendary",
+      "spoilerLevel": "full",
+      "evidence": "official",
+      "registration": "Unlock and access conditions are intentionally hidden behind the major-spoiler guide gate.",
+      "bestFor": ["flight", "long-distance aerial traversal", "legendary traversal"],
+      "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511",
+      "notes": [
+        "Official patch notes identify Blackstar as a controllable mount with a Breath action.",
+        "Patch history includes fixes for Blackstar remaining in place after death, walking into water and Breath-related frame drops.",
+        "The guide does not treat any Blackstar armour set as confirmed."
+      ]
+    }
+  ],
+  "eligibleSpecialSpecies": [
+    "Bear",
+    "Boar",
+    "Wolf",
+    "Deer",
+    "Mountain Goat",
+    "Kuku Bird",
+    "Iguana",
+    "Raptor",
+    "Camel",
+    "Lion",
+    "Tiger"
+  ],
+  "saddleries": [
+    {
+      "locationId": "hernand",
+      "mounts": ["Wolf", "Bear"],
+      "evidence": "official",
+      "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511"
+    },
+    {
+      "locationId": "equinsher",
+      "mounts": ["Deer", "Wolf"],
+      "evidence": "official",
+      "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511"
+    },
+    {
+      "locationId": "calphade",
+      "mounts": ["Bear", "Kuku Bird"],
+      "evidence": "official",
+      "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511"
+    }
+  ]
+}
