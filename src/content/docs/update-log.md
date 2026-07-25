@@ -8,6 +8,16 @@ spoilerLevel: none
 patchStatus: current
 ---
 
+## 25 July 2026 — Pywel Atlas and route intelligence
+
+- Added a cinematic topological atlas for verified settlements, services, travel systems and world progress.
+- Added 12 evidence-labelled location and system records with 16 service definitions.
+- Added official special-mount saddlery intelligence for eight cities.
+- Added the verified Pailune Nexus link to the abstract Abyss Nexus network without inventing coordinates or road connections.
+- Added local visited-location, activated-node and service-check progress with validated JSON backup and restore.
+- Added explicit no-route handling, atlas data audits and route/persistence tests.
+- Added the Pywel Atlas to site navigation and the Steam Guide export.
+
 ## 25 July 2026 — Quest, boss and content database
 
 - Added a canonical searchable database containing 67 evidence-safe quests, bosses, strongholds, Abysses, challenges and knowledge records.

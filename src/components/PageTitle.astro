@@ -23,7 +23,6 @@ const isHomepage = route.id === '';
 const routeId = route.id;
 
 const steamRoot = 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3321460';
-
 const art = {
   hero: `${steamRoot}/669119c3747653f41a46c59f213168448d094e04/ss_669119c3747653f41a46c59f213168448d094e04.1920x1080.jpg?t=1781661893`,
   beginner: `${steamRoot}/4b178bdd24ed576458116d8d3383b5352dad0fae/ss_4b178bdd24ed576458116d8d3383b5352dad0fae.1920x1080.jpg?t=1781661893`,
@@ -34,558 +33,85 @@ const art = {
 };
 
 const themes: Record<string, SectionTheme> = {
-  updates: {
-    id: 'updates',
-    label: 'Live Intelligence',
-    kicker: 'Patch surveillance and publication record',
-    icon: '✦',
-    image: art.hero,
-  },
-  start: {
-    id: 'start',
-    label: 'Field Manual',
-    kicker: 'First-hours guidance and safe progression',
-    icon: '◈',
-    image: art.beginner,
-  },
-  combat: {
-    id: 'combat',
-    label: 'Combat Doctrine',
-    kicker: 'Weapons, defence, encounters and testing',
-    icon: '⚔',
-    image: art.combat,
-  },
-  gear: {
-    id: 'gear',
-    label: 'Forge & Arsenal',
-    kicker: 'Equipment, refinement and extraction',
-    icon: '◆',
-    image: art.forge,
-  },
-  world: {
-    id: 'world',
-    label: 'World Compendium',
-    kicker: 'Routes, settlements, services and discovery',
-    icon: '⌖',
-    image: art.world,
-  },
-  mounts: {
-    id: 'mounts',
-    label: 'Mounts & Creatures',
-    kicker: 'Trust, traversal and legendary discoveries',
-    icon: '♞',
-    image: art.world,
-  },
-  database: {
-    id: 'database',
-    label: 'Content Archive',
-    kicker: 'Quests, bosses, challenges and completion records',
-    icon: '◫',
-    image: art.completion,
-  },
-  completion: {
-    id: 'completion',
-    label: 'Completion Archive',
-    kicker: 'Milestones, records and spoiler control',
-    icon: '◇',
-    image: art.completion,
-  },
-  technical: {
-    id: 'technical',
-    label: 'Technical Centre',
-    kicker: 'Known issues, diagnostics and performance',
-    icon: '⚙',
-    image: art.forge,
-  },
-  standards: {
-    id: 'standards',
-    label: 'Guide Standards',
-    kicker: 'Evidence, verification and editorial control',
-    icon: '✧',
-    image: art.hero,
-  },
+  updates: { id: 'updates', label: 'Live Intelligence', kicker: 'Patch surveillance and publication record', icon: '✦', image: art.hero },
+  start: { id: 'start', label: 'Field Manual', kicker: 'First-hours guidance and safe progression', icon: '◈', image: art.beginner },
+  combat: { id: 'combat', label: 'Combat Doctrine', kicker: 'Weapons, defence, encounters and testing', icon: '⚔', image: art.combat },
+  gear: { id: 'gear', label: 'Forge & Arsenal', kicker: 'Equipment, refinement and extraction', icon: '◆', image: art.forge },
+  atlas: { id: 'atlas', label: 'Pywel Atlas', kicker: 'Settlements, services and verified route intelligence', icon: '⌘', image: art.world },
+  world: { id: 'world', label: 'World Compendium', kicker: 'Routes, settlements, services and discovery', icon: '⌖', image: art.world },
+  mounts: { id: 'mounts', label: 'Mounts & Creatures', kicker: 'Trust, traversal and legendary discoveries', icon: '♞', image: art.world },
+  database: { id: 'database', label: 'Content Archive', kicker: 'Quests, bosses, challenges and completion records', icon: '◫', image: art.completion },
+  completion: { id: 'completion', label: 'Completion Archive', kicker: 'Milestones, records and spoiler control', icon: '◇', image: art.completion },
+  technical: { id: 'technical', label: 'Technical Centre', kicker: 'Known issues, diagnostics and performance', icon: '⚙', image: art.forge },
+  standards: { id: 'standards', label: 'Guide Standards', kicker: 'Evidence, verification and editorial control', icon: '✧', image: art.hero },
 };
 
-const section = routeId === 'update-log' || routeId === 'patch-notes'
-  ? themes.updates
-  : routeId.startsWith('start-here/')
-    ? themes.start
-    : routeId.startsWith('systems/gear')
-      ? themes.gear
-      : routeId.startsWith('systems/')
-        ? themes.combat
-        : routeId.startsWith('world/') || routeId === 'world'
-          ? themes.world
-          : routeId.startsWith('mounts/') || routeId === 'mounts'
-            ? themes.mounts
-            : routeId.startsWith('database/') || routeId === 'database'
-      ? themes.database
-      : routeId.startsWith('completion/') || routeId === 'completion'
-              ? themes.completion
-              : routeId.startsWith('technical/') || routeId === 'technical'
-                ? themes.technical
-                : routeId.startsWith('standards/') || routeId === 'standards'
-                  ? themes.standards
-                  : themes.updates;
+function pickSection(id: string): SectionTheme {
+  if (id === 'update-log' || id === 'patch-notes') return themes.updates;
+  if (id.startsWith('start-here/')) return themes.start;
+  if (id.startsWith('systems/gear')) return themes.gear;
+  if (id.startsWith('systems/')) return themes.combat;
+  if (id === 'atlas' || id.startsWith('atlas/')) return themes.atlas;
+  if (id === 'world' || id.startsWith('world/')) return themes.world;
+  if (id === 'mounts' || id.startsWith('mounts/')) return themes.mounts;
+  if (id === 'database' || id.startsWith('database/')) return themes.database;
+  if (id === 'completion' || id.startsWith('completion/')) return themes.completion;
+  if (id === 'technical' || id.startsWith('technical/')) return themes.technical;
+  if (id === 'standards' || id.startsWith('standards/')) return themes.standards;
+  return themes.updates;
+}
 
-const evidenceLabels: Record<NonNullable<GuideData['evidence']>, string> = {
+const section = pickSection(routeId);
+const evidenceLabels = {
   official: 'Official source',
   verified: 'Tested & verified',
   community: 'Community confirmed',
   provisional: 'Provisional finding',
 };
-
-const patchLabels: Record<NonNullable<GuideData['patchStatus']>, string> = {
-  current: 'Current',
-  'review-required': 'Review required',
-  historical: 'Historical',
-};
-
-const spoilerLabels: Record<NonNullable<GuideData['spoilerLevel']>, string> = {
-  none: 'No spoilers',
-  minor: 'Minor spoilers',
-  full: 'Major spoilers',
-};
+const patchLabels = { current: 'Current', 'review-required': 'Review required', historical: 'Historical' };
+const spoilerLabels = { none: 'No spoilers', minor: 'Minor spoilers', full: 'Major spoilers' };
 ---
 
-{
-  !isHomepage && (
-    <header
-      class="guide-title"
-      data-guide-section={section.id}
-      style={`--guide-hero-image: url('${section.image}')`}
-    >
-      <div class="guide-title__art" aria-hidden="true"></div>
-      <div class="guide-title__frame" aria-hidden="true"></div>
-
-      <div class="guide-title__content">
-        <div class="guide-title__section">
-          <span class="guide-title__crest" aria-hidden="true">{section.icon}</span>
-          <div>
-            <span>{section.label}</span>
-            <small>{section.kicker}</small>
-          </div>
-        </div>
-
-        <div class="guide-title__line">
-          <span class={`guide-state guide-state--${data.patchStatus ?? 'current'}`}>
-            <i aria-hidden="true"></i>
-            {patchLabels[data.patchStatus ?? 'current']}
-          </span>
-          {data.currentPatch && <span>Patch {data.currentPatch}</span>}
-        </div>
-
-        <h1 id="_top">{data.title}</h1>
-        {data.description && <p class="guide-title__description">{data.description}</p>}
-
-        <dl class="guide-title__meta" aria-label="Guide verification metadata">
-          {data.evidence && (
-            <div>
-              <dt>Evidence</dt>
-              <dd class={`evidence evidence--${data.evidence}`}>{evidenceLabels[data.evidence]}</dd>
-            </div>
-          )}
-          {data.lastVerified && (
-            <div>
-              <dt>Verified</dt>
-              <dd>{data.lastVerified}</dd>
-            </div>
-          )}
-          {data.spoilerLevel && (
-            <div>
-              <dt>Spoilers</dt>
-              <dd>{spoilerLabels[data.spoilerLevel]}</dd>
-            </div>
-          )}
-        </dl>
+{!isHomepage && (
+  <header class="guide-title" data-guide-section={section.id} style={`--guide-hero-image: url('${section.image}')`}>
+    <div class="guide-title__art" aria-hidden="true"></div>
+    <div class="guide-title__frame" aria-hidden="true"></div>
+    <div class="guide-title__content">
+      <div class="guide-title__section">
+        <span class="guide-title__crest" aria-hidden="true">{section.icon}</span>
+        <div><span>{section.label}</span><small>{section.kicker}</small></div>
       </div>
-
-      {data.currentPatch && (
-        <aside class="guide-title__patch" aria-label={`Guide baseline Patch ${data.currentPatch}`}>
-          <span>Guide baseline</span>
-          <strong>{data.currentPatch}</strong>
-          <small>Live intelligence</small>
-        </aside>
-      )}
-    </header>
-  )
-}
+      <div class="guide-title__line">
+        <span class={`guide-state guide-state--${data.patchStatus ?? 'current'}`}><i aria-hidden="true"></i>{patchLabels[data.patchStatus ?? 'current']}</span>
+        {data.currentPatch && <span>Patch {data.currentPatch}</span>}
+      </div>
+      <h1 id="_top">{data.title}</h1>
+      {data.description && <p class="guide-title__description">{data.description}</p>}
+      <dl class="guide-title__meta" aria-label="Guide verification metadata">
+        {data.evidence && <div><dt>Evidence</dt><dd class={`evidence evidence--${data.evidence}`}>{evidenceLabels[data.evidence]}</dd></div>}
+        {data.lastVerified && <div><dt>Verified</dt><dd>{data.lastVerified}</dd></div>}
+        {data.spoilerLevel && <div><dt>Spoilers</dt><dd>{spoilerLabels[data.spoilerLevel]}</dd></div>}
+      </dl>
+    </div>
+    {data.currentPatch && <aside class="guide-title__patch" aria-label={`Guide baseline Patch ${data.currentPatch}`}><span>Guide baseline</span><strong>{data.currentPatch}</strong><small>Live intelligence</small></aside>}
+  </header>
+)}
 
 <style>
-  .guide-title {
-    position: relative;
-    isolation: isolate;
-    min-height: clamp(23rem, 45vw, 31rem);
-    overflow: hidden;
-    margin: 0 0 clamp(2rem, 5vw, 3.5rem);
-    padding: clamp(1.2rem, 3.4vw, 2.6rem);
-    border: 1px solid rgb(210 160 78 / 32%);
-    border-radius: 1rem;
-    background: #0b0b0a;
-    box-shadow: 0 2rem 5rem rgb(0 0 0 / 36%);
-  }
-
-  .guide-title__art {
-    position: absolute;
-    inset: 0;
-    z-index: -3;
-    background-image: var(--guide-hero-image);
-    background-position: center;
-    background-size: cover;
-    transform: scale(1.015);
-  }
-
-  .guide-title::before {
-    position: absolute;
-    inset: 0;
-    z-index: -2;
-    content: '';
-    background:
-      linear-gradient(90deg, rgb(7 7 7 / 99%) 0%, rgb(9 9 8 / 94%) 37%, rgb(9 9 8 / 54%) 65%, rgb(9 9 8 / 24%) 100%),
-      linear-gradient(0deg, rgb(8 8 7 / 88%), transparent 55%),
-      radial-gradient(circle at 80% 5%, rgb(188 55 29 / 24%), transparent 36%);
-  }
-
-  .guide-title::after {
-    position: absolute;
-    inset: auto 0 0;
-    z-index: -1;
-    height: 42%;
-    content: '';
-    background: linear-gradient(transparent, rgb(5 5 5 / 86%));
-  }
-
-  .guide-title__frame {
-    position: absolute;
-    inset: 0.55rem;
-    z-index: 0;
-    pointer-events: none;
-    border: 1px solid rgb(224 179 98 / 15%);
-    border-radius: 0.68rem;
-  }
-
-  .guide-title__frame::before,
-  .guide-title__frame::after {
-    position: absolute;
-    width: 3.4rem;
-    height: 3.4rem;
-    content: '';
-  }
-
-  .guide-title__frame::before {
-    top: -1px;
-    left: -1px;
-    border-top: 1px solid rgb(232 189 111 / 62%);
-    border-left: 1px solid rgb(232 189 111 / 62%);
-  }
-
-  .guide-title__frame::after {
-    right: -1px;
-    bottom: -1px;
-    border-right: 1px solid rgb(232 189 111 / 62%);
-    border-bottom: 1px solid rgb(232 189 111 / 62%);
-  }
-
-  .guide-title__content {
-    position: relative;
-    z-index: 2;
-    display: grid;
-    align-content: end;
-    width: min(100%, 47rem);
-    min-height: clamp(19rem, 38vw, 26rem);
-  }
-
-  .guide-title__section {
-    display: inline-flex;
-    gap: 0.75rem;
-    align-items: center;
-    width: fit-content;
-    margin-bottom: auto;
-    padding: 0.6rem 0.8rem;
-    border: 1px solid rgb(210 160 78 / 28%);
-    border-radius: 0.48rem;
-    background: rgb(6 6 6 / 62%);
-    backdrop-filter: blur(10px);
-  }
-
-  .guide-title__crest {
-    display: grid;
-    place-items: center;
-    width: 2.35rem;
-    aspect-ratio: 1;
-    border: 1px solid rgb(219 168 83 / 48%);
-    border-radius: 50%;
-    font-family: var(--cd-font-display);
-    font-size: 1rem;
-    color: #f1cc83;
-    box-shadow: inset 0 0 0 0.25rem rgb(201 147 62 / 6%);
-  }
-
-  .guide-title__section div {
-    display: grid;
-    gap: 0.15rem;
-  }
-
-  .guide-title__section span:not(.guide-title__crest) {
-    font-family: var(--cd-font-display);
-    font-size: 0.88rem;
-    letter-spacing: 0.06em;
-    color: #f1cc83;
-  }
-
-  .guide-title__section small {
-    font-size: 0.62rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #a99b84;
-  }
-
-  .guide-title__line {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem 1rem;
-    align-items: center;
-    margin: clamp(2.5rem, 8vw, 6rem) 0 0.9rem;
-    font-size: 0.7rem;
-    font-weight: 750;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: #a99b84;
-  }
-
-  .guide-state {
-    display: inline-flex;
-    gap: 0.45rem;
-    align-items: center;
-    color: #d8ccb8;
-  }
-
-  .guide-state i {
-    width: 0.42rem;
-    aspect-ratio: 1;
-    border-radius: 50%;
-    background: #75b987;
-    box-shadow: 0 0 0 0.22rem rgb(117 185 135 / 12%);
-  }
-
-  .guide-state--review-required { color: #f1be73; }
-  .guide-state--review-required i { background: #e7a94e; }
-  .guide-state--historical { color: #a99b84; }
-  .guide-state--historical i { background: #756b5c; }
-
-  h1 {
-    max-width: 17ch;
-    margin: 0;
-    font-family: var(--cd-font-display);
-    font-size: clamp(2.55rem, 6.4vw, 5.35rem);
-    font-weight: 500;
-    line-height: 0.94;
-    letter-spacing: -0.045em;
-    color: #fff7e8;
-    text-shadow: 0 0.8rem 2.5rem rgb(0 0 0 / 68%);
-  }
-
-  .guide-title__description {
-    max-width: 42rem;
-    margin: 1rem 0 0;
-    font-size: clamp(0.98rem, 1.5vw, 1.12rem);
-    line-height: 1.65;
-    color: #d0c3ad;
-    text-shadow: 0 0.35rem 1rem rgb(0 0 0 / 76%);
-  }
-
-  .guide-title__meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.6rem;
-    margin: 1.4rem 0 0;
-  }
-
-  .guide-title__meta div {
-    display: grid;
-    grid-template-columns: auto auto;
-    gap: 0.45rem;
-    align-items: center;
-    padding: 0.42rem 0.62rem;
-    border: 1px solid rgb(210 160 78 / 24%);
-    border-radius: 999px;
-    background: rgb(5 5 5 / 62%);
-    backdrop-filter: blur(8px);
-  }
-
-  .guide-title__meta dt {
-    font-size: 0.62rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #908574;
-  }
-
-  .guide-title__meta dd {
-    margin: 0;
-    font-size: 0.7rem;
-    font-weight: 750;
-    color: #d7cab4;
-  }
-
-  .guide-title__patch {
-    position: absolute;
-    top: 0;
-    right: clamp(1.25rem, 3vw, 2.5rem);
-    z-index: 3;
-    display: grid;
-    min-width: 8.5rem;
-    padding: 1rem 0.9rem 1.25rem;
-    border-right: 1px solid rgb(227 174 88 / 28%);
-    border-bottom: 1px solid rgb(227 174 88 / 38%);
-    border-left: 1px solid rgb(227 174 88 / 28%);
-    background:
-      linear-gradient(180deg, rgb(111 26 19 / 94%), rgb(48 12 10 / 94%));
-    text-align: center;
-    box-shadow: 0 1rem 2rem rgb(0 0 0 / 32%);
-    clip-path: polygon(0 0, 100% 0, 100% 86%, 50% 100%, 0 86%);
-  }
-
-  .guide-title__patch span,
-  .guide-title__patch small {
-    font-size: 0.58rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: #d5b170;
-  }
-
-  .guide-title__patch strong {
-    margin-block: 0.25rem;
-    font-family: var(--cd-font-display);
-    font-size: 1.7rem;
-    font-weight: 500;
-    color: #fff2d5;
-  }
-
-  .evidence--official { color: #e3ba74 !important; }
-  .evidence--verified { color: #8fc59b !important; }
-  .evidence--community { color: #91b4ca !important; }
-  .evidence--provisional { color: #d29d72 !important; }
-
-  :global(:root[data-theme='light']) .guide-title {
-    border-color: #bda47e;
-    background: #f7efe4;
-    box-shadow: 0 1.4rem 3rem rgb(91 55 32 / 16%);
-  }
-
-  :global(:root[data-theme='light']) .guide-title__art {
-    filter: sepia(0.12) saturate(0.78) contrast(0.86) brightness(1.18);
-  }
-
-  :global(:root[data-theme='light']) .guide-title::before {
-    background:
-      linear-gradient(90deg, rgb(255 253 249 / 99%) 0%, rgb(250 243 234 / 96%) 43%, rgb(248 237 224 / 76%) 72%, rgb(248 237 224 / 45%) 100%),
-      linear-gradient(0deg, rgb(255 253 249 / 90%), transparent 55%),
-      radial-gradient(circle at 80% 5%, rgb(157 45 32 / 12%), transparent 36%);
-  }
-
-  :global(:root[data-theme='light']) .guide-title::after {
-    background: linear-gradient(transparent, rgb(255 253 249 / 94%));
-  }
-
-  :global(:root[data-theme='light']) .guide-title__section,
-  :global(:root[data-theme='light']) .guide-title__meta div {
-    border-color: #bda47e;
-    background: rgb(255 253 249 / 82%);
-  }
-
-  :global(:root[data-theme='light']) .guide-title__crest {
-    border-color: #9b7135;
-    color: #633d0b;
-  }
-
-  :global(:root[data-theme='light']) .guide-title__section span:not(.guide-title__crest),
-  :global(:root[data-theme='light']) h1 {
-    color: #261811;
-    text-shadow: none;
-  }
-
-  :global(:root[data-theme='light']) .guide-title__section small,
-  :global(:root[data-theme='light']) .guide-title__line,
-  :global(:root[data-theme='light']) .guide-title__meta dt {
-    color: #6d5948;
-  }
-
-  :global(:root[data-theme='light']) .guide-state,
-  :global(:root[data-theme='light']) .guide-title__meta dd,
-  :global(:root[data-theme='light']) .guide-title__description {
-    color: #46372d;
-    text-shadow: none;
-  }
-
-  :global(:root[data-theme='light']) .evidence--official { color: #7a4b00 !important; }
-  :global(:root[data-theme='light']) .evidence--verified { color: #23653b !important; }
-  :global(:root[data-theme='light']) .evidence--community { color: #285b7a !important; }
-  :global(:root[data-theme='light']) .evidence--provisional { color: #8a4d23 !important; }
-
-  @media (max-width: 48rem) {
-    .guide-title {
-      min-height: 30rem;
-      padding: 1rem;
-    }
-
-    .guide-title::before {
-      background:
-        linear-gradient(0deg, rgb(7 7 7 / 98%) 0%, rgb(8 8 8 / 88%) 54%, rgb(8 8 8 / 35%) 100%),
-        linear-gradient(90deg, rgb(7 7 7 / 88%), transparent 85%);
-    }
-
-    .guide-title__art {
-      background-position: 65% center;
-    }
-
-    .guide-title__content {
-      min-height: 27rem;
-    }
-
-    .guide-title__patch {
-      right: 1rem;
-      min-width: 7rem;
-      padding: 0.75rem 0.7rem 1rem;
-    }
-
-    .guide-title__patch strong { font-size: 1.35rem; }
-
-    .guide-title__section {
-      max-width: calc(100% - 8rem);
-      padding: 0.5rem 0.6rem;
-    }
-
-    .guide-title__section small { display: none; }
-
-    .guide-title__line {
-      margin-top: auto;
-    }
-
-    .guide-title__meta {
-      display: grid;
-      grid-template-columns: 1fr;
-      max-width: 18rem;
-    }
-
-    .guide-title__meta div {
-      border-radius: 0.5rem;
-    }
-
-    :global(:root[data-theme='light']) .guide-title::before {
-      background:
-        linear-gradient(0deg, rgb(255 253 249 / 99%) 0%, rgb(255 253 249 / 91%) 58%, rgb(255 253 249 / 45%) 100%),
-        linear-gradient(90deg, rgb(255 253 249 / 86%), transparent 90%);
-    }
-  }
-
-  @media (prefers-reduced-motion: no-preference) {
-    .guide-title__art {
-      animation: guide-drift 24s ease-in-out infinite alternate;
-    }
-  }
-
-  @keyframes guide-drift {
-    from { transform: scale(1.015) translate3d(0, 0, 0); }
-    to { transform: scale(1.045) translate3d(-0.5%, -0.5%, 0); }
-  }
+  .guide-title{position:relative;isolation:isolate;min-height:clamp(23rem,45vw,31rem);overflow:hidden;margin:0 0 clamp(2rem,5vw,3.5rem);padding:clamp(1.2rem,3.4vw,2.6rem);border:1px solid rgb(210 160 78 / 32%);border-radius:1rem;background:#0b0b0a;box-shadow:0 2rem 5rem rgb(0 0 0 / 36%)}
+  .guide-title__art{position:absolute;inset:0;z-index:-3;background-image:var(--guide-hero-image);background-position:center;background-size:cover;transform:scale(1.015)}
+  .guide-title::before{position:absolute;inset:0;z-index:-2;content:'';background:linear-gradient(90deg,rgb(7 7 7 / 99%) 0%,rgb(9 9 8 / 94%) 37%,rgb(9 9 8 / 54%) 65%,rgb(9 9 8 / 24%) 100%),linear-gradient(0deg,rgb(8 8 7 / 88%),transparent 55%),radial-gradient(circle at 80% 5%,rgb(188 55 29 / 24%),transparent 36%)}
+  .guide-title::after{position:absolute;inset:auto 0 0;z-index:-1;height:42%;content:'';background:linear-gradient(transparent,rgb(5 5 5 / 86%))}
+  .guide-title__frame{position:absolute;inset:.55rem;pointer-events:none;border:1px solid rgb(224 179 98 / 15%);border-radius:.68rem}.guide-title__frame::before,.guide-title__frame::after{position:absolute;width:3.4rem;height:3.4rem;content:''}.guide-title__frame::before{top:-1px;left:-1px;border-top:1px solid rgb(232 189 111 / 62%);border-left:1px solid rgb(232 189 111 / 62%)}.guide-title__frame::after{right:-1px;bottom:-1px;border-right:1px solid rgb(232 189 111 / 62%);border-bottom:1px solid rgb(232 189 111 / 62%)}
+  .guide-title__content{position:relative;z-index:2;display:grid;align-content:end;width:min(100%,47rem);min-height:clamp(19rem,38vw,26rem)}
+  .guide-title__section{display:inline-flex;gap:.75rem;align-items:center;width:fit-content;margin-bottom:auto;padding:.6rem .8rem;border:1px solid rgb(210 160 78 / 28%);border-radius:.48rem;background:rgb(6 6 6 / 62%);backdrop-filter:blur(10px)}
+  .guide-title__crest{display:grid;place-items:center;width:2.35rem;aspect-ratio:1;border:1px solid rgb(219 168 83 / 48%);border-radius:50%;font-family:var(--cd-font-display);color:#f1cc83}.guide-title__section div{display:grid;gap:.15rem}.guide-title__section div>span{font-family:var(--cd-font-display);font-size:.88rem;letter-spacing:.06em;color:#f1cc83}.guide-title__section small{font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:#a99b84}
+  .guide-title__line{display:flex;flex-wrap:wrap;gap:.75rem 1rem;align-items:center;margin:clamp(2.5rem,8vw,6rem) 0 .9rem;font-size:.7rem;font-weight:750;letter-spacing:.12em;text-transform:uppercase;color:#a99b84}.guide-state{display:inline-flex;gap:.45rem;align-items:center;color:#d8ccb8}.guide-state i{width:.42rem;aspect-ratio:1;border-radius:50%;background:#75b987;box-shadow:0 0 0 .22rem rgb(117 185 135 / 12%)}.guide-state--review-required{color:#f1be73}.guide-state--review-required i{background:#e7a94e}.guide-state--historical{color:#a99b84}.guide-state--historical i{background:#756b5c}
+  h1{max-width:17ch;margin:0;font-family:var(--cd-font-display);font-size:clamp(2.55rem,6.4vw,5.35rem);font-weight:500;line-height:.94;letter-spacing:-.045em;color:#fff7e8;text-shadow:0 .8rem 2.5rem rgb(0 0 0 / 68%)}.guide-title__description{max-width:42rem;margin:1rem 0 0;font-size:clamp(.98rem,1.5vw,1.12rem);line-height:1.65;color:#d0c3ad;text-shadow:0 .35rem 1rem rgb(0 0 0 / 76%)}
+  .guide-title__meta{display:flex;flex-wrap:wrap;gap:.6rem;margin:1.4rem 0 0}.guide-title__meta div{display:grid;grid-template-columns:auto auto;gap:.45rem;align-items:center;padding:.42rem .62rem;border:1px solid rgb(210 160 78 / 24%);border-radius:999px;background:rgb(5 5 5 / 62%);backdrop-filter:blur(8px)}.guide-title__meta dt{font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:#908574}.guide-title__meta dd{margin:0;font-size:.7rem;font-weight:750;color:#d7cab4}
+  .guide-title__patch{position:absolute;top:0;right:clamp(1.25rem,3vw,2.5rem);z-index:3;display:grid;min-width:8.5rem;padding:1rem .9rem 1.25rem;border-right:1px solid rgb(227 174 88 / 28%);border-bottom:1px solid rgb(227 174 88 / 38%);border-left:1px solid rgb(227 174 88 / 28%);background:linear-gradient(180deg,rgb(111 26 19 / 94%),rgb(48 12 10 / 94%));text-align:center;box-shadow:0 1rem 2rem rgb(0 0 0 / 32%);clip-path:polygon(0 0,100% 0,100% 86%,50% 100%,0 86%)}.guide-title__patch span,.guide-title__patch small{font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:#d5b170}.guide-title__patch strong{margin-block:.25rem;font-family:var(--cd-font-display);font-size:1.7rem;font-weight:500;color:#fff2d5}
+  .evidence--official{color:#e3ba74!important}.evidence--verified{color:#8fc59b!important}.evidence--community{color:#91b4ca!important}.evidence--provisional{color:#d29d72!important}
+  :global(:root[data-theme='light']) .guide-title{border-color:#bda47e;background:#f7efe4;box-shadow:0 1.4rem 3rem rgb(91 55 32 / 16%)}:global(:root[data-theme='light']) .guide-title__art{filter:sepia(.12) saturate(.78) contrast(.86) brightness(1.18)}:global(:root[data-theme='light']) .guide-title::before{background:linear-gradient(90deg,rgb(255 253 249 / 99%) 0%,rgb(250 243 234 / 96%) 43%,rgb(248 237 224 / 76%) 72%,rgb(248 237 224 / 45%) 100%),linear-gradient(0deg,rgb(255 253 249 / 90%),transparent 55%),radial-gradient(circle at 80% 5%,rgb(157 45 32 / 12%),transparent 36%)}:global(:root[data-theme='light']) .guide-title::after{background:linear-gradient(transparent,rgb(255 253 249 / 94%))}:global(:root[data-theme='light']) .guide-title__section,:global(:root[data-theme='light']) .guide-title__meta div{border-color:#bda47e;background:rgb(255 253 249 / 82%)}:global(:root[data-theme='light']) .guide-title__crest{border-color:#9b7135;color:#633d0b}:global(:root[data-theme='light']) .guide-title__section div>span,:global(:root[data-theme='light']) h1{color:#261811;text-shadow:none}:global(:root[data-theme='light']) .guide-title__section small,:global(:root[data-theme='light']) .guide-title__line,:global(:root[data-theme='light']) .guide-title__meta dt{color:#6d5948}:global(:root[data-theme='light']) .guide-state,:global(:root[data-theme='light']) .guide-title__meta dd,:global(:root[data-theme='light']) .guide-title__description{color:#46372d;text-shadow:none}
+  @media(max-width:48rem){.guide-title{min-height:24rem;padding:1.1rem}.guide-title::before{background:linear-gradient(0deg,rgb(7 7 7 / 97%) 0%,rgb(8 8 7 / 76%) 68%,rgb(8 8 7 / 38%) 100%)}.guide-title__content{min-height:21rem}.guide-title__patch{right:1rem;min-width:7.2rem}.guide-title__section{max-width:calc(100% - 8.5rem)}.guide-title__line{margin-top:4rem}}@media(max-width:32rem){.guide-title{min-height:25rem}.guide-title__patch{min-width:6.5rem}.guide-title__section{max-width:calc(100% - 7.5rem)}.guide-title__section small{display:none}.guide-title__meta{display:grid;grid-template-columns:1fr}.guide-title__meta div{border-radius:.5rem}}
+  @media(prefers-reduced-motion:reduce){.guide-title__art{transform:none}}
 </style>
