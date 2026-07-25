@@ -8,6 +8,16 @@ spoilerLevel: none
 patchStatus: current
 ---
 
+## 25 July 2026 — Combat and gear systems
+
+- Replaced the provisional Combat page with a complete fight-control guide covering camera, positioning, defence, stamina, Spirit, stun pressure, groups, large targets and healing windows.
+- Added a weapon and skill evaluation framework based on reach, recovery, resource cost, crowd control, mobility, defensive fit and terrain tolerance.
+- Added a boss and encounter diagnostic that separates visibility, positioning, recognition, defence, resources, gear and known defects.
+- Rebuilt the Gear page with keep, sell, store, refine and extract decisions.
+- Documented official extraction behaviour, including 100% special-material recovery and approximately 70% common-material recovery.
+- Added refinement stopping rules, identical-equipment gates, sockets, Abyss Gear and character-specific loadout checks.
+- Expanded the generated Steam BBCode guide with four combat and gear sections.
+
 ## 25 July 2026 — Patch 1.15.00 baseline
 
 - Verified the official Patch 1.15.00 notice published on 24 July 2026.
