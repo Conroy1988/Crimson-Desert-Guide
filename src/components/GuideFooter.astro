@@ -1,0 +1,59 @@
+---
+import DefaultFooter from '@astrojs/starlight/components/Footer.astro';
+---
+
+<DefaultFooter><slot /></DefaultFooter>
+
+<div class="guide-footer-note">
+  <div>
+    <strong>Crimson Desert Guide</strong>
+    <span>Independent · Evidence-led · Patch-aware</span>
+  </div>
+  <p>Unofficial fan project. Crimson Desert and related trademarks remain the property of Pearl Abyss.</p>
+</div>
+
+<style>
+  .guide-footer-note {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 2rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid color-mix(in srgb, var(--sl-color-gray-5) 70%, transparent);
+  }
+
+  .guide-footer-note div {
+    display: grid;
+    gap: 0.2rem;
+  }
+
+  .guide-footer-note strong {
+    font-family: var(--cd-font-display);
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--sl-color-gray-2);
+  }
+
+  .guide-footer-note span,
+  .guide-footer-note p {
+    margin: 0;
+    font-size: 0.68rem;
+    line-height: 1.5;
+    color: var(--sl-color-gray-4);
+  }
+
+  .guide-footer-note p {
+    max-width: 28rem;
+    text-align: right;
+  }
+
+  @media (max-width: 42rem) {
+    .guide-footer-note {
+      display: grid;
+      align-items: start;
+    }
+
+    .guide-footer-note p { text-align: left; }
+  }
+</style>
