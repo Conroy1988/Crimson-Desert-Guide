@@ -6,6 +6,9 @@ const dist = fileURLToPath(new URL('../dist/', import.meta.url));
 const failures = [];
 let htmlCount = 0;
 let assetReferenceCount = 0;
+let optionalCodeStylesheetCount = 0;
+
+const optionalCodeStylesheet = /^\/_astro\/ec\.[A-Za-z0-9_-]+\.css$/;
 
 async function walk(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -47,9 +50,12 @@ for (const file of await walk(dist)) {
   const inlineStyleBytes = [...source.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/gi)]
     .reduce((total, match) => total + Buffer.byteLength(match[1]), 0);
 
-  if (inlineStyleBytes < 10_000) {
+  // The complete Starlight shell and custom responsive theme currently exceed
+  // 79 KB on every route. This floor allows modest minification changes while
+  // preventing a future build from moving critical layout CSS back outside.
+  if (inlineStyleBytes < 70_000) {
     failures.push(
-      `${relative}: only ${inlineStyleBytes} bytes of inline CSS; the page could render unstyled if external CSS fails`,
+      `${relative}: only ${inlineStyleBytes} bytes of inline CSS; critical responsive styles are not self-contained`,
     );
   }
 
@@ -62,9 +68,13 @@ for (const file of await walk(dist)) {
     const src = getAttribute(tag, 'src');
 
     if (rel.includes('stylesheet') && media !== 'print') {
-      failures.push(
-        `${relative}: depends on an external screen stylesheet (${href || 'unknown href'})`,
-      );
+      if (optionalCodeStylesheet.test(href)) {
+        optionalCodeStylesheetCount += 1;
+      } else {
+        failures.push(
+          `${relative}: depends on an unexpected external screen stylesheet (${href || 'unknown href'})`,
+        );
+      }
     }
 
     for (const url of [href, src]) {
@@ -89,5 +99,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  `Deployment smoke test passed for ${htmlCount} HTML pages and ${assetReferenceCount} local asset references.`,
+  `Deployment smoke test passed for ${htmlCount} HTML pages, ${assetReferenceCount} local asset references and ${optionalCodeStylesheetCount} optional Expressive Code stylesheet references.`,
 );
