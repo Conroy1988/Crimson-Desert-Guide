@@ -8,6 +8,18 @@ spoilerLevel: none
 patchStatus: current
 ---
 
+## 25 July 2026 — Interactive completion companion
+
+- Replaced the static completion roadmap with a local-first interactive tracker.
+- Added 18 supported starter milestones across activities, settlements, travel, mounts, equipment and knowledge.
+- Added category, progress, spoiler and text-search filters with overall and per-category totals.
+- Added browser-only persistence with no account, cookies, telemetry or remote database.
+- Added validated JSON export/import, confirmation-based reset and strict rejection of unknown IDs or foreign backup formats.
+- Added stable-ID migrations for renamed and retired records so dataset updates do not silently erase valid progress.
+- Added spoiler-safe checklist cards with explicit reveal state stored separately from completion state.
+- Added completion-data and state-engine tests to the protected Quality Gate.
+- Added a static Completion Companion section to the generated Steam BBCode guide.
+
 ## 25 July 2026 — Mobile stylesheet delivery fix
 
 - Investigated an iOS Brave production report where the guide rendered as unstyled raw HTML.

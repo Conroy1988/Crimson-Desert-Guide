@@ -1,0 +1,894 @@
+---
+import dataset from '../../data/completion.json';
+
+const categoryById = new Map(dataset.categories.map((category) => [category.id, category]));
+const entries = dataset.entries.map((entry) => ({
+  ...entry,
+  categoryLabel: categoryById.get(entry.category)?.label ?? entry.category,
+}));
+const datasetJson = JSON.stringify(dataset).replaceAll('<', '\\u003c');
+---
+
+<section class="completion-tracker" data-completion-tracker>
+  <script type="application/json" data-completion-data set:html={datasetJson}></script>
+
+  <header class="completion-tracker__hero">
+    <div>
+      <p class="completion-tracker__eyebrow">Local-first progress</p>
+      <h2>Your completion record</h2>
+      <p>
+        Progress stays in this browser. No account, cookies, analytics or remote database are used.
+      </p>
+    </div>
+    <dl class="completion-tracker__metadata">
+      <div><dt>Dataset</dt><dd>v{dataset.datasetVersion}</dd></div>
+      <div><dt>Game patch</dt><dd>{dataset.gamePatch}</dd></div>
+      <div><dt>Verified</dt><dd>{dataset.lastVerified}</dd></div>
+    </dl>
+  </header>
+
+  <div class="completion-summary" aria-label="Overall completion progress">
+    <div class="completion-summary__dial" aria-hidden="true">
+      <strong data-percent>0%</strong>
+      <span>complete</span>
+    </div>
+    <div class="completion-summary__body">
+      <div class="completion-summary__counts">
+        <div><strong data-completed-count>0</strong><span>completed</span></div>
+        <div><strong data-remaining-count>{entries.length}</strong><span>remaining</span></div>
+        <div><strong>{entries.length}</strong><span>seeded milestones</span></div>
+      </div>
+      <div
+        class="completion-summary__bar"
+        role="progressbar"
+        aria-label="Overall completion"
+        aria-valuemin="0"
+        aria-valuemax={entries.length}
+        aria-valuenow="0"
+        data-overall-progress
+      >
+        <span data-overall-progress-fill></span>
+      </div>
+      <p class="completion-summary__note">
+        Stable IDs preserve completed records when the dataset is expanded or renamed.
+      </p>
+    </div>
+  </div>
+
+  <div class="completion-tools" aria-label="Completion filters and backup tools">
+    <label class="completion-field completion-field--search">
+      <span>Search milestones</span>
+      <span class="completion-input-wrap">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4 4"></path></svg>
+        <input type="search" placeholder="Search titles, tags or summaries" data-search />
+      </span>
+    </label>
+
+    <label class="completion-field">
+      <span>Category</span>
+      <select data-category-filter>
+        <option value="all">All categories</option>
+        {dataset.categories.map((category) => (
+          <option value={category.id}>{category.label}</option>
+        ))}
+      </select>
+    </label>
+
+    <label class="completion-field">
+      <span>Progress</span>
+      <select data-state-filter>
+        <option value="all">All milestones</option>
+        <option value="remaining">Remaining only</option>
+        <option value="completed">Completed only</option>
+      </select>
+    </label>
+
+    <label class="completion-field">
+      <span>Spoilers</span>
+      <select data-spoiler-filter>
+        <option value="all">All entries, masked</option>
+        <option value="safe">Spoiler-free only</option>
+        <option value="revealed">Revealed + spoiler-free</option>
+      </select>
+    </label>
+
+    <div class="completion-actions" aria-label="Completion backup actions">
+      <button type="button" class="completion-button" data-export>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 20h14"></path></svg>
+        Export JSON
+      </button>
+      <button type="button" class="completion-button" data-import-button>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21V9"></path><path d="m7 14 5-5 5 5"></path><path d="M5 4h14"></path></svg>
+        Import JSON
+      </button>
+      <input type="file" accept="application/json,.json" hidden data-import-file />
+      <button type="button" class="completion-button completion-button--danger" data-reset>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16"></path><path d="m9 7 .7-2h4.6l.7 2"></path><path d="m7 7 1 13h8l1-13"></path></svg>
+        Reset
+      </button>
+    </div>
+  </div>
+
+  <p class="completion-status" role="status" aria-live="polite" data-status>
+    Loading saved progress…
+  </p>
+
+  <div class="completion-layout">
+    <aside class="completion-categories" aria-labelledby="category-progress-title">
+      <div class="completion-categories__heading">
+        <p class="completion-tracker__eyebrow">Coverage</p>
+        <h2 id="category-progress-title">Category progress</h2>
+      </div>
+      <div class="completion-categories__list">
+        {dataset.categories.map((category) => {
+          const total = entries.filter((entry) => entry.category === category.id).length;
+          return (
+            <div class="completion-category" data-category-progress data-category-id={category.id}>
+              <div class="completion-category__title">
+                <strong>{category.label}</strong>
+                <span data-category-value>{total ? `0 / ${total}` : 'Planned'}</span>
+              </div>
+              <div
+                class="completion-category__bar"
+                role="progressbar"
+                aria-label={`${category.label} completion`}
+                aria-valuemin="0"
+                aria-valuemax={total || 1}
+                aria-valuenow="0"
+              ><span data-category-fill></span></div>
+              <p>{category.description}</p>
+            </div>
+          );
+        })}
+      </div>
+    </aside>
+
+    <div class="completion-results">
+      <div class="completion-results__header">
+        <div>
+          <p class="completion-tracker__eyebrow">Checklist</p>
+          <h2>Verified and supported milestones</h2>
+        </div>
+        <span data-visible-count>{entries.length} shown</span>
+      </div>
+
+      <div class="completion-list" data-entry-list>
+        {entries.map((entry) => {
+          const isSpoiler = entry.spoilerLevel !== 'none';
+          const searchText = [entry.title, entry.summary, entry.categoryLabel, ...entry.tags]
+            .join(' ')
+            .toLowerCase();
+          return (
+            <article
+              class:list={[
+                'completion-item',
+                isSpoiler && 'completion-item--spoiler',
+                `completion-item--${entry.spoilerLevel}`,
+              ]}
+              data-entry
+              data-entry-id={entry.id}
+              data-entry-title={entry.title}
+              data-category={entry.category}
+              data-spoiler={entry.spoilerLevel}
+              data-search-text={searchText}
+            >
+              <label class="completion-check">
+                <input
+                  type="checkbox"
+                  data-complete
+                  aria-label={isSpoiler ? 'Mark hidden spoiler milestone complete' : `Mark ${entry.title} complete`}
+                />
+                <span aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m6 12 4 4 8-9"></path></svg></span>
+              </label>
+
+              <div class="completion-item__copy">
+                <div class="completion-item__badges">
+                  <span>{entry.categoryLabel}</span>
+                  <span class={`completion-evidence completion-evidence--${entry.evidence}`}>{entry.evidence}</span>
+                  {entry.spoilerLevel !== 'none' && <span>{entry.spoilerLevel === 'full' ? 'Major spoiler' : 'Minor spoiler'}</span>}
+                </div>
+
+                {isSpoiler ? (
+                  <>
+                    <div data-spoiler-mask>
+                      <h3>{entry.spoilerLevel === 'full' ? 'Hidden major-spoiler milestone' : 'Hidden minor-spoiler milestone'}</h3>
+                      <p>Reveal this entry to display its identity, objective and related guide.</p>
+                    </div>
+                    <div data-spoiler-content hidden>
+                      <h3>{entry.title}</h3>
+                      <p>{entry.summary}</p>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <h3>{entry.title}</h3>
+                    <p>{entry.summary}</p>
+                  </>
+                )}
+
+                <div class="completion-item__meta">
+                  {entry.prerequisites.length > 0 && (
+                    <span>{entry.prerequisites.length} prerequisite{entry.prerequisites.length === 1 ? '' : 's'}</span>
+                  )}
+                  <span>Patch {dataset.gamePatch}</span>
+                  <span>{entry.patchStatus === 'current' ? 'Current' : entry.patchStatus}</span>
+                </div>
+              </div>
+
+              <div class="completion-item__actions">
+                {isSpoiler && (
+                  <button type="button" class="completion-reveal" data-reveal aria-expanded="false">
+                    Reveal
+                  </button>
+                )}
+                <a href={entry.guidePath} data-guide-link={isSpoiler ? '' : 'visible'} hidden={isSpoiler}>
+                  Related guide <span aria-hidden="true">↗</span>
+                </a>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+
+      <div class="completion-empty" data-empty hidden>
+        <strong>No milestones match these filters.</strong>
+        <span>Clear the search or choose a broader category, progress or spoiler view.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import {
+    createCompletionExport,
+    createEmptyCompletionState,
+    loadCompletionState,
+    parseCompletionImport,
+    saveCompletionState,
+  } from '../lib/completion-state.js';
+
+  const MAX_IMPORT_BYTES = 256 * 1024;
+
+  for (const root of document.querySelectorAll('[data-completion-tracker]')) {
+    const datasetElement = root.querySelector('[data-completion-data]');
+    if (!(datasetElement instanceof HTMLScriptElement)) continue;
+
+    const dataset = JSON.parse(datasetElement.textContent || '{}');
+    const entryElements = [...root.querySelectorAll('[data-entry]')];
+    const entryById = new Map(entryElements.map((entry) => [entry.dataset.entryId, entry]));
+    const searchInput = root.querySelector('[data-search]');
+    const categoryFilter = root.querySelector('[data-category-filter]');
+    const stateFilter = root.querySelector('[data-state-filter]');
+    const spoilerFilter = root.querySelector('[data-spoiler-filter]');
+    const status = root.querySelector('[data-status]');
+    const importFile = root.querySelector('[data-import-file]');
+
+    let storage = null;
+    try { storage = window.localStorage; } catch {}
+
+    const loaded = loadCompletionState(storage, dataset);
+    let state = loaded.state;
+    let completed = new Set(state.completed);
+    let revealed = new Set(state.revealed);
+    let storageAvailable = loaded.storageAvailable;
+
+    function announce(message, tone = 'info') {
+      if (!(status instanceof HTMLElement)) return;
+      status.textContent = message;
+      status.dataset.tone = tone;
+    }
+
+    function persist(message) {
+      state = {
+        ...state,
+        completed: [...completed],
+        revealed: [...revealed],
+      };
+      try {
+        const saved = saveCompletionState(storage, state, dataset);
+        state = saved.state;
+        storageAvailable = saved.storageAvailable;
+        announce(
+          storageAvailable ? message : `${message} Progress is session-only because browser storage is unavailable.`,
+          storageAvailable ? 'success' : 'warning',
+        );
+      } catch {
+        storageAvailable = false;
+        announce(`${message} Progress is session-only because browser storage could not be written.`, 'warning');
+      }
+    }
+
+    function applyEntryState() {
+      for (const entry of entryElements) {
+        const id = entry.dataset.entryId;
+        if (!id) continue;
+        const checkbox = entry.querySelector('[data-complete]');
+        const isCompleted = completed.has(id);
+        entry.classList.toggle('is-complete', isCompleted);
+        if (checkbox instanceof HTMLInputElement) checkbox.checked = isCompleted;
+
+        const isRevealed = revealed.has(id);
+        const mask = entry.querySelector('[data-spoiler-mask]');
+        const content = entry.querySelector('[data-spoiler-content]');
+        const revealButton = entry.querySelector('[data-reveal]');
+        const guideLink = entry.querySelector('[data-guide-link]');
+        if (mask instanceof HTMLElement) mask.hidden = isRevealed;
+        if (content instanceof HTMLElement) content.hidden = !isRevealed;
+        if (guideLink instanceof HTMLElement && entry.dataset.spoiler !== 'none') guideLink.hidden = !isRevealed;
+        if (revealButton instanceof HTMLButtonElement) {
+          revealButton.textContent = isRevealed ? 'Hide' : 'Reveal';
+          revealButton.setAttribute('aria-expanded', String(isRevealed));
+        }
+        if (checkbox instanceof HTMLInputElement && entry.dataset.spoiler !== 'none') {
+          checkbox.setAttribute(
+            'aria-label',
+            isRevealed
+              ? `Mark ${entry.dataset.entryTitle || 'spoiler milestone'} complete`
+              : 'Mark hidden spoiler milestone complete',
+          );
+        }
+      }
+    }
+
+    function updateProgress() {
+      const total = dataset.entries.length;
+      const completeCount = dataset.entries.filter((entry) => completed.has(entry.id)).length;
+      const percent = total ? Math.round((completeCount / total) * 100) : 0;
+      const percentNode = root.querySelector('[data-percent]');
+      const completeNode = root.querySelector('[data-completed-count]');
+      const remainingNode = root.querySelector('[data-remaining-count]');
+      const progress = root.querySelector('[data-overall-progress]');
+      const fill = root.querySelector('[data-overall-progress-fill]');
+      if (percentNode) percentNode.textContent = `${percent}%`;
+      if (completeNode) completeNode.textContent = String(completeCount);
+      if (remainingNode) remainingNode.textContent = String(total - completeCount);
+      if (progress) progress.setAttribute('aria-valuenow', String(completeCount));
+      if (fill instanceof HTMLElement) fill.style.width = `${percent}%`;
+
+      for (const categoryNode of root.querySelectorAll('[data-category-progress]')) {
+        const categoryId = categoryNode.getAttribute('data-category-id');
+        const categoryEntries = dataset.entries.filter((entry) => entry.category === categoryId);
+        const categoryCompleted = categoryEntries.filter((entry) => completed.has(entry.id)).length;
+        const value = categoryNode.querySelector('[data-category-value]');
+        const categoryFill = categoryNode.querySelector('[data-category-fill]');
+        const categoryProgress = categoryNode.querySelector('[role="progressbar"]');
+        const categoryPercent = categoryEntries.length
+          ? Math.round((categoryCompleted / categoryEntries.length) * 100)
+          : 0;
+        if (value) value.textContent = categoryEntries.length
+          ? `${categoryCompleted} / ${categoryEntries.length}`
+          : 'Planned';
+        if (categoryFill instanceof HTMLElement) categoryFill.style.width = `${categoryPercent}%`;
+        if (categoryProgress) categoryProgress.setAttribute('aria-valuenow', String(categoryCompleted));
+      }
+    }
+
+    function applyFilters() {
+      const query = searchInput instanceof HTMLInputElement ? searchInput.value.trim().toLowerCase() : '';
+      const category = categoryFilter instanceof HTMLSelectElement ? categoryFilter.value : 'all';
+      const progressState = stateFilter instanceof HTMLSelectElement ? stateFilter.value : 'all';
+      const spoilerState = spoilerFilter instanceof HTMLSelectElement ? spoilerFilter.value : 'all';
+      let visible = 0;
+
+      for (const entry of entryElements) {
+        const id = entry.dataset.entryId || '';
+        const matchesSearch = !query || (entry.dataset.searchText || '').includes(query);
+        const matchesCategory = category === 'all' || entry.dataset.category === category;
+        const isCompleted = completed.has(id);
+        const matchesProgress = progressState === 'all'
+          || (progressState === 'completed' && isCompleted)
+          || (progressState === 'remaining' && !isCompleted);
+        const spoilerLevel = entry.dataset.spoiler || 'none';
+        const matchesSpoiler = spoilerState === 'all'
+          || (spoilerState === 'safe' && spoilerLevel === 'none')
+          || (spoilerState === 'revealed' && (spoilerLevel === 'none' || revealed.has(id)));
+        const show = matchesSearch && matchesCategory && matchesProgress && matchesSpoiler;
+        entry.toggleAttribute('hidden', !show);
+        if (show) visible += 1;
+      }
+
+      const visibleCount = root.querySelector('[data-visible-count]');
+      const empty = root.querySelector('[data-empty]');
+      if (visibleCount) visibleCount.textContent = `${visible} shown`;
+      if (empty instanceof HTMLElement) empty.hidden = visible !== 0;
+    }
+
+    for (const entry of entryElements) {
+      const id = entry.dataset.entryId;
+      const checkbox = entry.querySelector('[data-complete]');
+      const revealButton = entry.querySelector('[data-reveal]');
+      if (id && checkbox instanceof HTMLInputElement) {
+        checkbox.addEventListener('change', () => {
+          checkbox.checked ? completed.add(id) : completed.delete(id);
+          applyEntryState();
+          updateProgress();
+          applyFilters();
+          persist(checkbox.checked ? 'Milestone completed.' : 'Milestone returned to remaining.');
+        });
+      }
+      if (id && revealButton instanceof HTMLButtonElement) {
+        revealButton.addEventListener('click', () => {
+          revealed.has(id) ? revealed.delete(id) : revealed.add(id);
+          applyEntryState();
+          applyFilters();
+          persist(revealed.has(id) ? 'Spoiler milestone revealed.' : 'Spoiler milestone hidden.');
+        });
+      }
+    }
+
+    for (const control of [searchInput, categoryFilter, stateFilter, spoilerFilter]) {
+      control?.addEventListener(control === searchInput ? 'input' : 'change', applyFilters);
+    }
+
+    root.querySelector('[data-export]')?.addEventListener('click', () => {
+      const backup = createCompletionExport(
+        { ...state, completed: [...completed], revealed: [...revealed] },
+        dataset,
+      );
+      const blob = new Blob([`${JSON.stringify(backup, null, 2)}\n`], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = `crimson-desert-completion-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.append(anchor);
+      anchor.click();
+      anchor.remove();
+      URL.revokeObjectURL(url);
+      announce('Completion backup exported.', 'success');
+    });
+
+    root.querySelector('[data-import-button]')?.addEventListener('click', () => {
+      if (importFile instanceof HTMLInputElement) importFile.click();
+    });
+
+    importFile?.addEventListener('change', async () => {
+      if (!(importFile instanceof HTMLInputElement)) return;
+      const file = importFile.files?.[0];
+      importFile.value = '';
+      if (!file) return;
+      if (file.size > MAX_IMPORT_BYTES) {
+        announce('Import rejected: the backup exceeds 256 KB.', 'error');
+        return;
+      }
+      try {
+        const raw = JSON.parse(await file.text());
+        const imported = parseCompletionImport(raw, dataset);
+        if (!window.confirm('Replace the current completion progress with this validated backup?')) {
+          announce('Import cancelled. Existing progress was not changed.');
+          return;
+        }
+        state = imported;
+        completed = new Set(imported.completed);
+        revealed = new Set(imported.revealed);
+        applyEntryState();
+        updateProgress();
+        applyFilters();
+        persist('Validated completion backup imported.');
+      } catch (error) {
+        announce(
+          `Import rejected: ${error instanceof Error ? error.message : 'invalid completion backup'}`,
+          'error',
+        );
+      }
+    });
+
+    root.querySelector('[data-reset]')?.addEventListener('click', () => {
+      if (!window.confirm('Reset all completion progress and spoiler reveals in this browser?')) return;
+      state = createEmptyCompletionState(dataset);
+      completed = new Set();
+      revealed = new Set();
+      applyEntryState();
+      updateProgress();
+      applyFilters();
+      persist('Completion progress reset.');
+    });
+
+    applyEntryState();
+    updateProgress();
+    applyFilters();
+    if (loaded.error) announce(`Saved progress was reset: ${loaded.error}`, 'warning');
+    else if (!storageAvailable) announce('Tracker ready. Progress is session-only because browser storage is unavailable.', 'warning');
+    else announce('Tracker ready. Progress is stored only in this browser.', 'success');
+  }
+</script>
+
+<style>
+  .completion-tracker {
+    --completion-border: color-mix(in srgb, var(--sl-color-gray-5) 78%, transparent);
+    --completion-panel: color-mix(in srgb, var(--sl-color-black) 85%, transparent);
+    display: grid;
+    gap: 1.25rem;
+    margin-block: 1.5rem 3rem;
+  }
+
+  .completion-tracker__hero,
+  .completion-summary,
+  .completion-tools,
+  .completion-categories,
+  .completion-results {
+    border: 1px solid var(--completion-border);
+    border-radius: 1rem;
+    background:
+      radial-gradient(circle at 100% 0, rgb(181 54 32 / 10%), transparent 30%),
+      var(--completion-panel);
+    box-shadow: 0 1rem 3rem rgb(0 0 0 / 12%);
+  }
+
+  .completion-tracker__hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1.5rem;
+    align-items: end;
+    padding: clamp(1.1rem, 3vw, 1.7rem);
+  }
+
+  .completion-tracker__hero h2,
+  .completion-categories h2,
+  .completion-results h2 {
+    margin: 0;
+    color: var(--sl-color-white);
+  }
+
+  .completion-tracker__hero > div > p:last-child {
+    max-width: 44rem;
+    margin: 0.55rem 0 0;
+    color: var(--sl-color-gray-3);
+  }
+
+  .completion-tracker__eyebrow {
+    margin: 0 0 0.35rem;
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--sl-color-accent-high);
+  }
+
+  .completion-tracker__metadata {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    gap: 0.6rem;
+    margin: 0;
+  }
+
+  .completion-tracker__metadata div {
+    min-width: 6rem;
+    padding: 0.65rem 0.8rem;
+    border: 1px solid var(--completion-border);
+    border-radius: 0.7rem;
+    background: rgb(0 0 0 / 16%);
+  }
+
+  .completion-tracker__metadata dt,
+  .completion-tracker__metadata dd { margin: 0; }
+  .completion-tracker__metadata dt {
+    font-size: 0.58rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--sl-color-gray-4);
+  }
+  .completion-tracker__metadata dd {
+    margin-top: 0.15rem;
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: var(--sl-color-gray-1);
+  }
+
+  .completion-summary {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 1.2rem;
+    align-items: center;
+    padding: 1rem;
+  }
+
+  .completion-summary__dial {
+    display: grid;
+    place-items: center;
+    align-content: center;
+    width: 7rem;
+    aspect-ratio: 1;
+    border: 1px solid color-mix(in srgb, var(--sl-color-accent) 46%, var(--sl-color-gray-5));
+    border-radius: 50%;
+    background:
+      radial-gradient(circle, var(--completion-panel) 58%, transparent 60%),
+      conic-gradient(from -90deg, var(--sl-color-accent-high), #b53620, var(--sl-color-gray-5) 0);
+  }
+  .completion-summary__dial strong { font-size: 1.6rem; color: var(--sl-color-white); }
+  .completion-summary__dial span {
+    font-size: 0.6rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--sl-color-gray-4);
+  }
+
+  .completion-summary__counts {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.65rem;
+  }
+  .completion-summary__counts div {
+    display: grid;
+    padding: 0.65rem;
+    border-left: 2px solid color-mix(in srgb, var(--sl-color-accent) 56%, transparent);
+  }
+  .completion-summary__counts strong { font-size: 1.2rem; color: var(--sl-color-white); }
+  .completion-summary__counts span { font-size: 0.72rem; color: var(--sl-color-gray-4); }
+
+  .completion-summary__bar,
+  .completion-category__bar {
+    overflow: hidden;
+    height: 0.42rem;
+    margin-top: 0.85rem;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 7%);
+  }
+  .completion-summary__bar span,
+  .completion-category__bar span {
+    display: block;
+    width: 0;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--sl-color-accent), var(--sl-color-accent-high));
+    transition: width 180ms ease;
+  }
+  .completion-summary__note { margin: 0.55rem 0 0; font-size: 0.72rem; color: var(--sl-color-gray-4); }
+
+  .completion-tools {
+    display: grid;
+    grid-template-columns: minmax(14rem, 1.5fr) repeat(3, minmax(9rem, 0.7fr));
+    gap: 0.8rem;
+    padding: 1rem;
+  }
+
+  .completion-field { display: grid; gap: 0.32rem; min-width: 0; }
+  .completion-field > span:first-child {
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--sl-color-gray-4);
+  }
+  .completion-field input,
+  .completion-field select {
+    width: 100%;
+    min-height: 2.7rem;
+    padding: 0.65rem 0.75rem;
+    border: 1px solid var(--completion-border);
+    border-radius: 0.65rem;
+    background: rgb(0 0 0 / 18%);
+    color: var(--sl-color-gray-1);
+  }
+  .completion-input-wrap { position: relative; display: block; }
+  .completion-input-wrap svg {
+    position: absolute;
+    top: 50%;
+    left: 0.75rem;
+    width: 1rem;
+    transform: translateY(-50%);
+    fill: none;
+    stroke: var(--sl-color-gray-4);
+    stroke-linecap: round;
+    stroke-width: 1.7;
+  }
+  .completion-input-wrap input { padding-left: 2.2rem; }
+
+  .completion-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    padding-top: 0.15rem;
+  }
+  .completion-button,
+  .completion-reveal {
+    display: inline-flex;
+    gap: 0.45rem;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.45rem;
+    padding: 0.55rem 0.8rem;
+    border: 1px solid var(--completion-border);
+    border-radius: 0.6rem;
+    background: rgb(255 255 255 / 3%);
+    color: var(--sl-color-gray-2);
+    cursor: pointer;
+    font-size: 0.72rem;
+    font-weight: 800;
+  }
+  .completion-button:hover,
+  .completion-reveal:hover { border-color: var(--sl-color-accent); color: var(--sl-color-white); }
+  .completion-button svg {
+    width: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.6;
+  }
+  .completion-button--danger { margin-left: auto; color: #e8a295; }
+
+  .completion-status {
+    margin: -0.55rem 0 0;
+    padding-inline: 0.15rem;
+    font-size: 0.72rem;
+    color: var(--sl-color-gray-4);
+  }
+  .completion-status[data-tone='success'] { color: #8ac7a1; }
+  .completion-status[data-tone='warning'] { color: #dcb36e; }
+  .completion-status[data-tone='error'] { color: #e89586; }
+
+  .completion-layout {
+    display: grid;
+    grid-template-columns: minmax(14rem, 0.62fr) minmax(0, 1.7fr);
+    gap: 1rem;
+    align-items: start;
+  }
+  .completion-categories,
+  .completion-results { padding: 1rem; }
+  .completion-categories { position: sticky; top: calc(var(--sl-nav-height) + 1rem); }
+  .completion-categories__heading,
+  .completion-results__header { margin-bottom: 1rem; }
+  .completion-categories h2,
+  .completion-results h2 { font-size: 1.1rem; }
+  .completion-categories__list { display: grid; gap: 0.85rem; }
+  .completion-category { padding-top: 0.8rem; border-top: 1px solid var(--completion-border); }
+  .completion-category:first-child { padding-top: 0; border-top: 0; }
+  .completion-category__title { display: flex; gap: 0.5rem; justify-content: space-between; }
+  .completion-category__title strong { font-size: 0.76rem; color: var(--sl-color-gray-2); }
+  .completion-category__title span { font-size: 0.66rem; color: var(--sl-color-gray-4); }
+  .completion-category p { margin: 0.45rem 0 0; font-size: 0.67rem; line-height: 1.45; color: var(--sl-color-gray-4); }
+
+  .completion-results__header {
+    display: flex;
+    gap: 1rem;
+    align-items: end;
+    justify-content: space-between;
+  }
+  .completion-results__header > span {
+    padding: 0.3rem 0.55rem;
+    border: 1px solid var(--completion-border);
+    border-radius: 999px;
+    font-size: 0.66rem;
+    color: var(--sl-color-gray-4);
+  }
+  .completion-list { display: grid; gap: 0.7rem; }
+
+  .completion-item {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 0.8rem;
+    align-items: start;
+    padding: 0.9rem;
+    border: 1px solid var(--completion-border);
+    border-radius: 0.8rem;
+    background: rgb(0 0 0 / 12%);
+    transition: border-color 140ms ease, opacity 140ms ease, transform 140ms ease;
+  }
+  .completion-item:hover { border-color: color-mix(in srgb, var(--sl-color-accent) 42%, var(--sl-color-gray-5)); }
+  .completion-item.is-complete { opacity: 0.72; }
+  .completion-item.is-complete h3 { text-decoration: line-through; text-decoration-color: var(--sl-color-gray-4); }
+  .completion-item[hidden] { display: none; }
+
+  .completion-check { position: relative; display: grid; cursor: pointer; }
+  .completion-check input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+  .completion-check span {
+    display: grid;
+    place-items: center;
+    width: 1.6rem;
+    aspect-ratio: 1;
+    border: 1px solid color-mix(in srgb, var(--sl-color-gray-4) 50%, transparent);
+    border-radius: 0.45rem;
+    background: rgb(0 0 0 / 16%);
+    color: transparent;
+  }
+  .completion-check svg {
+    width: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2;
+  }
+  .completion-check input:checked + span {
+    border-color: var(--sl-color-accent);
+    background: color-mix(in srgb, var(--sl-color-accent) 70%, #24120c);
+    color: var(--sl-color-white);
+  }
+  .completion-check input:focus-visible + span {
+    outline: 2px solid var(--sl-color-accent-high);
+    outline-offset: 3px;
+  }
+
+  .completion-item__copy h3 { margin: 0.35rem 0 0; font-size: 0.96rem; color: var(--sl-color-gray-1); }
+  .completion-item__copy p { margin: 0.3rem 0 0; font-size: 0.78rem; line-height: 1.5; color: var(--sl-color-gray-3); }
+  .completion-item__badges,
+  .completion-item__meta { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+  .completion-item__badges span,
+  .completion-item__meta span {
+    padding: 0.18rem 0.4rem;
+    border: 1px solid var(--completion-border);
+    border-radius: 999px;
+    font-size: 0.56rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--sl-color-gray-4);
+  }
+  .completion-evidence--official { color: #8db8dd !important; }
+  .completion-evidence--verified { color: #8ac7a1 !important; }
+  .completion-evidence--community { color: #d7b171 !important; }
+  .completion-evidence--provisional { color: #d89183 !important; }
+  .completion-item__meta { margin-top: 0.6rem; }
+  .completion-item__meta span { border: 0; padding: 0; text-transform: none; letter-spacing: 0; }
+
+  .completion-item__actions { display: grid; gap: 0.5rem; justify-items: end; }
+  .completion-item__actions a {
+    font-size: 0.68rem;
+    font-weight: 800;
+    white-space: nowrap;
+    color: var(--sl-color-accent-high);
+  }
+  .completion-reveal { min-height: 2rem; padding: 0.35rem 0.65rem; }
+  [data-spoiler-mask][hidden],
+  [data-spoiler-content][hidden],
+  [data-guide-link][hidden] { display: none; }
+
+  .completion-empty {
+    display: grid;
+    gap: 0.25rem;
+    place-items: center;
+    padding: 2rem 1rem;
+    text-align: center;
+    color: var(--sl-color-gray-3);
+  }
+  .completion-empty[hidden] { display: none; }
+  .completion-empty span { font-size: 0.75rem; color: var(--sl-color-gray-4); }
+
+  @media (max-width: 68rem) {
+    .completion-tools { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .completion-field--search { grid-column: 1 / -1; }
+    .completion-layout { grid-template-columns: 1fr; }
+    .completion-categories { position: static; }
+    .completion-categories__list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 46rem) {
+    .completion-tracker__hero { grid-template-columns: 1fr; }
+    .completion-tracker__metadata { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .completion-tracker__metadata div { min-width: 0; }
+    .completion-summary { grid-template-columns: 1fr; }
+    .completion-summary__dial { width: 6rem; justify-self: center; }
+    .completion-tools { grid-template-columns: 1fr; }
+    .completion-field--search { grid-column: auto; }
+    .completion-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .completion-button--danger { margin-left: 0; grid-column: 1 / -1; }
+    .completion-categories__list { grid-template-columns: 1fr; }
+    .completion-item { grid-template-columns: auto minmax(0, 1fr); }
+    .completion-item__actions {
+      grid-column: 2;
+      grid-template-columns: repeat(2, auto);
+      justify-content: start;
+      justify-items: start;
+      align-items: center;
+    }
+  }
+
+  @media (max-width: 30rem) {
+    .completion-tracker__metadata { grid-template-columns: 1fr; }
+    .completion-summary__counts { grid-template-columns: 1fr; }
+    .completion-summary__counts div { grid-template-columns: auto 1fr; gap: 0.55rem; align-items: baseline; }
+    .completion-actions { grid-template-columns: 1fr; }
+    .completion-button--danger { grid-column: auto; }
+    .completion-item { padding: 0.75rem; }
+    .completion-item__actions { grid-template-columns: 1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .completion-summary__bar span,
+    .completion-category__bar span,
+    .completion-item { transition: none; }
+  }
+</style>

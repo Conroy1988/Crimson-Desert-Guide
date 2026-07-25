@@ -1,0 +1,28 @@
+---
+title: Completion Companion
+description: Local-first interactive Crimson Desert progress tracker with filters, spoiler controls and validated JSON backups.
+currentPatch: 1.15.00
+lastVerified: "2026-07-25"
+evidence: verified
+spoilerLevel: none
+patchStatus: current
+---
+
+import CompletionTracker from '../../../components/CompletionTracker.astro';
+
+The Completion Companion tracks only milestones supported by the current guide and source record. It does **not** pretend the quest, boss, collectible or stronghold catalogues are complete.
+
+<CompletionTracker />
+
+## Data and privacy model
+
+- Progress is stored under a versioned key in the browser's local storage.
+- No account, remote database, cookie banner, telemetry or analytics is required.
+- Exports contain stable entry IDs and spoiler-reveal state, not personal information.
+- Imports are validated before they can replace existing progress.
+- Unknown IDs, invalid schemas and files from another project are rejected.
+- Renamed and retired IDs can be migrated without silently deleting supported progress.
+
+## Coverage policy
+
+Categories marked **Planned** are deliberately empty until the repository has verified enough data to seed them responsibly. New milestones are added through the same evidence and patch-control process used by the written guide.

@@ -48,6 +48,10 @@
     {
       "heading": "10. Mounts & Traversal",
       "source": "steam/mounts-traversal.md"
+    },
+    {
+      "heading": "11. Completion Companion",
+      "source": "steam/completion-companion.md"
     }
   ]
 }
