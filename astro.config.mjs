@@ -15,6 +15,10 @@ export default defineConfig({
       },
       favicon: '/favicon.svg',
       customCss: ['./src/styles/custom.css'],
+      components: {
+        PageTitle: './src/components/PageTitle.astro',
+        Footer: './src/components/GuideFooter.astro',
+      },
       lastUpdated: true,
       editLink: {
         baseUrl:
@@ -33,6 +37,13 @@ export default defineConfig({
           attrs: {
             name: 'theme-color',
             content: '#110d0a',
+          },
+        },
+        {
+          tag: 'link',
+          attrs: {
+            rel: 'manifest',
+            href: '/site.webmanifest',
           },
         },
       ],
