@@ -1,0 +1,126 @@
+name: Phase 9 Atlas Integration
+
+on:
+  push:
+    branches:
+      - agent/phase9-pywel-atlas
+
+permissions:
+  contents: write
+
+concurrency:
+  group: phase9-atlas-integration
+  cancel-in-progress: false
+
+jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Phase 9 branch
+        uses: actions/checkout@v7
+        with:
+          ref: agent/phase9-pywel-atlas
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Integrate atlas across the guide
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+
+          package_path = Path('package.json')
+          package = json.loads(package_path.read_text(encoding='utf-8'))
+          scripts = package.setdefault('scripts', {})
+          scripts['audit:atlas'] = 'node scripts/atlas-data-audit.mjs'
+          scripts['test:atlas'] = 'node scripts/atlas-state-test.mjs'
+          check = scripts.get('check:all', '')
+          if 'npm run audit:atlas' not in check:
+              marker = '&& npm run audit:technical'
+              insertion = '&& npm run audit:atlas && npm run test:atlas && npm run audit:technical'
+              check = check.replace(marker, insertion) if marker in check else check + ' && npm run audit:atlas && npm run test:atlas'
+          scripts['check:all'] = check
+          package_path.write_text(json.dumps(package, indent=2) + '\n', encoding='utf-8')
+
+          config_path = Path('astro.config.mjs')
+          config = config_path.read_text(encoding='utf-8')
+          if "directory: 'atlas'" not in config:
+              marker = "        { label: 'World Compendium', items: [{ autogenerate: { directory: 'world' } }] },\n"
+              config = config.replace(marker, "        { label: 'Pywel Atlas', items: [{ autogenerate: { directory: 'atlas' } }] },\n" + marker)
+          config_path.write_text(config, encoding='utf-8')
+
+          title_path = Path('src/components/PageTitle.astro')
+          title = title_path.read_text(encoding='utf-8')
+          if "id: 'atlas'" not in title:
+              title = title.replace("  database: {\n", "  atlas: {\n    id: 'atlas',\n    label: 'Pywel Atlas',\n    kicker: 'Settlements, services and verified route intelligence',\n    icon: '⌘',\n    image: art.world,\n  },\n  database: {\n")
+          if "routeId.startsWith('atlas/')" not in title:
+              title = title.replace("            : routeId.startsWith('database/') || routeId === 'database'\n", "            : routeId.startsWith('atlas/') || routeId === 'atlas'\n              ? themes.atlas\n              : routeId.startsWith('database/') || routeId === 'database'\n")
+          title_path.write_text(title, encoding='utf-8')
+
+          home_path = Path('src/components/HomeExperience.astro')
+          home = home_path.read_text(encoding='utf-8')
+          if "label: 'Pywel atlas'" not in home:
+              marker = "  { label: 'World services', detail: 'Routes and hubs', icon: 'pin', href: '/world/' },\n"
+              home = home.replace(marker, marker + "  { label: 'Pywel atlas', detail: 'Verified routes & services', icon: 'compass', href: '/atlas/' },\n")
+          if "{ label: 'Atlas', count: 1" not in home:
+              home = home.replace("  { label: 'Database', count: 1, width: 25 },\n", "  { label: 'Atlas', count: 1, width: 25 },\n  { label: 'Database', count: 1, width: 25 },\n")
+          home = home.replace('<strong>19</strong><span>live guide pages</span>', '<strong>20</strong><span>live guide pages</span>')
+          if "title: 'Pywel Atlas and route intelligence'" not in home:
+              home = home.replace("const latestUpdates = [\n", "const latestUpdates = [\n  {\n    label: 'World intelligence',\n    title: 'Pywel Atlas and route intelligence',\n    description: 'Verified settlements, services, Nexus links and local world progress without invented coordinates.',\n    href: '/atlas/',\n  },\n")
+          home_path.write_text(home, encoding='utf-8')
+
+          steam_path = Path('data/steam-sections.json')
+          steam = json.loads(steam_path.read_text(encoding='utf-8'))
+          if not any(section.get('source') == 'steam/pywel-atlas.md' for section in steam['sections']):
+              steam['sections'].append({'heading': '15. Pywel Atlas & Route Intelligence', 'source': 'steam/pywel-atlas.md'})
+          steam_path.write_text(json.dumps(steam, indent=2) + '\n', encoding='utf-8')
+
+          audit_path = Path('scripts/site-theme-audit.mjs')
+          audit = audit_path.read_text(encoding='utf-8')
+          if 'atlas-hero' not in audit:
+              audit = audit.replace("  '.tech-centre__hero',\n", "  '.tech-centre__hero',\n  '.atlas-hero',\n")
+          if '"id: \'atlas\'"' not in audit:
+              audit = audit.replace("  \"id: 'database'\",\n", "  \"id: 'atlas'\",\n  \"id: 'database'\",\n")
+          audit_path.write_text(audit, encoding='utf-8')
+
+          log_path = Path('src/content/docs/update-log.md')
+          log = log_path.read_text(encoding='utf-8')
+          heading = '## 25 July 2026 — Pywel Atlas and route intelligence'
+          if heading not in log:
+              entry = heading + "\n\n- Added a cinematic topological atlas for verified settlements, services, travel systems and world progress.\n- Added 12 evidence-labelled location and system records with 16 service definitions.\n- Added the official special-mount saddlery inventories for eight cities.\n- Added verified Pailune Nexus routing to the abstract Abyss Nexus network without inventing coordinates or road connections.\n- Added local visited-location, activated-node and service-check progress with validated JSON backup and restore.\n- Added explicit no-route handling, atlas data audits and route/persistence tests.\n- Added the Pywel Atlas to site navigation, homepage intelligence and the Steam Guide export.\n\n"
+              boundary = log.find('\n---', 4)
+              if boundary == -1:
+                  raise RuntimeError('Update Log frontmatter boundary not found')
+              insertion = boundary + 4
+              log = log[:insertion] + '\n\n' + entry + log[insertion:].lstrip('\n')
+          log_path.write_text(log, encoding='utf-8')
+
+          workflow = Path('.github/workflows/phase9-integrate.yml')
+          if workflow.exists():
+              workflow.unlink()
+          PY
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate complete guide
+        run: npm run check:all
+
+      - name: Commit validated integration
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git commit -m "Phase 9: integrate Pywel Atlas across the guide"
+          git push origin HEAD:agent/phase9-pywel-atlas
