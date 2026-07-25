@@ -1,0 +1,40 @@
+name: Finalise Patch 1.15 Copy
+
+on:
+  push:
+    branches:
+      - agent/patch-1.15.00
+    paths:
+      - .github/workflows/finalise-patch-1-15-copy.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check out patch branch
+        uses: actions/checkout@v6
+        with:
+          ref: agent/patch-1.15.00
+
+      - name: Update remaining current-version copy
+        shell: bash
+        run: |
+          set -euo pipefail
+          perl -0pi -e 's/description: Current Patch 1\.14\.00 recommendations/description: Current Patch 1.15.00 recommendations/' src/content/docs/start-here/essential-settings.md
+          perl -0pi -e 's/placeholder: 1\.14\.00/placeholder: 1.15.00/g' .github/ISSUE_TEMPLATE/content-correction.yml .github/ISSUE_TEMPLATE/new-discovery.yml
+          rm .github/workflows/finalise-patch-1-15-copy.yml
+
+      - name: Commit copy updates
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/content/docs/start-here/essential-settings.md .github/ISSUE_TEMPLATE .github/workflows/finalise-patch-1-15-copy.yml
+          git commit -m "Finalise Patch 1.15 current-version copy"
+          git push origin HEAD:agent/patch-1.15.00
