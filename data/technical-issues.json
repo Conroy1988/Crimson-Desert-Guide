@@ -1,0 +1,452 @@
+{
+  "schemaVersion": 1,
+  "datasetVersion": "2026.07.25.1",
+  "currentPatch": "1.15.00",
+  "lastVerified": "2026-07-25",
+  "knownIssuesSource": {
+    "url": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=68",
+    "lastUpdated": "2026/07/24 03:20 UTC",
+    "issueCount": 11,
+    "fingerprint": "8d8553d5b3575a1a86317dcfb9b954ab280b0f9e914ec7ee3e64fe478e5e5ae0"
+  },
+  "platforms": [
+    { "id": "all", "label": "All platforms" },
+    { "id": "pc", "label": "PC" },
+    { "id": "playstation", "label": "PlayStation 5" },
+    { "id": "xbox", "label": "Xbox Series X|S" },
+    { "id": "mac", "label": "Mac" }
+  ],
+  "symptoms": [
+    { "id": "crash", "label": "Crash" },
+    { "id": "freeze", "label": "Freeze" },
+    { "id": "white-screen", "label": "White screen" },
+    { "id": "blur", "label": "Blur or distortion" },
+    { "id": "graphics", "label": "Graphics" },
+    { "id": "performance", "label": "Performance" },
+    { "id": "display", "label": "Display or scaling" },
+    { "id": "input", "label": "Input or controls" },
+    { "id": "save-sync", "label": "Save or synchronisation" },
+    { "id": "network", "label": "Network" },
+    { "id": "progression", "label": "Progression" },
+    { "id": "accessibility", "label": "Accessibility" },
+    { "id": "gameplay", "label": "Gameplay" },
+    { "id": "combat", "label": "Combat" },
+    { "id": "mounts", "label": "Mounts" },
+    { "id": "weather", "label": "Weather" }
+  ],
+  "records": [
+    {
+      "id": "ps-cross-save-network-error",
+      "kind": "official-issue",
+      "title": "PlayStation cross-save can fail during network instability",
+      "platforms": ["playstation"],
+      "symptoms": ["save-sync", "network"],
+      "severity": "high",
+      "status": "active",
+      "evidence": "official",
+      "summary": "Using cross-save on PlayStation may return an error when the network connection is unstable.",
+      "safeActions": [
+        "Do not overwrite another platform's known-good save while the error is present.",
+        "Confirm the source platform still has the intended save.",
+        "Retry only after the network connection is stable."
+      ],
+      "escalation": [
+        "Create a fresh manual save before another upload attempt.",
+        "Use the official cross-save page to confirm linked platforms."
+      ],
+      "sources": [
+        "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=68",
+        "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=107"
+      ],
+      "affectedPatches": ["1.15.00"],
+      "lastVerified": "2026-07-25"
+    },
+    {
+      "id": "fishing-catch-animation-stuck",
+      "kind": "official-issue",
+      "title": "Caught fish may not move in certain areas",
+      "platforms": ["all"],
+      "symptoms": ["gameplay"],
+      "severity": "low",
+      "status": "active",
+      "evidence": "official",
+      "summary": "Fish caught in certain areas may remain motionless.",
+      "safeActions": [
+        "Treat this as a presentation defect unless progression is blocked.",
+        "Capture the location and platform before reporting it."
+      ],
+      "escalation": ["Reload from a recent manual save only if the interaction remains blocked."],
+      "sources": ["https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=68"],
+      "affectedPatches": ["1.15.00"],
+      "lastVerified": "2026-07-25"
+    },
+    {
+      "id": "greymane-faction-companion-progression",
+      "kind": "official-issue",
+      "title": "Greymane faction quests can stall as Damiane or Oongka",
+      "platforms": ["all"],
+      "symptoms": ["progression"],
+      "severity": "high",
+      "status": "active",
+      "evidence": "official",
+      "summary": "Greymane faction quests may not progress while playing as Damiane or Oongka.",
+      "safeActions": [
+        "Switch back to Kliff before continuing the affected faction quest.",
+        "Make a manual save before changing character or retrying the objective."
+      ],
+      "escalation": ["Reload the manual save and retry as Kliff."],
+      "sources": ["https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=68"],
+      "affectedPatches": ["1.15.00"],
+      "lastVerified": "2026-07-25"
+    },
+    {
+      "id": "hold-evasion-remap-default-key",
+      "kind": "official-issue",
+      "title": "Hold evasion may still respond to the default key",
+      "platforms": ["pc"],
+      "symptoms": ["input"],
+      "severity": "medium",
+      "status": "active",
+      "evidence": "official",
+      "summary": "When Evasion Control is set to Hold, the original evasion key can remain active after remapping.",
+      "safeActions": [
+        "Avoid assigning another critical action to the original evasion key.",
+        "Test both the new and original bindings in a safe area."
+      ],
+      "escalation": ["Use the default evasion binding until the issue is fixed."],
+      "sources": ["https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=68"],
+      "affectedPatches": ["1.15.00"],
+      "lastVerified": "2026-07-25"
+    },
+    {
+      "id": "damiane-shield-toss-death-state",
+      "kind": "official-issue",
+      "title": "Damiane can lose shield actions after dying during Shield Toss",
+      "platforms": ["all"],
+      "symptoms": ["input", "combat"],
+      "severity": "high",
+      "status": "active",
+      "evidence": "official",
+      "summary": "If Damiane dies immediately after Shield Toss, her shield and related skills may stop working.",
+      "safeActions": [
+        "Save and reload; this is the official workaround.",
+        "Confirm shield actions have returned before entering another fight."
+      ],
+      "escalation": [],
+      "sources": ["https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=68"],
+      "affectedPatches": ["1.15.00"],
+      "lastVerified": "2026-07-25"
+    },
+    {
+      "id": "legendary-mount-quest-passenger",
+      "kind": "official-issue",
+      "title": "Quest NPCs cannot ride with Legendary Animal mounts",
+      "platforms": ["all"],
+      "symptoms": ["progression", "mounts"],
+      "severity": "medium",
+      "status": "active",
+      "evidence": "official",
+      "summary": "NPCs required for quest progression cannot ride together on Legendary Animal mounts.",
+      "safeActions": [
+        "Use a regular compatible mount for passenger objectives.",
+        "Do not dismiss the quest NPC while changing mounts."
+      ],
+      "escalation": ["Reload before the passenger step if the NPC state becomes stuck."],
+      "sources": ["https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=68"],
+      "affectedPatches": ["1.15.00"],
+      "lastVerified": "2026-07-25"
+    },
+    {
+      "id": "mac-furniture-cursor-offset",
+      "kind": "official-issue",
+      "title": "Mac furniture placement cursor can be offset",
+      "platforms": ["mac"],
+      "symptoms": ["input", "display"],
+      "severity": "medium",
+      "status": "active",
+      "evidence": "official",
+      "summary": "At certain resolutions on Mac, the cursor position may differ from the furniture placement point.",
+      "safeActions": [
+        "Try a different supported resolution before placing valuable furniture.",
+        "Place a low-value item first to measure the offset."
+      ],
+      "escalation": ["Use controller input or a different resolution for placement."],
+      "sources": ["https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=68"],
+      "affectedPatches": ["1.15.00"],
+      "lastVerified": "2026-07-25"
+    },
+    {
+      "id": "mac-colourblind-ui-filter",
+      "kind": "official-issue",
+      "title": "Mac colourblind mode does not affect the UI",
+      "platforms": ["mac"],
+      "symptoms": ["accessibility", "display"],
+      "severity": "medium",
+      "status": "active",
+      "evidence": "official",
+      "summary": "The colourblind filter may apply to the scene but not the interface on Mac.",
+      "safeActions": [
+        "Use high-contrast UI options where available.",
+        "Do not assume the filter is active on icons or interface states."
+      ],
+      "escalation": ["Report specific unreadable screens through official support."],
+      "sources": ["https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=68"],
+      "affectedPatches": ["1.15.00"],
+      "lastVerified": "2026-07-25"
+    },
+    {
+      "id": "ps-rapid-name-entry-freeze",
+      "kind": "official-issue",
+      "title": "Rapid virtual-keyboard name entry can freeze PlayStation",
+      "platforms": ["playstation"],
+      "symptoms": ["input", "freeze"],
+      "severity": "high",
+      "status": "active",
+      "evidence": "official",
+      "summary": "Rapidly entering a pet or horse name with the PlayStation virtual keyboard may freeze the screen.",
+      "safeActions": [
+        "Enter characters slowly with brief pauses; this is the official workaround.",
+        "Save before renaming a pet or horse."
+      ],
+      "escalation": ["Close and relaunch only after allowing the console time to respond."],
+      "sources": ["https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=68"],
+      "affectedPatches": ["1.15.00"],
+      "lastVerified": "2026-07-25"
+    },
+    {
+      "id": "gtx1060-fsr-framegen-white-screen",
+      "kind": "official-issue",
+      "title": "GTX 1060 can show a white screen with FSR and Frame Generation",
+      "platforms": ["pc"],
+      "vendors": ["nvidia"],
+      "symptoms": ["white-screen", "graphics"],
+      "severity": "critical",
+      "status": "active",
+      "evidence": "official",
+      "summary": "On NVIDIA GTX 1060, enabling FSR Upscaling and Frame Generation together can make the screen appear white.",
+      "safeActions": [
+        "Disable Frame Generation first.",
+        "If the menu is unreadable, restore only the graphics configuration through the least destructive supported method."
+      ],
+      "escalation": ["Do not reinstall or delete saves for this symptom; it is a known graphics-setting conflict."],
+      "sources": ["https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=68"],
+      "affectedPatches": ["1.15.00"],
+      "lastVerified": "2026-07-25"
+    },
+    {
+      "id": "fsr4-rain-blur-distortion",
+      "kind": "official-issue",
+      "title": "FSR 4 can remove rain or distort rainy scenes",
+      "platforms": ["pc"],
+      "vendors": ["amd"],
+      "symptoms": ["blur", "graphics", "weather"],
+      "severity": "medium",
+      "status": "active",
+      "evidence": "official",
+      "summary": "With FSR 4, rainy environments may lose rain or become blurry or distorted.",
+      "safeActions": [
+        "Switch from FSR 4 to another supported upscaler or native rendering.",
+        "Re-test in the same rainy location before changing unrelated settings."
+      ],
+      "escalation": ["Capture the location, preset and driver version for a report."],
+      "sources": ["https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=68"],
+      "affectedPatches": ["1.15.00"],
+      "lastVerified": "2026-07-25"
+    },
+    {
+      "id": "path-pc-crash-safe-triage",
+      "kind": "editorial-path",
+      "title": "PC crash: safe diagnostic order",
+      "platforms": ["pc"],
+      "symptoms": ["crash"],
+      "severity": "high",
+      "status": "guidance",
+      "evidence": "editorial",
+      "summary": "A reversible crash-triage sequence that preserves saves and avoids unnecessary reinstalls.",
+      "safeActions": [
+        "Create a manual save and copy the local save folder before changing drivers or files.",
+        "Confirm Patch 1.15.00 and the launcher update are installed.",
+        "Record the crash location, action, graphics preset and driver version.",
+        "Return overclocks or undervolts to a known-stable profile.",
+        "Lower one high-cost graphics feature at a time and reproduce the same scenario."
+      ],
+      "escalation": [
+        "Verify game files only after preserving saves.",
+        "Use a driver rollback only when an official issue or reproducible regression supports it.",
+        "Reinstall last; it rarely diagnoses a deterministic graphics or save-state defect."
+      ],
+      "sources": [
+        "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=63",
+        "https://crimsondesert.pearlabyss.com/en-us/News/Notice/Detail?_boardNo=62",
+        "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=68",
+        "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=102"
+      ],
+      "affectedPatches": ["1.15.00"],
+      "lastVerified": "2026-07-25"
+    },
+    {
+      "id": "path-white-screen-upscaling",
+      "kind": "editorial-path",
+      "title": "White screen: upscaling and Frame Generation path",
+      "platforms": ["pc"],
+      "symptoms": ["white-screen", "graphics"],
+      "severity": "high",
+      "status": "guidance",
+      "evidence": "editorial",
+      "summary": "Separate an upscaler conflict from display, save or installation problems.",
+      "safeActions": [
+        "Disable Frame Generation before changing resolution or reinstalling.",
+        "Switch the upscaler to Off or another supported method.",
+        "Apply settings, restart the game and test the same scene.",
+        "On GTX 1060, treat FSR plus Frame Generation as a known issue."
+      ],
+      "escalation": [
+        "Reset only graphics settings if the menu cannot be used.",
+        "Do not delete save data."
+      ],
+      "sources": [
+        "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=68",
+        "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=63"
+      ],
+      "affectedPatches": ["1.15.00"],
+      "lastVerified": "2026-07-25"
+    },
+    {
+      "id": "path-cloud-save-conflict",
+      "kind": "editorial-path",
+      "title": "Cloud-save conflict: protect the newest file",
+      "platforms": ["pc", "playstation", "xbox", "mac"],
+      "symptoms": ["save-sync"],
+      "severity": "critical",
+      "status": "guidance",
+      "evidence": "official",
+      "summary": "Prevent an older cloud copy from overwriting the newest local or console save.",
+      "safeActions": [
+        "Stop before choosing either side of a conflict prompt.",
+        "Compare timestamps and identify the newest known-good save.",
+        "Back up the local PC or Mac save folder where possible.",
+        "On PlayStation, check device and cloud timestamps before launching on another console.",
+        "Allow platform synchronisation to reach completion before shutdown or device switching."
+      ],
+      "escalation": [
+        "Restore a backup only after preserving the current conflicting copies.",
+        "Never delete both local and cloud copies to force synchronisation."
+      ],
+      "sources": ["https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=63"],
+      "affectedPatches": ["1.15.00"],
+      "lastVerified": "2026-07-25"
+    },
+    {
+      "id": "path-cross-save-recovery",
+      "kind": "editorial-path",
+      "title": "Cross-save upload or refresh failure",
+      "platforms": ["pc", "playstation", "xbox"],
+      "symptoms": ["save-sync", "network"],
+      "severity": "high",
+      "status": "guidance",
+      "evidence": "official",
+      "summary": "Safely recover from a failed cross-save upload, refresh or platform-link check.",
+      "safeActions": [
+        "Keep the source platform's manual save untouched.",
+        "Confirm linked platforms in Cross-Save Settings.",
+        "Stabilise the connection, return to the game and use Refresh.",
+        "Upload only after the intended Cross-Save slot is visible."
+      ],
+      "escalation": [
+        "Do not overwrite the cross-save slot from a platform with older progress.",
+        "Use official account support for platform-link errors."
+      ],
+      "sources": [
+        "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=107",
+        "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=68"
+      ],
+      "affectedPatches": ["1.15.00"],
+      "lastVerified": "2026-07-25"
+    },
+    {
+      "id": "path-controller-input-conflict",
+      "kind": "editorial-path",
+      "title": "Controller or keyboard action conflict",
+      "platforms": ["pc", "playstation", "xbox", "mac"],
+      "symptoms": ["input"],
+      "severity": "medium",
+      "status": "guidance",
+      "evidence": "editorial",
+      "summary": "Separate a binding conflict from a device, cable or game-state failure.",
+      "safeActions": [
+        "Test the action with default bindings in a safe area.",
+        "Disconnect duplicate controllers or virtual-input software.",
+        "On PC, DualSense support is USB-only according to the official FAQ.",
+        "For Hold evasion, test the original and remapped keys."
+      ],
+      "escalation": [
+        "Reset only the input profile before resetting all game settings.",
+        "Do not delete saves for an input problem."
+      ],
+      "sources": [
+        "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=63",
+        "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=68",
+        "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=73"
+      ],
+      "affectedPatches": ["1.15.00"],
+      "lastVerified": "2026-07-25"
+    },
+    {
+      "id": "path-performance-tuning-order",
+      "kind": "editorial-path",
+      "title": "Stable frame-rate tuning order",
+      "platforms": ["pc", "playstation", "xbox", "mac"],
+      "symptoms": ["performance", "graphics"],
+      "severity": "medium",
+      "status": "guidance",
+      "evidence": "editorial",
+      "summary": "Change one performance layer at a time so gains and image-quality regressions remain attributable.",
+      "safeActions": [
+        "Choose a target mode or frame rate and a repeatable test route.",
+        "Set resolution and display mode first.",
+        "Choose one upscaler and quality level.",
+        "Adjust ray-traced effects next.",
+        "Then reduce shadows, volumetrics and reflections.",
+        "Reduce textures only when memory pressure or stutter supports it.",
+        "Enable Frame Generation last and only on supported PC or Mac hardware."
+      ],
+      "escalation": [
+        "Do not copy benchmark values from different hardware as guaranteed results.",
+        "Use the official performance-spec notice as a baseline, not a promise."
+      ],
+      "sources": [
+        "https://crimsondesert.pearlabyss.com/en-us/News/Notice/Detail?_boardNo=62",
+        "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=63",
+        "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=80&pubDate=20260405",
+        "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=93"
+      ],
+      "affectedPatches": ["1.15.00"],
+      "lastVerified": "2026-07-25"
+    },
+    {
+      "id": "path-console-presentation-mode",
+      "kind": "editorial-path",
+      "title": "Console mode, 120 Hz and VRR selection",
+      "platforms": ["playstation", "xbox"],
+      "symptoms": ["performance", "display"],
+      "severity": "medium",
+      "status": "guidance",
+      "evidence": "official",
+      "summary": "Choose console presentation settings based on display capability rather than mode names alone.",
+      "safeActions": [
+        "Confirm the display input supports the required refresh rate and bandwidth.",
+        "Use HDMI 2.1 where the selected feature requires it.",
+        "Enable VRR only on a compatible display.",
+        "For Balanced Mode instability around 30–40 FPS, test 120 Hz or disable V-Sync in a VRR-supported environment as officially documented."
+      ],
+      "escalation": ["Return to the default 60 Hz output if the display loses signal or behaves unpredictably."],
+      "sources": [
+        "https://crimsondesert.pearlabyss.com/en-us/News/Notice/Detail?_boardNo=62",
+        "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=73",
+        "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=80&pubDate=20260405"
+      ],
+      "affectedPatches": ["1.15.00"],
+      "lastVerified": "2026-07-25"
+    }
+  ]
+}

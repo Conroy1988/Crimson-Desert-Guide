@@ -1,0 +1,293 @@
+---
+import data from '../../data/technical-issues.json';
+
+const platformLabels = new Map(data.platforms.map((item) => [item.id, item.label]));
+const symptomLabels = new Map(data.symptoms.map((item) => [item.id, item.label]));
+const officialCount = data.records.filter((record) => record.kind === 'official-issue').length;
+const guidanceCount = data.records.filter((record) => record.kind === 'editorial-path').length;
+const criticalCount = data.records.filter((record) => record.severity === 'critical').length;
+const sourceLink = data.knownIssuesSource.url;
+---
+
+<section class="tech-centre" data-technical-centre>
+  <header class="tech-centre__hero">
+    <div>
+      <p class="tech-centre__eyebrow">Patch {data.currentPatch} technical intelligence</p>
+      <h2>Diagnose the symptom before changing the system</h2>
+      <p>
+        Start with reversible checks, preserve saves and change one variable at a time.
+        Official defects and editorial diagnostic paths are labelled separately.
+      </p>
+    </div>
+    <dl class="tech-centre__metrics">
+      <div><dt>Official issues</dt><dd>{officialCount}</dd></div>
+      <div><dt>Diagnostic paths</dt><dd>{guidanceCount}</dd></div>
+      <div><dt>Critical records</dt><dd>{criticalCount}</dd></div>
+      <div><dt>Official revision</dt><dd>{data.knownIssuesSource.lastUpdated}</dd></div>
+    </dl>
+  </header>
+
+  <aside class="tech-centre__safety" aria-label="Troubleshooting safety rule">
+    <strong>Preserve evidence before escalation.</strong>
+    <span>
+      Make a manual save and backup first. Driver rollback, configuration resets,
+      file verification and reinstalling are escalation steps—not opening moves.
+      Never delete save data to diagnose graphics, controller or performance faults.
+    </span>
+  </aside>
+
+  <form class="tech-centre__filters" aria-label="Filter technical records" onsubmit="return false">
+    <label class="tech-centre__search">
+      <span>Search symptoms or actions</span>
+      <input type="search" name="query" placeholder="crash, white screen, cross-save…" autocomplete="off" />
+    </label>
+    <label>
+      <span>Platform</span>
+      <select name="platform">
+        <option value="all">All platforms</option>
+        {data.platforms.filter((item) => item.id !== 'all').map((item) => (
+          <option value={item.id}>{item.label}</option>
+        ))}
+      </select>
+    </label>
+    <label>
+      <span>Symptom</span>
+      <select name="symptom">
+        <option value="all">All symptoms</option>
+        {data.symptoms.map((item) => <option value={item.id}>{item.label}</option>)}
+      </select>
+    </label>
+    <label>
+      <span>Record type</span>
+      <select name="kind">
+        <option value="all">Official and guidance</option>
+        <option value="official-issue">Official known issues</option>
+        <option value="editorial-path">Diagnostic paths</option>
+      </select>
+    </label>
+    <label>
+      <span>Severity</span>
+      <select name="severity">
+        <option value="all">All severities</option>
+        <option value="critical">Critical</option>
+        <option value="high">High</option>
+        <option value="medium">Medium</option>
+        <option value="low">Low</option>
+      </select>
+    </label>
+    <button type="reset">Clear filters</button>
+  </form>
+
+  <div class="tech-centre__status" role="status" aria-live="polite">
+    <strong data-visible-count>{data.records.length}</strong>
+    <span>records shown</span>
+  </div>
+
+  <div class="tech-centre__records">
+    {data.records.map((record) => {
+      const searchable = [
+        record.title,
+        record.summary,
+        ...record.safeActions,
+        ...record.escalation,
+        ...record.symptoms.map((id) => symptomLabels.get(id)),
+        ...record.platforms.map((id) => platformLabels.get(id)),
+      ].join(' ').toLowerCase();
+      return (
+        <article
+          class:list={[
+            'tech-record',
+            `tech-record--${record.severity}`,
+            record.kind === 'official-issue' && 'tech-record--official',
+          ]}
+          data-tech-record
+          data-platforms={record.platforms.join(' ')}
+          data-symptoms={record.symptoms.join(' ')}
+          data-kind={record.kind}
+          data-severity={record.severity}
+          data-search={searchable}
+        >
+          <header class="tech-record__header">
+            <div class="tech-record__badges">
+              <span class={`tech-badge tech-badge--${record.kind}`}>
+                {record.kind === 'official-issue' ? 'Official known issue' : 'Diagnostic path'}
+              </span>
+              <span class={`tech-badge tech-badge--${record.severity}`}>{record.severity}</span>
+              <span class="tech-badge">{record.status}</span>
+            </div>
+            <h3>{record.title}</h3>
+            <p>{record.summary}</p>
+          </header>
+
+          <div class="tech-record__meta">
+            <span>
+              <strong>Platform:</strong>{' '}
+              {record.platforms.map((id) => platformLabels.get(id)).join(', ')}
+            </span>
+            <span>
+              <strong>Symptoms:</strong>{' '}
+              {record.symptoms.map((id) => symptomLabels.get(id)).join(', ')}
+            </span>
+          </div>
+
+          <section class="tech-record__actions" aria-label={`Safe actions for ${record.title}`}>
+            <h4>Safe first actions</h4>
+            <ol>
+              {record.safeActions.map((action) => <li>{action}</li>)}
+            </ol>
+          </section>
+
+          {record.escalation.length > 0 && (
+            <details class="tech-record__escalation">
+              <summary>Escalation steps and warnings</summary>
+              <ul>{record.escalation.map((action) => <li>{action}</li>)}</ul>
+            </details>
+          )}
+
+          <footer class="tech-record__footer">
+            <span>Verified {record.lastVerified}</span>
+            <span>Patch {record.affectedPatches.join(', ')}</span>
+            <span>{record.evidence}</span>
+            <div class="tech-record__sources">
+              {record.sources.map((source, index) => (
+                <a href={source}>Source {index + 1}</a>
+              ))}
+            </div>
+          </footer>
+        </article>
+      );
+    })}
+  </div>
+
+  <p class="tech-centre__empty" data-empty hidden>
+    No record matches those filters. Clear one filter or search for a broader symptom.
+  </p>
+
+  <footer class="tech-centre__dataset">
+    <span>Dataset {data.datasetVersion}</span>
+    <span>Verified {data.lastVerified}</span>
+    <a href={sourceLink}>Open official Known Issues</a>
+  </footer>
+</section>
+
+<script>
+  const centres = document.querySelectorAll('[data-technical-centre]');
+
+  for (const centre of centres) {
+    const form = centre.querySelector('form');
+    const query = form?.querySelector('[name="query"]');
+    const platform = form?.querySelector('[name="platform"]');
+    const symptom = form?.querySelector('[name="symptom"]');
+    const kind = form?.querySelector('[name="kind"]');
+    const severity = form?.querySelector('[name="severity"]');
+    const records = [...centre.querySelectorAll('[data-tech-record]')];
+    const count = centre.querySelector('[data-visible-count]');
+    const empty = centre.querySelector('[data-empty]');
+
+    const apply = () => {
+      const text = String(query?.value ?? '').trim().toLowerCase();
+      const wantedPlatform = String(platform?.value ?? 'all');
+      const wantedSymptom = String(symptom?.value ?? 'all');
+      const wantedKind = String(kind?.value ?? 'all');
+      const wantedSeverity = String(severity?.value ?? 'all');
+      let visible = 0;
+
+      for (const record of records) {
+        const platforms = String(record.dataset.platforms ?? '').split(' ');
+        const symptoms = String(record.dataset.symptoms ?? '').split(' ');
+        const matches =
+          (!text || String(record.dataset.search ?? '').includes(text)) &&
+          (wantedPlatform === 'all' || platforms.includes('all') || platforms.includes(wantedPlatform)) &&
+          (wantedSymptom === 'all' || symptoms.includes(wantedSymptom)) &&
+          (wantedKind === 'all' || record.dataset.kind === wantedKind) &&
+          (wantedSeverity === 'all' || record.dataset.severity === wantedSeverity);
+        record.hidden = !matches;
+        if (matches) visible += 1;
+      }
+
+      if (count) count.textContent = String(visible);
+      if (empty) empty.hidden = visible !== 0;
+    };
+
+    form?.addEventListener('input', apply);
+    form?.addEventListener('change', apply);
+    form?.addEventListener('reset', () => setTimeout(apply, 0));
+    apply();
+  }
+</script>
+
+<style>
+  .tech-centre { display: grid; gap: 1.25rem; margin-block: 1.5rem 2.5rem; }
+  .tech-centre__hero {
+    display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(17rem, 0.8fr);
+    gap: 1.4rem; padding: clamp(1.1rem, 3vw, 2rem); border: 1px solid var(--sl-color-gray-5);
+    border-radius: 1rem; background: radial-gradient(circle at 90% 0, rgb(188 63 34 / 14%), transparent 42%),
+      color-mix(in srgb, var(--sl-color-black) 88%, transparent);
+  }
+  .tech-centre__eyebrow { margin: 0 0 0.35rem; color: var(--sl-color-accent-high); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; }
+  .tech-centre__hero h2 { margin: 0; max-width: 16ch; font-size: clamp(1.65rem, 4vw, 2.75rem); line-height: 1.02; }
+  .tech-centre__hero p:last-child { max-width: 58ch; margin-bottom: 0; color: var(--sl-color-gray-2); }
+  .tech-centre__metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.65rem; margin: 0; }
+  .tech-centre__metrics div { padding: 0.85rem; border: 1px solid rgb(255 255 255 / 8%); border-radius: 0.75rem; background: rgb(0 0 0 / 18%); }
+  .tech-centre__metrics dt { color: var(--sl-color-gray-3); font-size: 0.68rem; font-weight: 750; text-transform: uppercase; }
+  .tech-centre__metrics dd { margin: 0.25rem 0 0; color: var(--sl-color-gray-1); font-size: 1.15rem; font-weight: 800; overflow-wrap: anywhere; }
+  .tech-centre__safety { display: grid; gap: 0.3rem; padding: 1rem 1.1rem; border: 1px solid rgb(226 104 66 / 35%); border-left: 0.28rem solid #e26842; border-radius: 0.75rem; background: rgb(139 47 28 / 12%); }
+  .tech-centre__safety strong { color: #ffb59e; }
+  .tech-centre__safety span { color: var(--sl-color-gray-2); }
+  .tech-centre__filters { display: grid; grid-template-columns: minmax(14rem, 1.6fr) repeat(4, minmax(9rem, 1fr)) auto; gap: 0.7rem; align-items: end; }
+  .tech-centre__filters label { display: grid; gap: 0.3rem; min-width: 0; }
+  .tech-centre__filters label > span { color: var(--sl-color-gray-3); font-size: 0.7rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; }
+  .tech-centre__filters input, .tech-centre__filters select, .tech-centre__filters button {
+    min-height: 2.8rem; width: 100%; padding: 0.65rem 0.75rem; border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.65rem; background: var(--sl-color-bg-nav); color: var(--sl-color-text);
+  }
+  .tech-centre__filters button { width: auto; cursor: pointer; font-weight: 750; }
+  .tech-centre__filters :is(input, select, button):focus-visible { outline: 0.18rem solid var(--sl-color-accent-high); outline-offset: 0.12rem; }
+  .tech-centre__status { display: flex; gap: 0.35rem; align-items: baseline; color: var(--sl-color-gray-3); }
+  .tech-centre__status strong { color: var(--sl-color-gray-1); font-size: 1.35rem; }
+  .tech-centre__records { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+  .tech-record { display: grid; align-content: start; gap: 1rem; min-width: 0; padding: 1.1rem; border: 1px solid var(--sl-color-gray-5); border-top: 0.22rem solid var(--sl-color-gray-4); border-radius: 0.85rem; background: color-mix(in srgb, var(--sl-color-black) 88%, transparent); }
+  .tech-record--critical { border-top-color: #df4c43; }
+  .tech-record--high { border-top-color: #e68a48; }
+  .tech-record--medium { border-top-color: #d5af66; }
+  .tech-record--low { border-top-color: #7da58c; }
+  .tech-record--official { background: radial-gradient(circle at 100% 0, rgb(181 54 32 / 9%), transparent 38%), color-mix(in srgb, var(--sl-color-black) 88%, transparent); }
+  .tech-record[hidden] { display: none; }
+  .tech-record__header h3 { margin: 0.55rem 0 0.45rem; font-size: 1.18rem; line-height: 1.2; }
+  .tech-record__header p { margin: 0; color: var(--sl-color-gray-2); }
+  .tech-record__badges { display: flex; flex-wrap: wrap; gap: 0.38rem; }
+  .tech-badge { display: inline-flex; padding: 0.25rem 0.48rem; border: 1px solid var(--sl-color-gray-5); border-radius: 999px; color: var(--sl-color-gray-3); font-size: 0.62rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; }
+  .tech-badge--official-issue { border-color: rgb(226 104 66 / 35%); color: #ffb59e; }
+  .tech-badge--editorial-path { border-color: rgb(231 181 106 / 30%); color: var(--sl-color-accent-high); }
+  .tech-badge--critical { color: #ff9189; }
+  .tech-record__meta { display: grid; gap: 0.35rem; padding: 0.75rem; border-radius: 0.6rem; background: rgb(255 255 255 / 2.5%); color: var(--sl-color-gray-3); font-size: 0.78rem; }
+  .tech-record__meta strong { color: var(--sl-color-gray-2); }
+  .tech-record__actions h4 { margin: 0 0 0.45rem; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.06em; }
+  .tech-record__actions ol, .tech-record__escalation ul { margin: 0; padding-left: 1.2rem; }
+  .tech-record__actions li, .tech-record__escalation li { margin-block: 0.32rem; color: var(--sl-color-gray-2); }
+  .tech-record__escalation { padding: 0.75rem; border: 1px solid rgb(226 104 66 / 22%); border-radius: 0.65rem; background: rgb(139 47 28 / 8%); }
+  .tech-record__escalation summary { cursor: pointer; color: #ffb59e; font-weight: 750; }
+  .tech-record__footer { display: flex; flex-wrap: wrap; gap: 0.45rem 0.7rem; padding-top: 0.75rem; border-top: 1px solid var(--sl-color-gray-6); color: var(--sl-color-gray-3); font-size: 0.68rem; }
+  .tech-record__sources { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-left: auto; }
+  .tech-record__sources a { font-weight: 750; }
+  .tech-centre__empty { padding: 1.4rem; border: 1px dashed var(--sl-color-gray-5); border-radius: 0.8rem; text-align: center; }
+  .tech-centre__dataset { display: flex; flex-wrap: wrap; gap: 0.6rem 1rem; align-items: center; padding-top: 0.8rem; border-top: 1px solid var(--sl-color-gray-5); color: var(--sl-color-gray-3); font-size: 0.72rem; }
+  .tech-centre__dataset a { margin-left: auto; font-weight: 750; }
+  @media (max-width: 72rem) {
+    .tech-centre__filters { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .tech-centre__search { grid-column: span 2; }
+  }
+  @media (max-width: 50rem) {
+    .tech-centre__hero, .tech-centre__records { grid-template-columns: 1fr; }
+    .tech-centre__filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .tech-centre__search { grid-column: 1 / -1; }
+  }
+  @media (max-width: 34rem) {
+    .tech-centre__metrics, .tech-centre__filters { grid-template-columns: 1fr; }
+    .tech-centre__search { grid-column: auto; }
+    .tech-centre__filters button { width: 100%; }
+    .tech-record { padding: 0.9rem; }
+    .tech-record__sources, .tech-centre__dataset a { width: 100%; margin-left: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>

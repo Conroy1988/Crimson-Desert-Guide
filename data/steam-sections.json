@@ -1,5 +1,5 @@
 {
-  "title": "(WIP) Crimson Desert Guide – Beginner Systems, Combat, Gear, Mounts & Completion",
+  "title": "(WIP) Crimson Desert Guide – Beginner Systems, Combat, Gear, Mounts, Completion & Technical",
   "sections": [
     {
       "heading": "Update Log",
@@ -52,6 +52,10 @@
     {
       "heading": "11. Completion Companion",
       "source": "steam/completion-companion.md"
+    },
+    {
+      "heading": "12. Technical & Performance",
+      "source": "steam/technical-performance.md"
     }
   ]
 }

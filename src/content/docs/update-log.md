@@ -8,6 +8,17 @@ spoilerLevel: none
 patchStatus: current
 ---
 
+## 25 July 2026 — Technical and performance centre
+
+- Replaced the provisional Technical page with a filterable platform and symptom troubleshooting centre.
+- Structured the official Known Issues notice revised on 24 July 2026 into 11 stable records.
+- Added safe-first diagnostic paths for crashes, white screens, save conflicts, cross-save, input, performance and console display modes.
+- Added explicit save-preservation and destructive-escalation warnings.
+- Added platform, symptom, record-type, severity and text-search filters.
+- Added technical-data validation for patch alignment, stale records, sources, enums and duplicate IDs.
+- Added a six-hour official Known Issues watcher with revision fingerprints and deduplicated GitHub issues.
+- Added a Technical & Performance section to the generated Steam BBCode guide.
+
 ## 25 July 2026 — Interactive completion companion
 
 - Replaced the static completion roadmap with a local-first interactive tracker.
