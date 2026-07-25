@@ -13,7 +13,7 @@ async function walk(directory) {
 
   for (const entry of entries) {
     const absolute = path.join(directory, entry.name);
-    if (entry.isDirectory()) files.push(...(await walk(absolute));
+    if (entry.isDirectory()) files.push(...(await walk(absolute)));
     else files.push(absolute);
   }
 
