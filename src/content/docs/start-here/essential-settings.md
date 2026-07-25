@@ -1,6 +1,6 @@
 ---
 title: Essential Settings
-description: Current Patch 1.14.00 recommendations for controls, readability, accessibility and performance on PC, PlayStation 5 and Xbox Series X|S.
+description: Current Patch 1.15.00 recommendations for controls, readability, accessibility and performance on PC, PlayStation 5 and Xbox Series X|S.
 currentPatch: 1.15.00
 lastVerified: "2026-07-25"
 evidence: official

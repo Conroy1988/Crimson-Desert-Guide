@@ -14,7 +14,7 @@ body:
     id: patch
     attributes:
       label: Game version
-      placeholder: 1.14.00
+      placeholder: 1.15.00
     validations:
       required: true
   - type: dropdown
