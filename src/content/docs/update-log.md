@@ -8,6 +8,16 @@ spoilerLevel: none
 patchStatus: current
 ---
 
+## 25 July 2026 — Cinematic Crimson Desert portal redesign
+
+- Rebuilt the homepage as a real responsive game-guide portal based on the approved desktop and mobile design direction.
+- Added an original dark fantasy navigation bar, cinematic hero, live patch badge and direct guide entry points.
+- Added official public Crimson Desert screenshots from the Steam media feed to the hero and major guide cards.
+- Added real quick links for search, completion, patch notes, world services, known issues and the Update Log.
+- Added live dashboard panels driven by repository patch, completion and technical-issue datasets rather than invented figures.
+- Added recent-update cards, project trust principles and a GitHub contribution call to action.
+- Preserved keyboard focus, reduced-motion support, mobile navigation and the existing light-mode accessibility protections.
+
 ## 25 July 2026 — Light-mode contrast remediation
 
 - Added a dedicated light-theme stylesheet without changing the established dark-theme design.
