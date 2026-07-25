@@ -1,6 +1,6 @@
 ---
 title: Blackstar
-description: Spoiler-controlled research page for Blackstar and related traversal.
+description: Spoiler-controlled field guide to Blackstar's confirmed traversal role, patch history and unresolved unlock conditions.
 currentPatch: 1.15.00
 lastVerified: "2026-07-25"
 evidence: community
@@ -9,20 +9,120 @@ patchStatus: current
 ---
 
 import SpoilerReveal from '../../../components/SpoilerReveal.astro';
+import mounts from '../../../../data/mounts.json';
+
+export const blackstar = mounts.systems.find((mount) => mount.id === 'blackstar');
 
 <SpoilerReveal
-  title="Reveal Blackstar research"
+  title="Reveal Blackstar field guide"
   level="major"
-  description="This section identifies a late or narratively significant rideable creature."
+  description="This section identifies and discusses a narratively significant legendary aerial mount."
 >
-  Blackstar is tracked as a rideable dragon. The complete guide will document the unlock conditions, summon or access restrictions, controls, practical traversal use and any patch-specific limitations.
 
-  No armour set is currently treated as confirmed. Mount equipment claims will remain separate from character-equipment claims.
+  ## Confirmed role
+
+  Blackstar is recorded as a **legendary aerial traversal mount**. Official patch history treats Blackstar as a controllable mount with a Breath action and includes fixes for its death, water-pathing and performance behaviour.
+
+  The guide does **not** currently claim:
+
+  - a verified, spoiler-safe unlock sequence;
+  - unrestricted access at every story state;
+  - a universal summon location;
+  - confirmed armour or a dedicated armour set;
+  - identical handling across every platform and frame-rate condition.
+
+  ## Practical use
+
+  Blackstar's value is not ordinary road speed. It is the ability to replace long ground routes with direct aerial movement where summon access and world state allow it.
+
+  Use it for:
+
+  - crossing large terrain barriers;
+  - reaching distant regions without following roads;
+  - scouting route geometry from above;
+  - bypassing some ground hazards;
+  - long-distance travel after confirming a safe landing area.
+
+  Keep a regular or special ground mount available because aerial summon restrictions, enclosed spaces, quest states and landing terrain can make Blackstar unsuitable for the final part of a route.
+
+  ## Operating procedure
+
+  1. save before testing a new summon or landing area;
+  2. summon in open terrain with clear vertical space;
+  3. establish altitude before committing to a long crossing;
+  4. watch stamina and avoid repeated unnecessary attacks while travelling;
+  5. identify a broad landing zone before descending;
+  6. dismount or dismiss away from deep water and tight collision geometry;
+  7. verify the mount has left the world correctly before saving again.
+
+  ## Breath and combat use
+
+  Official Patch 1.06.00 fixed frame drops that could occur while using **Blackstar's Breath**. This confirms the action but does not establish exact damage, resource cost, area, scaling or an optimal combat rotation.
+
+  Treat Breath as a separate test:
+
+  ```text
+  Patch:
+  Platform and graphics mode:
+  Target/environment:
+  Starting stamina/resource:
+  Number of Breath uses:
+  Frame-rate or input issue:
+  Damage/area observation:
+  Recovery time:
+  Result:
+  ```
+
+  Do not publish damage values as verified until the target, difficulty, character state and repeat count are controlled.
+
+  ## Patch-history cautions
+
+  - Patch 1.01.01 fixed Blackstar remaining in place after death instead of disappearing.
+  - Patch 1.06.00 fixed Breath-related frame drops.
+  - Patch 1.08.00 fixed the lingering ground effect from Blackstar's Breath.
+  - Patch 1.11.00 fixed Blackstar and wyverns walking into water in certain situations.
+  - Current Patch 1.15.00 does not list a new Blackstar-specific progression change.
+
+  If Blackstar remains present after death, walks into water, leaves a persistent Breath effect or produces repeatable frame drops, record the platform, save state and location as a possible regression rather than treating it as intended behaviour.
+
+  ## Ground-mount backup
+
+  Keep a ground mount in the regular/special quickslot system for:
+
+  - settlement interiors and narrow streets;
+  - routes ending in caves, ruins or dense structures;
+  - quest states where aerial mounting is restricted;
+  - landing zones with water or awkward collision;
+  - short resource-gathering circuits where repeated aerial setup is slower.
+
+  ## Unverified unlock record
+
+  The canonical guide will not expose a speculative quest order. A valid unlock record requires:
+
+  ```text
+  Patch:
+  Prior story state:
+  Required quest or interaction:
+  Location:
+  Required item or ability:
+  Character restrictions:
+  First summon method:
+  Repeat summon method:
+  Save/reload test:
+  Screenshot or video evidence:
+  ```
+
+  Until that record is reproduced, unlock details remain community evidence and stay outside the public spoiler-safe summary.
+
+  ## Equipment boundary
+
+  No Blackstar armour set is treated as confirmed. Character armour, horse tack, special-mount saddles and legendary-mount claims remain separate evidence categories.
+
 </SpoilerReveal>
 
-## Research still required
+## Sources
 
-- Confirm the exact unlock sequence against Patch 1.14.00.
-- Record summon and dismissal restrictions.
-- Test practical traversal limits across representative terrain.
-- Separate official information from repeatable community findings.
+- [Patch 1.01.01 — Blackstar death-state fix](https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=77)
+- [Patch 1.06.00 — Breath performance fix](https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511)
+- [Patch 1.08.00 — lingering Breath-effect fix](https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=93)
+- [Patch 1.11.00 — Blackstar and wyvern water-pathing fix](https://crimsondesert.pearlabyss.com/en-us/News/Notice/Detail?_boardNo=99)
