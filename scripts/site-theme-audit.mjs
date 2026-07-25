@@ -1,10 +1,11 @@
 import { readFile } from 'node:fs/promises';
 
-const [config, css, pageTitle, footer] = await Promise.all([
+const [config, css, pageTitle, footer, atlas] = await Promise.all([
   readFile(new URL('../astro.config.mjs', import.meta.url), 'utf8'),
   readFile(new URL('../src/styles/site-theme.css', import.meta.url), 'utf8'),
   readFile(new URL('../src/components/PageTitle.astro', import.meta.url), 'utf8'),
   readFile(new URL('../src/components/GuideFooter.astro', import.meta.url), 'utf8'),
+  readFile(new URL('../src/components/PywelAtlas.astro', import.meta.url), 'utf8'),
 ]);
 
 const failures = [];
@@ -16,6 +17,7 @@ if (configLightIndex === -1) failures.push('astro.config.mjs does not load light
 if (configThemeIndex > configLightIndex) {
   failures.push('site-theme.css must load before light-mode.css so the accessibility layer remains authoritative');
 }
+if (!config.includes("directory: 'atlas'")) failures.push('astro.config.mjs does not expose the Pywel Atlas');
 
 const requiredShellSelectors = [
   '.header',
@@ -45,6 +47,7 @@ const requiredSections = [
   "id: 'gear'",
   "id: 'world'",
   "id: 'mounts'",
+  "id: 'database'",
   "id: 'completion'",
   "id: 'technical'",
   "id: 'standards'",
@@ -54,11 +57,24 @@ for (const section of requiredSections) {
   if (!pageTitle.includes(section)) failures.push(`Missing section-aware hero configuration: ${section}`);
 }
 
+const requiredAtlasSelectors = [
+  '.pywel-atlas',
+  '.atlas-hero',
+  '.atlas-workspace',
+  '.atlas-planner',
+  '.atlas-card',
+  ':root[data-theme=light] .atlas-hero',
+  '@media(max-width:46rem)',
+];
+for (const selector of requiredAtlasSelectors) {
+  if (!atlas.includes(selector)) failures.push(`Missing Pywel Atlas theme scope: ${selector}`);
+}
+
 if (!pageTitle.includes('shared.akamai.steamstatic.com/store_item_assets/steam/apps/3321460')) {
   failures.push('PageTitle does not use the approved official Steam media source');
 }
 
-if (!pageTitle.includes("data-guide-section={section.id}")) {
+if (!pageTitle.includes('data-guide-section={section.id}')) {
   failures.push('PageTitle is missing the route-aware section data attribute');
 }
 
@@ -72,5 +88,5 @@ if (failures.length) {
 }
 
 console.log(
-  `Site theme audit passed ${requiredShellSelectors.length} shell scopes and ${requiredSections.length} section-aware heroes.`,
+  `Site theme audit passed ${requiredShellSelectors.length} shell scopes, ${requiredSections.length} section heroes and ${requiredAtlasSelectors.length} atlas scopes.`,
 );
