@@ -40,6 +40,14 @@
     {
       "heading": "8. Gear, Refinement & Extraction",
       "source": "src/content/docs/systems/gear.md"
+    },
+    {
+      "heading": "9. World Navigation & Hernand",
+      "source": "steam/world-navigation.md"
+    },
+    {
+      "heading": "10. Mounts & Traversal",
+      "source": "steam/mounts-traversal.md"
     }
   ]
 }
