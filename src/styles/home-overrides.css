@@ -1,0 +1,50 @@
+.cd-visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.cd-portals .cd-portal:nth-child(1) {
+  grid-column: span 5;
+}
+
+.cd-portals .cd-portal:nth-child(2) {
+  grid-column: span 3;
+}
+
+.cd-portals .cd-portal:nth-child(3) {
+  grid-column: span 4;
+}
+
+.cd-portals .cd-portal:nth-child(4),
+.cd-portals .cd-portal:nth-child(5),
+.cd-portals .cd-portal:nth-child(6) {
+  grid-column: span 4;
+}
+
+.cd-portals .cd-portal:nth-child(7) {
+  grid-column: 1 / -1;
+  min-height: 12rem;
+}
+
+@media (max-width: 72rem) {
+  .cd-portals .cd-portal:nth-child(n) {
+    grid-column: span 6;
+  }
+
+  .cd-portals .cd-portal:nth-child(7) {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 38rem) {
+  .cd-portals .cd-portal:nth-child(n) {
+    grid-column: 1 / -1;
+  }
+}

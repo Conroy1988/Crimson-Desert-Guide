@@ -1,0 +1,165 @@
+---
+interface Props {
+  title: string;
+  level?: 'minor' | 'major';
+  description?: string;
+}
+
+const {
+  title,
+  level = 'major',
+  description = 'Open only when you are comfortable revealing this information.',
+} = Astro.props;
+---
+
+<details class={`spoiler-reveal spoiler-reveal--${level}`}>
+  <summary>
+    <span class="spoiler-reveal__icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24">
+        <path d="M12 3 3.8 7.4v9.2L12 21l8.2-4.4V7.4z"></path>
+        <path d="M8.8 9.2a3.2 3.2 0 0 1 6.4 0c0 2.5-3.2 2.4-3.2 4.3"></path>
+        <path d="M12 16.7h.01"></path>
+      </svg>
+    </span>
+    <span class="spoiler-reveal__copy">
+      <small>{level === 'major' ? 'Major spoiler' : 'Minor spoiler'}</small>
+      <strong>{title}</strong>
+      <span>{description}</span>
+    </span>
+    <span class="spoiler-reveal__action" aria-hidden="true">
+      <span class="closed">Reveal</span>
+      <span class="open">Hide</span>
+      <svg viewBox="0 0 24 24"><path d="m7 10 5 5 5-5"></path></svg>
+    </span>
+  </summary>
+  <div class="spoiler-reveal__content">
+    <slot />
+  </div>
+</details>
+
+<style>
+  .spoiler-reveal {
+    margin-block: 1.5rem;
+    overflow: clip;
+    border: 1px solid color-mix(in srgb, var(--sl-color-accent) 44%, var(--sl-color-gray-5));
+    border-radius: 0.85rem;
+    background:
+      radial-gradient(circle at 100% 0, rgb(181 54 32 / 12%), transparent 34%),
+      color-mix(in srgb, var(--sl-color-black) 84%, transparent);
+  }
+
+  .spoiler-reveal--minor {
+    border-color: color-mix(in srgb, #d2a45d 38%, var(--sl-color-gray-5));
+  }
+
+  summary {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 0.9rem;
+    align-items: center;
+    padding: 1rem;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  summary::-webkit-details-marker { display: none; }
+
+  summary:hover {
+    background: rgb(255 255 255 / 2.5%);
+  }
+
+  .spoiler-reveal__icon {
+    display: grid;
+    place-items: center;
+    width: 2.6rem;
+    aspect-ratio: 1;
+    border: 1px solid rgb(231 181 106 / 18%);
+    border-radius: 0.65rem;
+    background: rgb(0 0 0 / 18%);
+    color: var(--sl-color-accent-high);
+  }
+
+  .spoiler-reveal__icon svg {
+    width: 1.35rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.45;
+  }
+
+  .spoiler-reveal__copy {
+    display: grid;
+    min-width: 0;
+  }
+
+  .spoiler-reveal__copy small {
+    margin-bottom: 0.12rem;
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--sl-color-accent-high);
+  }
+
+  .spoiler-reveal__copy strong {
+    color: var(--sl-color-gray-1);
+  }
+
+  .spoiler-reveal__copy > span {
+    margin-top: 0.18rem;
+    overflow: hidden;
+    font-size: 0.78rem;
+    color: var(--sl-color-gray-3);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .spoiler-reveal__action {
+    display: inline-flex;
+    gap: 0.45rem;
+    align-items: center;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--sl-color-gray-3);
+  }
+
+  .spoiler-reveal__action svg {
+    width: 0.9rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.8;
+    transition: transform 160ms ease;
+  }
+
+  .open { display: none; }
+  details[open] .closed { display: none; }
+  details[open] .open { display: inline; }
+  details[open] .spoiler-reveal__action svg { transform: rotate(180deg); }
+
+  .spoiler-reveal__content {
+    padding: 1.1rem;
+    border-top: 1px solid color-mix(in srgb, var(--sl-color-gray-5) 76%, transparent);
+    background: rgb(0 0 0 / 10%);
+  }
+
+  .spoiler-reveal__content :global(:first-child) { margin-top: 0; }
+  .spoiler-reveal__content :global(:last-child) { margin-bottom: 0; }
+
+  @media (max-width: 36rem) {
+    summary { grid-template-columns: auto minmax(0, 1fr); }
+    .spoiler-reveal__action {
+      grid-column: 2;
+      justify-self: start;
+    }
+    .spoiler-reveal__copy > span { white-space: normal; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .spoiler-reveal__action svg { transition: none; }
+  }
+</style>

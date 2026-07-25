@@ -8,6 +8,15 @@ spoilerLevel: none
 patchStatus: current
 ---
 
+## 25 July 2026 — Premium guide experience
+
+- Replaced the documentation-style homepage with a purpose-built cinematic guide interface.
+- Added direct routes into beginner, combat, gear, world, mounts, completion and technical guidance.
+- Added patch status, verification date, evidence grade and spoiler metadata to article headers.
+- Added accessible spoiler-reveal controls for major discoveries.
+- Rebuilt the global visual system for desktop, tablet and mobile layouts.
+- Added an independent project footer and stronger accessibility focus states.
+
 ## 25 July 2026 — Production launch
 
 - Deployed the guide through Cloudflare Workers Builds.
