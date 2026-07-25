@@ -8,6 +8,16 @@ spoilerLevel: none
 patchStatus: current
 ---
 
+## 25 July 2026 — Quest, boss and content database
+
+- Added a canonical searchable database containing 67 evidence-safe quests, bosses, strongholds, Abysses, challenges and knowledge records.
+- Added all 34 official Steam achievement conditions as stable completion milestones.
+- Added 17 named boss records, including five verified Memory Fragment rematches with official locations.
+- Added 14 quest records, two named Abysses and two stronghold or liberation systems.
+- Kept partial identities searchable while excluding them from completion percentages until their route or completion condition is verified.
+- Generated Completion Companion entries from canonical records while preserving all existing local progress IDs.
+- Added cross-dataset validation, source provenance notes and two new Steam Guide sections.
+
 ## 25 July 2026 — Site-wide cinematic theme
 
 - Extended the approved Crimson Desert homepage design across every guide and tool route.

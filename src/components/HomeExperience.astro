@@ -50,13 +50,14 @@ const quickLinks = [
   { label: 'Patch notes', detail: `Version ${patch.version}`, icon: 'compass', href: '/patch-notes/' },
   { label: 'World services', detail: 'Routes and hubs', icon: 'pin', href: '/world/' },
   { label: 'Known issues', detail: `${technical.knownIssuesSource.issueCount} official records`, icon: 'warning', href: '/technical/' },
-  { label: 'Update log', detail: 'Latest changes', icon: 'scroll', href: '/update-log/' },
+  { label: 'Content database', detail: '67 verified records', icon: 'scroll', href: '/database/' },
 ];
 
 const guideSections = [
   { label: 'Start Here', count: 4, width: 100 },
   { label: 'Core Systems', count: 4, width: 100 },
   { label: 'World & Mounts', count: 4, width: 100 },
+  { label: 'Database', count: 1, width: 25 },
   { label: 'Completion', count: 1, width: 25 },
   { label: 'Technical', count: 1, width: 25 },
 ];
@@ -205,7 +206,7 @@ const verifiedLabel = new Intl.DateTimeFormat('en-GB', {
     <section class="portal-dashboard" aria-label="Current guide intelligence">
       <article class="portal-panel portal-panel--library">
         <header><span>✦</span><h2>Guide library</h2></header>
-        <div class="portal-library__summary"><strong>18</strong><span>live guide pages</span></div>
+        <div class="portal-library__summary"><strong>19</strong><span>live guide pages</span></div>
         <div class="portal-library__rows">
           {guideSections.map((section) => (
             <div><span><strong>{section.label}</strong><small>{section.count} {section.count === 1 ? 'guide' : 'guides'}</small></span><i><b style={`width:${section.width}%`}></b></i></div>
