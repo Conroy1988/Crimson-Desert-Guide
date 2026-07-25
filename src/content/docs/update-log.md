@@ -8,6 +8,14 @@ spoilerLevel: none
 patchStatus: current
 ---
 
+## 25 July 2026 — Mobile stylesheet delivery fix
+
+- Investigated an iOS Brave production report where the guide rendered as unstyled raw HTML.
+- Removed the runtime dependency on external screen stylesheets by embedding the complete Astro/Starlight visual system in every generated HTML page.
+- Added a deployment smoke test that rejects missing mobile viewport metadata, insufficient inline CSS, external screen-stylesheet dependencies and missing local asset references.
+- Made Cloudflare Workers static-site trailing-slash and 404 handling explicit.
+- Added immutable caching for fingerprinted `/_astro/` assets while retaining content-hashed filenames.
+
 ## 25 July 2026 — World and traversal compendium
 
 - Added validated structured records for settlements, services, special-mount species and saddlery inventories.
