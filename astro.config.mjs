@@ -14,7 +14,7 @@ export default defineConfig({
         alt: 'Crimson Desert Guide crest',
       },
       favicon: '/favicon.svg',
-      customCss: ['./src/styles/custom.css'],
+      customCss: ['./src/styles/custom.css', './src/styles/home-overrides.css'],
       components: {
         PageTitle: './src/components/PageTitle.astro',
         Footer: './src/components/GuideFooter.astro',
