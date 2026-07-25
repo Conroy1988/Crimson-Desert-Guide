@@ -24,6 +24,22 @@
     {
       "heading": "4. Your First Systems Circuit",
       "source": "src/content/docs/start-here/first-systems.md"
+    },
+    {
+      "heading": "5. Combat Fundamentals",
+      "source": "src/content/docs/systems/combat.md"
+    },
+    {
+      "heading": "6. Weapons, Skills & Testing",
+      "source": "src/content/docs/systems/weapon-skills.md"
+    },
+    {
+      "heading": "7. Boss & Encounter Diagnosis",
+      "source": "src/content/docs/systems/boss-diagnosis.md"
+    },
+    {
+      "heading": "8. Gear, Refinement & Extraction",
+      "source": "src/content/docs/systems/gear.md"
     }
   ]
 }
