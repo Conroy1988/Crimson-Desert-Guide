@@ -1,61 +1,21 @@
 {
-  "title": "(WIP) Crimson Desert Guide – Beginner Systems, Combat, Gear, Mounts, Completion & Technical",
+  "title": "(WIP) Crimson Desert Guide – Beginner Systems, Combat, Gear, Mounts, Completion, Database & Technical",
   "sections": [
-    {
-      "heading": "Update Log",
-      "source": "src/content/docs/update-log.md"
-    },
-    {
-      "heading": "Patch Notes",
-      "source": "src/content/docs/patch-notes.md"
-    },
-    {
-      "heading": "1. Beginner Roadmap",
-      "source": "src/content/docs/start-here/beginner-roadmap.md"
-    },
-    {
-      "heading": "2. Essential Settings",
-      "source": "src/content/docs/start-here/essential-settings.md"
-    },
-    {
-      "heading": "3. Save, Storage & Inventory Safety",
-      "source": "src/content/docs/start-here/save-storage.md"
-    },
-    {
-      "heading": "4. Your First Systems Circuit",
-      "source": "src/content/docs/start-here/first-systems.md"
-    },
-    {
-      "heading": "5. Combat Fundamentals",
-      "source": "src/content/docs/systems/combat.md"
-    },
-    {
-      "heading": "6. Weapons, Skills & Testing",
-      "source": "src/content/docs/systems/weapon-skills.md"
-    },
-    {
-      "heading": "7. Boss & Encounter Diagnosis",
-      "source": "src/content/docs/systems/boss-diagnosis.md"
-    },
-    {
-      "heading": "8. Gear, Refinement & Extraction",
-      "source": "src/content/docs/systems/gear.md"
-    },
-    {
-      "heading": "9. World Navigation & Hernand",
-      "source": "steam/world-navigation.md"
-    },
-    {
-      "heading": "10. Mounts & Traversal",
-      "source": "steam/mounts-traversal.md"
-    },
-    {
-      "heading": "11. Completion Companion",
-      "source": "steam/completion-companion.md"
-    },
-    {
-      "heading": "12. Technical & Performance",
-      "source": "steam/technical-performance.md"
-    }
+    {"heading":"Update Log","source":"src/content/docs/update-log.md"},
+    {"heading":"Patch Notes","source":"src/content/docs/patch-notes.md"},
+    {"heading":"1. Beginner Roadmap","source":"src/content/docs/start-here/beginner-roadmap.md"},
+    {"heading":"2. Essential Settings","source":"src/content/docs/start-here/essential-settings.md"},
+    {"heading":"3. Save, Storage & Inventory Safety","source":"src/content/docs/start-here/save-storage.md"},
+    {"heading":"4. Your First Systems Circuit","source":"src/content/docs/start-here/first-systems.md"},
+    {"heading":"5. Combat Fundamentals","source":"src/content/docs/systems/combat.md"},
+    {"heading":"6. Weapons, Skills & Testing","source":"src/content/docs/systems/weapon-skills.md"},
+    {"heading":"7. Boss & Encounter Diagnosis","source":"src/content/docs/systems/boss-diagnosis.md"},
+    {"heading":"8. Gear, Refinement & Extraction","source":"src/content/docs/systems/gear.md"},
+    {"heading":"9. World Navigation & Hernand","source":"steam/world-navigation.md"},
+    {"heading":"10. Mounts & Traversal","source":"steam/mounts-traversal.md"},
+    {"heading":"11. Completion Companion","source":"steam/completion-companion.md"},
+    {"heading":"12. Technical & Performance","source":"steam/technical-performance.md"},
+    {"heading":"13. Quests & Activities","source":"steam/quests-activities.md"},
+    {"heading":"14. Bosses, Abysses & Strongholds","source":"steam/bosses-strongholds.md"}
   ]
 }
