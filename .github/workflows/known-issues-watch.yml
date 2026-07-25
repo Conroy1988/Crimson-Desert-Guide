@@ -1,0 +1,35 @@
+name: Official Known Issues Watch
+
+on:
+  schedule:
+    - cron: "47 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: official-known-issues-watch
+  cancel-in-progress: false
+
+jobs:
+  inspect:
+    name: Inspect Official Known Issues
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22.12.0
+          package-manager-cache: false
+
+      - name: Compare official known issues
+        run: node scripts/check-known-issues.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
