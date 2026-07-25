@@ -1,0 +1,55 @@
+name: New discovery
+description: Submit a mechanic, route, item, location or interaction for verification.
+title: "[Discovery] "
+labels: ["research: discovery"]
+body:
+  - type: textarea
+    id: discovery
+    attributes:
+      label: What did you discover?
+      description: Describe the observation precisely.
+    validations:
+      required: true
+  - type: input
+    id: patch
+    attributes:
+      label: Game version
+      placeholder: 1.14.00
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - Steam PC
+        - Steam Mac
+        - PlayStation 5
+        - Xbox Series X|S
+        - Epic Games Store
+        - Mac App Store
+        - Multiple platforms
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction steps
+      description: Provide the shortest repeatable sequence.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Supporting evidence
+      description: Add links, screenshots or video timestamps where available.
+  - type: dropdown
+    id: spoilers
+    attributes:
+      label: Spoiler level
+      options:
+        - None
+        - Minor
+        - Major
+    validations:
+      required: true

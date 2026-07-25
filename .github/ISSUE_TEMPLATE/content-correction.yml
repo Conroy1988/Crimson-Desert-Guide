@@ -1,0 +1,54 @@
+name: Content correction
+description: Report information that is wrong, outdated or misleading.
+title: "[Correction] "
+labels: ["content: correction"]
+body:
+  - type: markdown
+    attributes:
+      value: Thank you for helping keep the guide accurate.
+  - type: input
+    id: page
+    attributes:
+      label: Guide page
+      description: Paste the page URL or repository path.
+      placeholder: https://...
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is incorrect?
+      description: Quote only the small section needed to identify the claim.
+    validations:
+      required: true
+  - type: textarea
+    id: correction
+    attributes:
+      label: Correct information
+      description: Explain the correction and how it can be verified.
+    validations:
+      required: true
+  - type: input
+    id: patch
+    attributes:
+      label: Game version
+      placeholder: 1.14.00
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Link official material or describe repeatable in-game testing.
+    validations:
+      required: true
+  - type: dropdown
+    id: spoilers
+    attributes:
+      label: Spoiler level
+      options:
+        - None
+        - Minor
+        - Major
+    validations:
+      required: true
