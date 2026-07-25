@@ -58,6 +58,7 @@ export default defineConfig({
         },
         { label: 'Start Here', items: [{ autogenerate: { directory: 'start-here' } }] },
         { label: 'Core Systems', items: [{ autogenerate: { directory: 'systems' } }] },
+        { label: 'Pywel Atlas', items: [{ autogenerate: { directory: 'atlas' } }] },
         { label: 'World Compendium', items: [{ autogenerate: { directory: 'world' } }] },
         { label: 'Mounts & Creatures', items: [{ autogenerate: { directory: 'mounts' } }] },
         { label: 'Content Database', items: [{ autogenerate: { directory: 'database' } }] },
