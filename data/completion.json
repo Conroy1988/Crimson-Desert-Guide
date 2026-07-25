@@ -1,0 +1,284 @@
+{
+  "schemaVersion": 1,
+  "datasetVersion": "1.0.0",
+  "gamePatch": "1.15.00",
+  "lastVerified": "2026-07-25",
+  "storageKey": "crimson-desert-guide.completion.v1",
+  "categories": [
+    {
+      "id": "activities",
+      "label": "Activities & Systems",
+      "description": "Foundational actions and system milestones supported by the current guide.",
+      "coverage": "seeded"
+    },
+    {
+      "id": "bosses-rematches",
+      "label": "Bosses & Rematches",
+      "description": "Boss and rematch records will be added only after identities and completion conditions are verified.",
+      "coverage": "planned"
+    },
+    {
+      "id": "settlements-travel",
+      "label": "Settlements & Travel",
+      "description": "Service hubs, regional discovery and travel-network milestones.",
+      "coverage": "seeded"
+    },
+    {
+      "id": "mounts-pets",
+      "label": "Mounts & Creatures",
+      "description": "Registered special mounts, mount equipment and spoiler-controlled legendary traversal.",
+      "coverage": "seeded"
+    },
+    {
+      "id": "equipment",
+      "label": "Equipment & Progression",
+      "description": "Refinement, sockets, extraction and equipment-management milestones.",
+      "coverage": "seeded"
+    },
+    {
+      "id": "collectibles-knowledge",
+      "label": "Collectibles & Knowledge",
+      "description": "Books, knowledge and collectible records confirmed by current sources.",
+      "coverage": "seeded"
+    },
+    {
+      "id": "stronghold-liberation",
+      "label": "Stronghold & Liberation",
+      "description": "Stronghold and liberation records remain planned until the guide has verified completion conditions.",
+      "coverage": "planned"
+    }
+  ],
+  "migrations": {
+    "renamedIds": {},
+    "retiredIds": []
+  },
+  "entries": [
+    {
+      "id": "activity-manual-save",
+      "category": "activities",
+      "title": "Create a manual save",
+      "summary": "Create a manual save before the first long exploration or equipment-investment session.",
+      "spoilerLevel": "none",
+      "evidence": "official",
+      "patchStatus": "current",
+      "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=63",
+      "guidePath": "/start-here/save-storage/",
+      "prerequisites": [],
+      "tags": ["save", "backup", "safety"]
+    },
+    {
+      "id": "activity-private-storage-deposit",
+      "category": "activities",
+      "title": "Make a Private Storage deposit",
+      "summary": "Deposit overflow, duplicate equipment or reserve materials before continuing a long route.",
+      "spoilerLevel": "none",
+      "evidence": "community",
+      "patchStatus": "current",
+      "guidePath": "/start-here/save-storage/",
+      "prerequisites": [],
+      "tags": ["storage", "inventory", "safety"]
+    },
+    {
+      "id": "activity-watch-and-learn",
+      "category": "activities",
+      "title": "Acquire a skill through Watch and Learn",
+      "summary": "Use the Watch and Learn system, then test the acquired skill under repeatable conditions.",
+      "spoilerLevel": "none",
+      "evidence": "community",
+      "patchStatus": "current",
+      "guidePath": "/systems/weapon-skills/",
+      "prerequisites": [],
+      "tags": ["skills", "watch and learn", "combat"]
+    },
+    {
+      "id": "travel-bell-tower",
+      "category": "settlements-travel",
+      "title": "Reveal a region from a bell tower",
+      "summary": "Use a city bell tower to reveal regional map information and nearby points of interest.",
+      "spoilerLevel": "none",
+      "evidence": "community",
+      "patchStatus": "current",
+      "guidePath": "/world/",
+      "prerequisites": [],
+      "tags": ["map", "discovery", "bell tower"]
+    },
+    {
+      "id": "travel-abyss-nexus",
+      "category": "settlements-travel",
+      "title": "Activate an Abyss Nexus",
+      "summary": "Identify and activate an Abyss Nexus to extend the usable fast-travel network.",
+      "spoilerLevel": "none",
+      "evidence": "community",
+      "patchStatus": "current",
+      "guidePath": "/world/",
+      "prerequisites": [],
+      "tags": ["fast travel", "abyss nexus", "discovery"]
+    },
+    {
+      "id": "travel-mysterious-energy",
+      "category": "settlements-travel",
+      "title": "Investigate Mysterious Energy",
+      "summary": "Investigate a Mysterious Energy location and determine whether it contains travel or puzzle value.",
+      "spoilerLevel": "minor",
+      "evidence": "community",
+      "patchStatus": "current",
+      "guidePath": "/world/",
+      "prerequisites": [],
+      "tags": ["mysterious energy", "abyss", "exploration"]
+    },
+    {
+      "id": "travel-hernand-circuit",
+      "category": "settlements-travel",
+      "title": "Complete the Hernand arrival circuit",
+      "summary": "Check map information, travel access, storage, smithy, saddlery, shops and local requests before leaving Hernand.",
+      "spoilerLevel": "minor",
+      "evidence": "community",
+      "patchStatus": "current",
+      "guidePath": "/world/hernand/",
+      "prerequisites": [],
+      "tags": ["hernand", "services", "settlement"]
+    },
+    {
+      "id": "travel-hernand-wolf-saddle",
+      "category": "settlements-travel",
+      "title": "Inspect Hernand's Wolf Saddle stock",
+      "summary": "Confirm the Wolf Saddle offering at Hernand's saddlery.",
+      "spoilerLevel": "minor",
+      "evidence": "official",
+      "patchStatus": "current",
+      "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511",
+      "guidePath": "/world/hernand/",
+      "prerequisites": ["travel-hernand-circuit"],
+      "tags": ["hernand", "wolf", "saddle"]
+    },
+    {
+      "id": "travel-hernand-bear-saddle",
+      "category": "settlements-travel",
+      "title": "Inspect Hernand's Bear Saddle stock",
+      "summary": "Confirm the Bear Saddle offering at Hernand's saddlery.",
+      "spoilerLevel": "minor",
+      "evidence": "official",
+      "patchStatus": "current",
+      "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511",
+      "guidePath": "/world/hernand/",
+      "prerequisites": ["travel-hernand-circuit"],
+      "tags": ["hernand", "bear", "saddle"]
+    },
+    {
+      "id": "mount-register-special",
+      "category": "mounts-pets",
+      "title": "Register a special mount",
+      "summary": "Gain an eligible animal's trust and complete its registration as a special mount.",
+      "spoilerLevel": "minor",
+      "evidence": "official",
+      "patchStatus": "current",
+      "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511",
+      "guidePath": "/mounts/",
+      "prerequisites": [],
+      "tags": ["special mount", "trust", "registration"]
+    },
+    {
+      "id": "mount-equip-special-saddle",
+      "category": "mounts-pets",
+      "title": "Equip a special-mount saddle",
+      "summary": "Purchase and equip a saddle compatible with a registered special mount.",
+      "spoilerLevel": "minor",
+      "evidence": "official",
+      "patchStatus": "current",
+      "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511",
+      "guidePath": "/mounts/",
+      "prerequisites": ["mount-register-special"],
+      "tags": ["saddle", "equipment", "special mount"]
+    },
+    {
+      "id": "mount-register-baby-wyvern",
+      "category": "mounts-pets",
+      "title": "Register a Baby Wyvern",
+      "summary": "Register a Baby Wyvern after the relevant special-mount support becomes available.",
+      "spoilerLevel": "full",
+      "evidence": "official",
+      "patchStatus": "current",
+      "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=96&pubDate=20260605",
+      "guidePath": "/mounts/",
+      "prerequisites": ["mount-register-special"],
+      "tags": ["wyvern", "aerial", "special mount"]
+    },
+    {
+      "id": "mount-register-kuku-chick",
+      "category": "mounts-pets",
+      "title": "Register a Kuku Bird Chick",
+      "summary": "Register a Kuku Bird Chick as a supported special mount.",
+      "spoilerLevel": "minor",
+      "evidence": "official",
+      "patchStatus": "current",
+      "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=96&pubDate=20260605",
+      "guidePath": "/mounts/",
+      "prerequisites": ["mount-register-special"],
+      "tags": ["kuku bird", "chick", "special mount"]
+    },
+    {
+      "id": "mount-blackstar-access",
+      "category": "mounts-pets",
+      "title": "Gain access to Blackstar",
+      "summary": "Record access to the spoiler-controlled legendary aerial traversal mount.",
+      "spoilerLevel": "full",
+      "evidence": "community",
+      "patchStatus": "current",
+      "guidePath": "/mounts/blackstar/",
+      "prerequisites": [],
+      "tags": ["blackstar", "legendary", "aerial"]
+    },
+    {
+      "id": "equipment-first-refinement",
+      "category": "equipment",
+      "title": "Complete a controlled refinement",
+      "summary": "Refine an item after saving, recording the inputs and deciding a stopping point in advance.",
+      "spoilerLevel": "none",
+      "evidence": "official",
+      "patchStatus": "current",
+      "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511",
+      "guidePath": "/systems/gear/",
+      "prerequisites": ["activity-manual-save"],
+      "tags": ["refinement", "materials", "equipment"]
+    },
+    {
+      "id": "equipment-first-extraction",
+      "category": "equipment",
+      "title": "Extract refinement materials",
+      "summary": "Use extraction and confirm the item remains while refinement materials are returned according to the documented recovery rules.",
+      "spoilerLevel": "none",
+      "evidence": "official",
+      "patchStatus": "current",
+      "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511",
+      "guidePath": "/systems/gear/",
+      "prerequisites": ["equipment-first-refinement"],
+      "tags": ["extraction", "materials", "recovery"]
+    },
+    {
+      "id": "equipment-socket-abyss-gear",
+      "category": "equipment",
+      "title": "Socket an Abyss Gear item",
+      "summary": "Place a supported Abyss Gear item into an equipment socket and verify the resulting loadout state.",
+      "spoilerLevel": "minor",
+      "evidence": "official",
+      "patchStatus": "current",
+      "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511",
+      "guidePath": "/systems/gear/",
+      "prerequisites": [],
+      "tags": ["abyss gear", "socket", "loadout"]
+    },
+    {
+      "id": "knowledge-hernand-ranged-weapons-book",
+      "category": "collectibles-knowledge",
+      "title": "Obtain Ranged Weapons of the World — Bows, Vol. I",
+      "summary": "Obtain the book added to Hernand's Equipment Shop in Patch 1.11.00.",
+      "spoilerLevel": "minor",
+      "evidence": "official",
+      "patchStatus": "current",
+      "source": "https://crimsondesert.pearlabyss.com/en-us/News/Notice/Detail?_boardNo=99",
+      "guidePath": "/world/hernand/",
+      "prerequisites": ["travel-hernand-circuit"],
+      "tags": ["book", "knowledge", "hernand", "bows"]
+    }
+  ]
+}
