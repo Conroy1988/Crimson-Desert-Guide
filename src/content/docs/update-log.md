@@ -8,6 +8,17 @@ spoilerLevel: none
 patchStatus: current
 ---
 
+## 25 July 2026 — Site-wide cinematic theme
+
+- Extended the approved Crimson Desert homepage design across every guide and tool route.
+- Added section-aware cinematic article heroes for updates, beginner guidance, combat, gear, world, mounts, completion, technical guidance and standards.
+- Added official promotional backgrounds from Pearl Abyss-controlled Steam media with documented source provenance.
+- Rebuilt the global header, sidebar, mobile navigation, reading canvas, tables, callouts, code blocks, contents navigation and pagination in the black, iron, crimson and antique-gold visual system.
+- Restyled Completion Companion and Technical Centre surfaces without changing their behaviour or stored progress.
+- Rebuilt the article footer around the project crest, guide navigation and Pearl Abyss fan-content disclaimer.
+- Added a parchment-and-ink light-mode interpretation for every new component.
+- Added a site-theme coverage audit to prevent future routes or major components from falling outside the design system.
+
 ## 25 July 2026 — Cinematic Crimson Desert portal redesign
 
 - Rebuilt the homepage as a real responsive game-guide portal based on the approved desktop and mobile design direction.
