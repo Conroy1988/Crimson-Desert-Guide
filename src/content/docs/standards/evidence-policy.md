@@ -1,7 +1,7 @@
 ---
 title: Evidence & Verification Policy
 description: The research, sourcing and patch-control standard used across the guide.
-currentPatch: 1.14.00
+currentPatch: 1.15.00
 lastVerified: "2026-07-25"
 evidence: verified
 spoilerLevel: none

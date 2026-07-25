@@ -1,7 +1,7 @@
 ---
 title: Hernand
 description: Research page for Hernand, its services, routes and surrounding activities.
-currentPatch: 1.14.00
+currentPatch: 1.15.00
 lastVerified: "2026-07-25"
 evidence: provisional
 spoilerLevel: minor

@@ -1,7 +1,7 @@
 ---
 title: Technical & Performance
 description: Platform-specific troubleshooting, optimisation and quality settings.
-currentPatch: 1.14.00
+currentPatch: 1.15.00
 lastVerified: "2026-07-25"
 evidence: provisional
 spoilerLevel: none

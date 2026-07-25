@@ -1,7 +1,7 @@
 ---
 title: Completion Companion
 description: Roadmap for interactive Crimson Desert checklists and completion tracking.
-currentPatch: 1.14.00
+currentPatch: 1.15.00
 lastVerified: "2026-07-25"
 evidence: provisional
 spoilerLevel: none
