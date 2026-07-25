@@ -8,6 +8,15 @@ spoilerLevel: none
 patchStatus: current
 ---
 
+## 25 July 2026 — Patch 1.15.00 baseline
+
+- Verified the official Patch 1.15.00 notice published on 24 July 2026.
+- Updated the global guide baseline, homepage intelligence and page metadata from 1.14.00 to 1.15.00.
+- Reviewed current pages against the patch's narrow combat, camera, mount and equipment-lock changes.
+- Added current known-issue warnings for remapped Hold evasion and Damiane's Shield Toss failure state.
+- Confirmed that the core beginner route, storage guidance, refinement rules and extraction model remain valid.
+- Recorded the Mac App Store rollout as still in progress at the time of verification.
+
 ## 25 July 2026 — Beginner guide expansion
 
 - Replaced the provisional beginner roadmap with a complete low-spoiler opening route.
