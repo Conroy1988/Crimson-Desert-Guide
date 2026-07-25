@@ -33,13 +33,22 @@ jobs:
         run: npm install --no-audit --no-fund
 
       - name: Validate content and build
-        run: npm run check:all
+        shell: bash
+        run: |
+          set +e
+          npm run check:all 2>&1 | tee validation.log
+          status=${PIPESTATUS[0]}
+          exit "$status"
 
-      - name: Upload website and Steam export
+      - name: Upload website, Steam export and diagnostics
+        if: always()
         uses: actions/upload-artifact@v7
         with:
           name: crimson-desert-guide-${{ github.sha }}
           path: |
+            validation.log
             dist/
             artifacts/steam-guide.bbcode
+            package-lock.json
+          if-no-files-found: warn
           retention-days: 7
