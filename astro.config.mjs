@@ -60,6 +60,7 @@ export default defineConfig({
         { label: 'Core Systems', items: [{ autogenerate: { directory: 'systems' } }] },
         { label: 'World Compendium', items: [{ autogenerate: { directory: 'world' } }] },
         { label: 'Mounts & Creatures', items: [{ autogenerate: { directory: 'mounts' } }] },
+        { label: 'Content Database', items: [{ autogenerate: { directory: 'database' } }] },
         { label: 'Completion', items: [{ autogenerate: { directory: 'completion' } }] },
         { label: 'Technical', items: [{ autogenerate: { directory: 'technical' } }] },
         { label: 'Guide Standards', items: [{ autogenerate: { directory: 'standards' } }] },
