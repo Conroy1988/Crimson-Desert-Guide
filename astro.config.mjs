@@ -20,9 +20,13 @@ export default defineConfig({
         baseUrl:
           'https://github.com/Conroy1988/Crimson-Desert-Guide/edit/main/',
       },
-      social: {
-        github: 'https://github.com/Conroy1988/Crimson-Desert-Guide',
-      },
+      social: [
+        {
+          icon: 'github',
+          label: 'GitHub',
+          href: 'https://github.com/Conroy1988/Crimson-Desert-Guide',
+        },
+      ],
       head: [
         {
           tag: 'meta',
@@ -42,31 +46,31 @@ export default defineConfig({
         },
         {
           label: 'Start Here',
-          autogenerate: { directory: 'start-here' },
+          items: [{ autogenerate: { directory: 'start-here' } }],
         },
         {
           label: 'Core Systems',
-          autogenerate: { directory: 'systems' },
+          items: [{ autogenerate: { directory: 'systems' } }],
         },
         {
           label: 'World Compendium',
-          autogenerate: { directory: 'world' },
+          items: [{ autogenerate: { directory: 'world' } }],
         },
         {
           label: 'Mounts & Creatures',
-          autogenerate: { directory: 'mounts' },
+          items: [{ autogenerate: { directory: 'mounts' } }],
         },
         {
           label: 'Completion',
-          autogenerate: { directory: 'completion' },
+          items: [{ autogenerate: { directory: 'completion' } }],
         },
         {
           label: 'Technical',
-          autogenerate: { directory: 'technical' },
+          items: [{ autogenerate: { directory: 'technical' } }],
         },
         {
           label: 'Guide Standards',
-          autogenerate: { directory: 'standards' },
+          items: [{ autogenerate: { directory: 'standards' } }],
         },
       ],
     }),
