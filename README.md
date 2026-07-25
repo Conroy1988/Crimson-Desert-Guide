@@ -7,7 +7,7 @@
 
 An independent, evidence-backed and patch-aware guide to **Crimson Desert**. The repository is the canonical source for the website, structured guide data, update history and automation.
 
-> **Current verified baseline:** Patch **1.14.00**, published 16 July 2026 and verified against the official Crimson Desert announcement list on 25 July 2026.
+> **Current verified baseline:** Patch **1.15.00**, published 24 July 2026 and verified against the official Crimson Desert announcement list on 25 July 2026.
 
 ## Objectives
 
