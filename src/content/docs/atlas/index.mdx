@@ -1,0 +1,29 @@
+---
+title: Pywel Atlas & Route Intelligence
+description: A cinematic, evidence-safe atlas for settlements, services, travel systems and local world progress.
+currentPatch: 1.15.00
+lastVerified: "2026-07-25"
+evidence: verified
+spoilerLevel: minor
+patchStatus: current
+---
+
+import PywelAtlas from '../../../components/PywelAtlas.astro';
+
+The atlas is a **topological intelligence register**, not a geographic coordinate map. It links only documented locations, services and travel-system edges. Missing coordinates and unverified roads are left unavailable rather than estimated.
+
+<PywelAtlas />
+
+## Reading the atlas
+
+- **Official** records come directly from Pearl Abyss patch notes or Steam achievements.
+- **Verified** records are maintained by the guide with an explicit source path.
+- A route result uses only the connection graph in the versioned atlas dataset.
+- “No verified route” means the guide does not yet have evidence for a reliable path.
+- Atlas progress remains in this browser unless you export a JSON backup.
+
+## Current evidence boundary
+
+Patch 1.02.00 added an Abyss Nexus in Pailune. Patch 1.03.00 improved Nexus discovery and teleportation while mounted, falling, swimming or climbing. Patch 1.06.00 published the official special-mount saddlery inventory for eight cities. The official Master Camper achievement names Howling Hill as the camp activation location.
+
+This is enough to build reliable service and system intelligence, but not enough to publish a coordinate-accurate world map or settlement-to-settlement road network.
