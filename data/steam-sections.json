@@ -16,6 +16,14 @@
     {
       "heading": "2. Essential Settings",
       "source": "src/content/docs/start-here/essential-settings.md"
+    },
+    {
+      "heading": "3. Save, Storage & Inventory Safety",
+      "source": "src/content/docs/start-here/save-storage.md"
+    },
+    {
+      "heading": "4. Your First Systems Circuit",
+      "source": "src/content/docs/start-here/first-systems.md"
     }
   ]
 }
