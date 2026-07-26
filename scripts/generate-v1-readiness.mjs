@@ -25,7 +25,7 @@ const programmes = [
   {
     id: 'world-mounts',
     label: 'World, settlements and mounts',
-    requiredPaths: ['src/content/docs/world/index.md', 'src/content/docs/world/hernand.md', 'src/content/docs/mounts/index.md', 'src/content/docs/mounts/blackstar.md', 'data/world.json'],
+    requiredPaths: ['src/content/docs/world/index.mdx', 'src/content/docs/world/hernand.mdx', 'src/content/docs/mounts/index.mdx', 'src/content/docs/mounts/blackstar.mdx', 'data/world.json'],
   },
   {
     id: 'completion',
@@ -106,7 +106,11 @@ const partialRecords = database.records.filter((record) => record.recordStatus =
 const verifiedRecords = database.records.filter((record) => record.recordStatus === 'verified');
 const completedProgrammes = programmes.filter((programme) => programme.status === 'complete').length;
 const programmePercent = Math.round((completedProgrammes / programmes.length) * 100);
-const requiredScripts = ['check:all', 'audit:content', 'audit:database', 'audit:atlas', 'audit:details', 'audit:catalogue', 'audit:technical', 'audit:theme', 'audit:site-theme', 'test:completion', 'test:atlas', 'test:guide-notes', 'test:catalogue'];
+const requiredScripts = [
+  'check:all', 'audit:content', 'audit:database', 'audit:atlas', 'audit:details', 'audit:catalogue',
+  'audit:characters', 'audit:technical', 'audit:theme', 'audit:site-theme', 'audit:v1',
+  'test:completion', 'test:atlas', 'test:guide-notes', 'test:catalogue', 'test:build-lab',
+];
 const missingScripts = requiredScripts.filter((script) => !packageJson.scripts?.[script]);
 const releaseReady = programmePercent === 100 && missingScripts.length === 0;
 
