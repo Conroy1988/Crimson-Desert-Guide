@@ -80,7 +80,7 @@ The guide combines complete walkthroughs with a searchable database, interactive
 <p><a href="https://crimson-desert-guide.dannyconroy.workers.dev/atlas/"><strong>Open the Pywel Atlas →</strong></a></p>
 </td>
 <td width="50%" valign="top">
-<a href="https://crimson-desert-guide.dannyconroy.workers.dev/command-centre/"><img src="https://s1.pearlcdn.com/cd/brand/media_GLOBAL/2025/09/25/6ef397ad44020250925154645837.jpg" alt="Official Crimson Desert world imagery for expedition planning" width="100%"></a>
+<a href="https://crimson-desert-guide.dannyconroy.workers.dev/command-centre/"><img src="https://s1.pearlcdn.com/cd/brand/media_GLOBAL/2026/04/02/9cf1d2ace3a20260402105221785.png" alt="Official Crimson Desert screenshot showing a river valley route through Pywel" width="100%"></a>
 <h3>Run the expedition</h3>
 <p>Continue your last guide, search the complete knowledge base, plan the next session and protect every local guide state through one validated vault.</p>
 <p><a href="https://crimson-desert-guide.dannyconroy.workers.dev/command-centre/"><strong>Open the Command Centre →</strong></a></p>
