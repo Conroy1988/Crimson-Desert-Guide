@@ -10,6 +10,7 @@ const files = [
   'bosses-research.json',
   'quests.json',
   'world.json',
+  'knowledge-challenges.json',
 ];
 
 const completion = JSON.parse(await readFile(completionUrl, 'utf8'));
@@ -73,6 +74,13 @@ const categories = completion.categories.map((category) => {
       coverage: 'seeded',
     };
   }
+  if (category.id === 'collectibles-knowledge') {
+    return {
+      ...category,
+      description: 'Official achievement categories and individually verified books, characters, creatures and faction knowledge.',
+      coverage: 'seeded',
+    };
+  }
   if (category.id === 'stronghold-liberation') {
     return {
       ...category,
@@ -85,8 +93,8 @@ const categories = completion.categories.map((category) => {
 
 const output = {
   ...completion,
-  datasetVersion: '2.0.0',
-  lastVerified: '2026-07-25',
+  datasetVersion: '2.1.0',
+  lastVerified: '2026-07-26',
   categories,
   entries: [...preserved, ...generated],
 };
