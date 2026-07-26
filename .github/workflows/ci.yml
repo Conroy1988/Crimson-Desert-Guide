@@ -17,7 +17,7 @@ jobs:
   quality:
     name: Quality Gate
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
 
     steps:
       - name: Check out repository
@@ -32,15 +32,15 @@ jobs:
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
-      - name: Validate content and build
+      - name: Validate content and both deployment modes
         shell: bash
         run: |
           set +e
-          npm run check:all 2>&1 | tee validation.log
+          npm run check:ci 2>&1 | tee validation.log
           status=${PIPESTATUS[0]}
           exit "$status"
 
-      - name: Upload website, Steam export and diagnostics
+      - name: Upload website, subpath build, Steam export and diagnostics
         if: always()
         uses: actions/upload-artifact@v7
         with:
@@ -48,6 +48,7 @@ jobs:
           path: |
             validation.log
             dist/
+            dist-subpath/
             artifacts/steam-guide.bbcode
             package-lock.json
           if-no-files-found: warn
