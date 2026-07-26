@@ -73,6 +73,21 @@ const programmes = [
     requiredPaths: ['src/content/docs/systems/characters.mdx', 'src/content/docs/systems/build-lab.mdx', 'src/components/CharacterMasteryCentre.astro', 'src/components/BuildLaboratory.astro', 'data/character-mastery.json', 'data/build-archetypes.json', 'src/lib/build-lab-state.mjs'],
   },
   {
+    id: 'command-centre',
+    label: 'Pywel Expedition Command Centre and guide-data vault',
+    requiredPaths: [
+      'src/content/docs/command-centre/index.mdx',
+      'src/components/ExpeditionCommandCentre.astro',
+      'src/components/GuideSessionTracker.astro',
+      'src/lib/command-centre-state.mjs',
+      'data/official-media.json',
+      'data/command-centre.json',
+      'scripts/generate-command-centre.mjs',
+      'scripts/command-centre-audit.mjs',
+      'scripts/command-centre-state-test.mjs',
+    ],
+  },
+  {
     id: 'publishing-quality',
     label: 'Publishing, accessibility and protected validation',
     requiredPaths: [
@@ -108,7 +123,7 @@ async function walk(directory) {
   return output;
 }
 
-const [database, research, completion, details, catalogue, atlas, technical, mastery, builds, steam, packageJson] = await Promise.all([
+const [database, research, completion, details, catalogue, atlas, technical, mastery, builds, command, officialMedia, steam, packageJson] = await Promise.all([
   readFile(new URL('data/content-database.json', rootUrl), 'utf8').then(JSON.parse),
   readFile(new URL('data/research-queue.json', rootUrl), 'utf8').then(JSON.parse),
   readFile(new URL('data/completion.json', rootUrl), 'utf8').then(JSON.parse),
@@ -118,6 +133,8 @@ const [database, research, completion, details, catalogue, atlas, technical, mas
   readFile(new URL('data/technical-issues.json', rootUrl), 'utf8').then(JSON.parse),
   readFile(new URL('data/character-mastery.json', rootUrl), 'utf8').then(JSON.parse),
   readFile(new URL('data/build-archetypes.json', rootUrl), 'utf8').then(JSON.parse),
+  readFile(new URL('data/command-centre.json', rootUrl), 'utf8').then(JSON.parse),
+  readFile(new URL('data/official-media.json', rootUrl), 'utf8').then(JSON.parse),
   readFile(new URL('data/steam-sections.json', rootUrl), 'utf8').then(JSON.parse),
   readFile(new URL('package.json', rootUrl), 'utf8').then(JSON.parse),
 ]);
@@ -128,9 +145,9 @@ const verifiedRecords = database.records.filter((record) => record.recordStatus 
 const completedProgrammes = programmes.filter((programme) => programme.status === 'complete').length;
 const programmePercent = Math.round((completedProgrammes / programmes.length) * 100);
 const requiredScripts = [
-  'check:all', 'generate:research', 'audit:content', 'audit:database', 'audit:research', 'audit:atlas', 'audit:details', 'audit:catalogue',
-  'audit:characters', 'audit:technical', 'audit:theme', 'audit:site-theme', 'audit:soundtrack', 'audit:v1',
-  'test:completion', 'test:atlas', 'test:guide-notes', 'test:catalogue', 'test:build-lab', 'test:research',
+  'check:all', 'generate:research', 'generate:command', 'audit:content', 'audit:database', 'audit:research', 'audit:atlas', 'audit:details', 'audit:catalogue',
+  'audit:characters', 'audit:technical', 'audit:theme', 'audit:site-theme', 'audit:soundtrack', 'audit:command', 'audit:v1',
+  'test:completion', 'test:atlas', 'test:guide-notes', 'test:catalogue', 'test:build-lab', 'test:research', 'test:command',
 ];
 const missingScripts = requiredScripts.filter((script) => !packageJson.scripts?.[script]);
 const releaseReady = programmePercent === 100 && missingScripts.length === 0;
@@ -160,12 +177,22 @@ const output = {
     technicalRecords: technical.records.length,
     playableCharacters: mastery.characters.length,
     buildArchetypes: builds.archetypes.length,
+    commandSearchRecords: command.records.length,
+    commandPlannerRecords: command.plannerRecords.length,
+    officialMediaAssets: officialMedia.assets.length,
     steamSections: steam.sections.length,
   },
   researchQueue: {
     count: research.records.length,
     explanation: 'Officially named or otherwise supported records whose route, objective, total, reward, mechanics or exact statistics remain incomplete. They are visible, converted into controlled research protocols and explicitly excluded from unsupported completion claims.',
     ids: research.records.map((record) => record.id),
+  },
+  commandCentre: {
+    searchRecords: command.records.length,
+    plannerRecords: command.plannerRecords.length,
+    vaultSources: command.stateSources.length,
+    officialAssets: officialMedia.assets.length,
+    explanation: 'Unifies local guide progress, expedition planning, spoiler preferences, recent-route continuation, full-guide search and validated backup restoration without creating a server-side player profile.',
   },
   interpretation: {
     programmeCompletion: 'Measures whether every planned guide programme, tool and validation system is present.',
@@ -179,4 +206,4 @@ const output = {
 };
 
 await writeFile(new URL('data/v1-readiness.json', rootUrl), `${JSON.stringify(output, null, 2)}\n`, 'utf8');
-console.log(`Generated v1 readiness: ${programmePercent}% programmes, ${database.records.length} canonical records and ${research.records.length} controlled research records.`);
+console.log(`Generated v1 readiness: ${programmePercent}% programmes, ${database.records.length} canonical records, ${research.records.length} controlled research records and ${command.records.length} command records.`);
