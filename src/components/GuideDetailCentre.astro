@@ -1,0 +1,403 @@
+---
+import details from '../../data/guide-details.json';
+
+const typeLabels = {
+  quest: 'Quest',
+  boss: 'Boss',
+  abyss: 'Abyss',
+  stronghold: 'Stronghold',
+};
+const statusLabels = {
+  supported: 'Supported guidance',
+  limited: 'Limited official detail',
+  research: 'Research required',
+};
+const records = details.records;
+const characters = [...new Set(records.flatMap((record) => record.characters))].sort();
+const counts = {
+  total: records.length,
+  supported: records.filter((record) => record.detailStatus === 'supported').length,
+  limited: records.filter((record) => record.detailStatus === 'limited').length,
+  research: records.filter((record) => record.detailStatus === 'research').length,
+};
+---
+
+<section class="detail-centre" data-detail-centre data-storage-key="cd-guide-notes-v1">
+  <div class="detail-centre__hero">
+    <div>
+      <span>Evidence-safe field intelligence</span>
+      <h2>Quest & Encounter Encyclopaedia</h2>
+      <p>Operational guidance is published only where the canonical evidence supports it. Unverified routes, rewards, boss phases and weaknesses remain visibly unresolved.</p>
+    </div>
+    <dl>
+      <div><dt>Records</dt><dd>{counts.total}</dd></div>
+      <div><dt>Supported</dt><dd>{counts.supported}</dd></div>
+      <div><dt>Limited</dt><dd>{counts.limited}</dd></div>
+      <div><dt>Research</dt><dd>{counts.research}</dd></div>
+    </dl>
+  </div>
+
+  <div class="detail-centre__toolbar" aria-label="Guide-detail filters">
+    <label class="detail-field detail-field--search">
+      <span>Search</span>
+      <input type="search" placeholder="Quest, boss, blocker, region…" data-detail-search />
+    </label>
+    <label class="detail-field">
+      <span>Type</span>
+      <select data-detail-type>
+        <option value="all">All types</option>
+        {Object.entries(typeLabels).map(([value, label]) => <option value={value}>{label}</option>)}
+      </select>
+    </label>
+    <label class="detail-field">
+      <span>Evidence state</span>
+      <select data-detail-status>
+        <option value="all">All states</option>
+        {Object.entries(statusLabels).map(([value, label]) => <option value={value}>{label}</option>)}
+      </select>
+    </label>
+    <label class="detail-field">
+      <span>Character</span>
+      <select data-detail-character>
+        <option value="all">All characters</option>
+        {characters.map((character) => <option value={character}>{character === 'all' ? 'Any character' : character}</option>)}
+      </select>
+    </label>
+    <label class="detail-field">
+      <span>Spoilers</span>
+      <select data-detail-spoiler>
+        <option value="all">All spoiler levels</option>
+        <option value="none">No spoilers</option>
+        <option value="minor">Minor spoilers</option>
+        <option value="full">Major spoilers</option>
+      </select>
+    </label>
+    <label class="detail-reveal">
+      <input type="checkbox" data-detail-reveal />
+      <span>Reveal major identities</span>
+    </label>
+  </div>
+
+  <div class="detail-centre__utility">
+    <p><strong data-detail-result-count>{records.length}</strong> records shown · Notes and preparation checks stay in this browser.</p>
+    <div>
+      <button type="button" data-detail-export>Export notes</button>
+      <label class="detail-import">Import notes<input type="file" accept="application/json,.json" data-detail-import /></label>
+      <button type="button" data-detail-reset>Reset notes</button>
+    </div>
+    <p class="detail-centre__feedback" aria-live="polite" data-detail-feedback></p>
+  </div>
+
+  <div class="detail-centre__grid" data-detail-grid>
+    {records.map((record) => {
+      const searchText = [
+        record.title,
+        record.summary,
+        record.regionLabel,
+        ...record.characters,
+        ...record.blockers,
+        ...record.unknowns,
+      ].join(' ').toLowerCase();
+      return (
+        <article
+          class:list={['detail-card', record.spoilerLevel === 'full' && 'detail-card--major']}
+          data-detail-card
+          data-record-id={record.id}
+          data-type={record.type}
+          data-status={record.detailStatus}
+          data-characters={record.characters.join(',')}
+          data-spoiler={record.spoilerLevel}
+          data-search={searchText}
+        >
+          <header class="detail-card__header">
+            <div class="detail-card__badges">
+              <span>{typeLabels[record.type]}</span>
+              <span class={`detail-status detail-status--${record.detailStatus}`}>{statusLabels[record.detailStatus]}</span>
+              <span>{record.regionLabel}</span>
+            </div>
+            <h3>
+              {record.spoilerLevel === 'full' && <span class="detail-card__masked">Major story record</span>}
+              <span class="detail-card__revealed">{record.title}</span>
+            </h3>
+            <p>{record.summary}</p>
+          </header>
+
+          <div class="detail-card__meta">
+            <span>Evidence: {record.evidence}</span>
+            <span>Characters: {record.characters.join(', ')}</span>
+            <span>Replay: {record.replayability}</span>
+            <span>Since: {record.firstSupportedPatch}</span>
+          </div>
+
+          <div class="detail-card__columns">
+            <section>
+              <h4>Preparation</h4>
+              <ul>{record.preparation.map((item) => <li>{item}</li>)}</ul>
+            </section>
+
+            <section>
+              <h4>Supported checkpoints</h4>
+              {record.checkpoints.length ? (
+                <ol>{record.checkpoints.map((item) => <li>{item}</li>)}</ol>
+              ) : (
+                <p class="detail-card__unknown">No complete objective sequence is currently supported.</p>
+              )}
+            </section>
+
+            <section>
+              <h4>Known blockers</h4>
+              {record.blockers.length ? (
+                <ul>{record.blockers.map((item) => <li>{item}</li>)}</ul>
+              ) : (
+                <p>No officially recorded blocker is attached to this record.</p>
+              )}
+            </section>
+
+            <section>
+              <h4>Safe recovery order</h4>
+              <ol>{record.recovery.map((item) => <li>{item}</li>)}</ol>
+            </section>
+          </div>
+
+          <section class="detail-card__boundary">
+            <h4>Still unresolved</h4>
+            <ul>{record.unknowns.map((item) => <li>{item}</li>)}</ul>
+          </section>
+
+          <div class="detail-card__links">
+            {record.guideLinks.map((link) => <a href={link}>Related guide <span aria-hidden="true">→</span></a>)}
+            {record.sources.map((source, index) => <a href={source} rel="noreferrer">Source {index + 1} <span aria-hidden="true">↗</span></a>)}
+          </div>
+
+          <section class="detail-card__personal" aria-label={`Private preparation for ${record.title}`}>
+            <div>
+              <h4>My preparation</h4>
+              {record.checklist.map((item) => (
+                <label><input type="checkbox" data-detail-prep={item.id} /> <span>{item.label}</span></label>
+              ))}
+            </div>
+            <label class="detail-card__note">
+              <span>Private note</span>
+              <textarea rows="3" maxlength="5000" placeholder="Record your route, failure state or next test…" data-detail-note></textarea>
+            </label>
+            <div class="detail-card__note-actions">
+              <button type="button" data-detail-save>Save note</button>
+              <button type="button" data-detail-clear>Clear</button>
+            </div>
+          </section>
+        </article>
+      );
+    })}
+  </div>
+
+  <p class="detail-centre__empty" hidden data-detail-empty>No records match the selected filters.</p>
+</section>
+
+<script>
+  import {
+    createGuideNotesState,
+    exportGuideNotes,
+    importGuideNotes,
+    setGuideNote,
+    setPreparationItem,
+    validateGuideNotesState,
+  } from '../lib/guide-notes-state.mjs';
+
+  const bindDetailCentres = () => {
+    for (const root of document.querySelectorAll('[data-detail-centre]')) {
+      if (!(root instanceof HTMLElement) || root.dataset.bound === 'true') continue;
+      root.dataset.bound = 'true';
+
+      const cards = [...root.querySelectorAll('[data-detail-card]')].filter((card) => card instanceof HTMLElement);
+      const recordIds = cards.map((card) => card.dataset.recordId).filter(Boolean);
+      const checklistByRecord = Object.fromEntries(cards.map((card) => [
+        card.dataset.recordId,
+        [...card.querySelectorAll('[data-detail-prep]')].map((item) => item.getAttribute('data-detail-prep')),
+      ]));
+      const storageKey = root.dataset.storageKey || 'cd-guide-notes-v1';
+      const feedback = root.querySelector('[data-detail-feedback]');
+      const resultCount = root.querySelector('[data-detail-result-count]');
+      const empty = root.querySelector('[data-detail-empty]');
+
+      let state = createGuideNotesState();
+      try {
+        const stored = localStorage.getItem(storageKey);
+        if (stored) state = validateGuideNotesState(JSON.parse(stored), recordIds, checklistByRecord);
+      } catch {
+        localStorage.removeItem(storageKey);
+      }
+
+      const announce = (message) => {
+        if (feedback) feedback.textContent = message;
+      };
+      const persist = () => localStorage.setItem(storageKey, JSON.stringify(state));
+      const applyState = () => {
+        for (const card of cards) {
+          const recordId = card.dataset.recordId;
+          const note = card.querySelector('[data-detail-note]');
+          if (note instanceof HTMLTextAreaElement) note.value = state.notes[recordId] ?? '';
+          const completed = new Set(state.preparation[recordId] ?? []);
+          for (const checkbox of card.querySelectorAll('[data-detail-prep]')) {
+            if (checkbox instanceof HTMLInputElement) checkbox.checked = completed.has(checkbox.dataset.detailPrep);
+          }
+        }
+      };
+
+      const filter = () => {
+        const search = root.querySelector('[data-detail-search]')?.value.trim().toLowerCase() ?? '';
+        const type = root.querySelector('[data-detail-type]')?.value ?? 'all';
+        const status = root.querySelector('[data-detail-status]')?.value ?? 'all';
+        const character = root.querySelector('[data-detail-character]')?.value ?? 'all';
+        const spoiler = root.querySelector('[data-detail-spoiler]')?.value ?? 'all';
+        let visible = 0;
+        for (const card of cards) {
+          const matches = (!search || card.dataset.search.includes(search))
+            && (type === 'all' || card.dataset.type === type)
+            && (status === 'all' || card.dataset.status === status)
+            && (character === 'all' || card.dataset.characters.split(',').includes(character) || card.dataset.characters.split(',').includes('all'))
+            && (spoiler === 'all' || card.dataset.spoiler === spoiler);
+          card.hidden = !matches;
+          if (matches) visible += 1;
+        }
+        if (resultCount) resultCount.textContent = String(visible);
+        if (empty instanceof HTMLElement) empty.hidden = visible !== 0;
+      };
+
+      for (const control of root.querySelectorAll('[data-detail-search], [data-detail-type], [data-detail-status], [data-detail-character], [data-detail-spoiler]')) {
+        control.addEventListener('input', filter);
+        control.addEventListener('change', filter);
+      }
+      const reveal = root.querySelector('[data-detail-reveal]');
+      reveal?.addEventListener('change', () => {
+        root.dataset.revealMajor = reveal.checked ? 'true' : 'false';
+      });
+
+      for (const card of cards) {
+        const recordId = card.dataset.recordId;
+        const note = card.querySelector('[data-detail-note]');
+        card.querySelector('[data-detail-save]')?.addEventListener('click', () => {
+          state = setGuideNote(state, recordId, note?.value ?? '', recordIds, checklistByRecord);
+          persist();
+          announce('Private note saved in this browser.');
+        });
+        card.querySelector('[data-detail-clear]')?.addEventListener('click', () => {
+          state = setGuideNote(state, recordId, '', recordIds, checklistByRecord);
+          if (note instanceof HTMLTextAreaElement) note.value = '';
+          persist();
+          announce('Private note cleared.');
+        });
+        for (const checkbox of card.querySelectorAll('[data-detail-prep]')) {
+          checkbox.addEventListener('change', () => {
+            state = setPreparationItem(state, recordId, checkbox.dataset.detailPrep, checkbox.checked, recordIds, checklistByRecord);
+            persist();
+          });
+        }
+      }
+
+      root.querySelector('[data-detail-export]')?.addEventListener('click', () => {
+        const blob = new Blob([exportGuideNotes(state, recordIds, checklistByRecord)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'crimson-desert-guide-notes.json';
+        link.click();
+        URL.revokeObjectURL(url);
+        announce('Guide notes exported.');
+      });
+
+      const importInput = root.querySelector('[data-detail-import]');
+      importInput?.addEventListener('change', async () => {
+        const file = importInput.files?.[0];
+        if (!file) return;
+        try {
+          state = importGuideNotes(await file.text(), recordIds, checklistByRecord);
+          persist();
+          applyState();
+          announce('Guide notes imported successfully.');
+        } catch (error) {
+          announce(error instanceof Error ? error.message : 'Guide-note import failed.');
+        } finally {
+          importInput.value = '';
+        }
+      });
+
+      root.querySelector('[data-detail-reset]')?.addEventListener('click', () => {
+        if (!confirm('Reset every private note and preparation check?')) return;
+        state = createGuideNotesState();
+        persist();
+        applyState();
+        announce('All private guide-detail progress was reset.');
+      });
+
+      applyState();
+      filter();
+    }
+  };
+
+  bindDetailCentres();
+  document.addEventListener('astro:page-load', bindDetailCentres);
+</script>
+
+<style>
+  .detail-centre { display: grid; gap: 1.25rem; }
+  .detail-centre__hero { display: grid; grid-template-columns: minmax(0, 1.4fr) auto; gap: 1.5rem; padding: clamp(1.2rem, 3vw, 2rem); border: 1px solid rgb(201 147 62 / 34%); border-radius: 1rem; background: radial-gradient(circle at 90% 0, rgb(145 34 25 / 24%), transparent 24rem), linear-gradient(135deg, #171510, #0b0b09); box-shadow: 0 1.5rem 4rem rgb(0 0 0 / 25%); }
+  .detail-centre__hero span { color: #d4a85d; font-size: .7rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+  .detail-centre__hero h2 { margin: .45rem 0 .65rem; color: #f6ead2; font-family: var(--cd-font-display); font-size: clamp(1.8rem, 4vw, 3.2rem); font-weight: 500; }
+  .detail-centre__hero p { max-width: 48rem; margin: 0; color: #c5b9a5; }
+  .detail-centre__hero dl { display: grid; grid-template-columns: repeat(2, minmax(5rem, 1fr)); gap: .65rem; margin: 0; }
+  .detail-centre__hero dl div { min-width: 6rem; padding: .75rem; border: 1px solid rgb(201 147 62 / 25%); border-radius: .6rem; background: rgb(0 0 0 / 24%); text-align: center; }
+  .detail-centre__hero dt { color: #9f927e; font-size: .62rem; letter-spacing: .08em; text-transform: uppercase; }
+  .detail-centre__hero dd { margin: .2rem 0 0; color: #f2d28b; font-family: var(--cd-font-display); font-size: 1.65rem; }
+  .detail-centre__toolbar { display: grid; grid-template-columns: minmax(14rem, 2fr) repeat(4, minmax(8rem, 1fr)); gap: .75rem; padding: 1rem; border: 1px solid rgb(201 147 62 / 25%); border-radius: .8rem; background: #11110f; }
+  .detail-field { display: grid; gap: .35rem; }
+  .detail-field span, .detail-card__note > span { color: #a89b87; font-size: .62rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+  .detail-field input, .detail-field select, .detail-card textarea { width: 100%; border: 1px solid #55462f; border-radius: .45rem; background: #080807; color: #e8ddca; }
+  .detail-field input, .detail-field select { min-height: 2.75rem; padding: .55rem .7rem; }
+  .detail-reveal { display: flex; grid-column: 1 / -1; gap: .55rem; align-items: center; width: fit-content; color: #d6c6aa; font-size: .82rem; }
+  .detail-centre__utility { display: flex; flex-wrap: wrap; gap: .75rem 1rem; align-items: center; justify-content: space-between; padding: .75rem 1rem; border-block: 1px solid rgb(201 147 62 / 20%); }
+  .detail-centre__utility p { margin: 0; color: #a99e8b; font-size: .8rem; }
+  .detail-centre__utility > div { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .detail-centre button, .detail-import { display: inline-flex; align-items: center; min-height: 2.35rem; padding: .45rem .7rem; border: 1px solid #654e2c; border-radius: .4rem; background: #17140f; color: #e2c887; font: inherit; font-size: .72rem; cursor: pointer; }
+  .detail-import input { position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0; }
+  .detail-centre__feedback { flex-basis: 100%; color: #8fc59b !important; }
+  .detail-centre__grid { display: grid; gap: 1rem; }
+  .detail-card { overflow: hidden; border: 1px solid rgb(201 147 62 / 25%); border-radius: .85rem; background: linear-gradient(145deg, #14130f, #0b0b09); box-shadow: 0 1rem 2.5rem rgb(0 0 0 / 18%); }
+  .detail-card__header { padding: 1.15rem 1.2rem .9rem; background: radial-gradient(circle at 100% 0, rgb(133 34 25 / 18%), transparent 20rem); }
+  .detail-card__badges { display: flex; flex-wrap: wrap; gap: .4rem; }
+  .detail-card__badges span, .detail-card__meta span { padding: .25rem .45rem; border: 1px solid rgb(201 147 62 / 25%); border-radius: 999px; color: #bbae98; font-size: .62rem; letter-spacing: .04em; text-transform: uppercase; }
+  .detail-status--supported { color: #8fc59b !important; }
+  .detail-status--limited { color: #e1b36c !important; }
+  .detail-status--research { color: #d68f74 !important; }
+  .detail-card h3 { margin: .85rem 0 .4rem; color: #f3e5ca; font-family: var(--cd-font-display); font-size: clamp(1.35rem, 3vw, 2rem); font-weight: 500; }
+  .detail-card__header p { margin: 0; color: #bdb19e; }
+  .detail-card__masked { display: none; }
+  .detail-card--major .detail-card__masked { display: inline; }
+  .detail-card--major .detail-card__revealed { display: none; }
+  [data-reveal-major='true'] .detail-card--major .detail-card__masked { display: none; }
+  [data-reveal-major='true'] .detail-card--major .detail-card__revealed { display: inline; }
+  .detail-card__meta { display: flex; flex-wrap: wrap; gap: .4rem; padding: 0 1.2rem 1rem; }
+  .detail-card__columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; padding: 0 1.2rem 1rem; }
+  .detail-card__columns section, .detail-card__boundary { padding: .85rem; border: 1px solid rgb(201 147 62 / 18%); border-radius: .55rem; background: rgb(0 0 0 / 20%); }
+  .detail-card h4 { margin: 0 0 .55rem; color: #d8b36e; font-family: var(--cd-font-display); font-size: .92rem; font-weight: 500; }
+  .detail-card ul, .detail-card ol { margin: 0; padding-left: 1.15rem; color: #bdb19e; font-size: .85rem; }
+  .detail-card li + li { margin-top: .3rem; }
+  .detail-card__unknown { color: #c18f78; font-style: italic; }
+  .detail-card__boundary { margin: 0 1.2rem 1rem; border-color: rgb(168 63 44 / 32%); background: rgb(89 24 18 / 16%); }
+  .detail-card__links { display: flex; flex-wrap: wrap; gap: .5rem; padding: 0 1.2rem 1rem; }
+  .detail-card__links a { color: #d7b56f; font-size: .75rem; }
+  .detail-card__personal { display: grid; grid-template-columns: minmax(12rem, .8fr) minmax(16rem, 1.5fr) auto; gap: 1rem; align-items: end; padding: 1rem 1.2rem; border-top: 1px solid rgb(201 147 62 / 20%); background: #0a0a08; }
+  .detail-card__personal > div:first-child { display: grid; gap: .35rem; }
+  .detail-card__personal label:not(.detail-card__note) { color: #b9ad99; font-size: .78rem; }
+  .detail-card__note { display: grid; gap: .35rem; }
+  .detail-card textarea { min-height: 5.1rem; padding: .65rem; resize: vertical; }
+  .detail-card__note-actions { display: grid; gap: .45rem; }
+  .detail-centre__empty { padding: 2rem; border: 1px dashed #604b2c; border-radius: .8rem; text-align: center; color: #b9aa92; }
+  :global(:root[data-theme='light']) .detail-centre__hero, :global(:root[data-theme='light']) .detail-card, :global(:root[data-theme='light']) .detail-centre__toolbar { border-color: #bda47e; background: #fffaf2; box-shadow: 0 1rem 2.5rem rgb(91 55 32 / 12%); }
+  :global(:root[data-theme='light']) .detail-centre__hero h2, :global(:root[data-theme='light']) .detail-card h3 { color: #2c1d14; }
+  :global(:root[data-theme='light']) .detail-centre__hero p, :global(:root[data-theme='light']) .detail-card__header p, :global(:root[data-theme='light']) .detail-card ul, :global(:root[data-theme='light']) .detail-card ol, :global(:root[data-theme='light']) .detail-card__personal label:not(.detail-card__note) { color: #514032; }
+  :global(:root[data-theme='light']) .detail-field input, :global(:root[data-theme='light']) .detail-field select, :global(:root[data-theme='light']) .detail-card textarea, :global(:root[data-theme='light']) .detail-card__personal { border-color: #bda47e; background: #fffdf9; color: #2c211a; }
+  :global(:root[data-theme='light']) .detail-card__columns section, :global(:root[data-theme='light']) .detail-card__boundary { background: #f7efe3; }
+  @media (max-width: 70rem) { .detail-centre__toolbar { grid-template-columns: repeat(2, minmax(0, 1fr)); } .detail-field--search { grid-column: 1 / -1; } }
+  @media (max-width: 48rem) { .detail-centre__hero { grid-template-columns: 1fr; } .detail-centre__hero dl { grid-template-columns: repeat(4, 1fr); } .detail-card__columns { grid-template-columns: 1fr; } .detail-card__personal { grid-template-columns: 1fr; } }
+  @media (max-width: 34rem) { .detail-centre__toolbar { grid-template-columns: 1fr; } .detail-field--search { grid-column: auto; } .detail-centre__hero dl { grid-template-columns: repeat(2, 1fr); } }
+</style>

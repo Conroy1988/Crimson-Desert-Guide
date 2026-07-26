@@ -8,6 +8,15 @@ spoilerLevel: none
 patchStatus: current
 ---
 
+## 25 July 2026 — Quest walkthrough and encounter encyclopaedia
+
+- Added generated operational detail for 32 canonical quest, Abyss, boss and stronghold records.
+- Added supported, limited and research states so partial records cannot become invented walkthroughs.
+- Added preparation, supported checkpoints, blocker history, safe recovery order and explicit unresolved fields.
+- Added private browser-only notes and preparation checklists with strict JSON backup and restore.
+- Added guide-detail consistency audits and local-state tests to the protected Quality Gate.
+- Added a Deep Quest & Encounter Guidance section to the Steam Guide export.
+
 ## 25 July 2026 — Pywel Atlas and route intelligence
 
 - Added a cinematic topological atlas for verified settlements, services, travel systems and world progress.
