@@ -1,12 +1,13 @@
 import { readFile } from 'node:fs/promises';
 
-const readiness = JSON.parse(
-  await readFile(new URL('../data/v1-readiness.json', import.meta.url), 'utf8'),
-);
+const [readiness, packageJson] = await Promise.all([
+  readFile(new URL('../data/v1-readiness.json', import.meta.url), 'utf8').then(JSON.parse),
+  readFile(new URL('../package.json', import.meta.url), 'utf8').then(JSON.parse),
+]);
 const failures = [];
 
 if (readiness.schemaVersion !== 1) failures.push('schemaVersion must be 1');
-if (readiness.guideVersion !== '1.0.0') failures.push('guideVersion must be 1.0.0');
+if (readiness.guideVersion !== packageJson.version) failures.push(`guideVersion ${readiness.guideVersion} does not match package ${packageJson.version}`);
 if (readiness.gamePatch !== '1.15.00') failures.push('v1 report must target Patch 1.15.00');
 if (readiness.lastVerified !== '2026-07-26') failures.push('v1 report verification date drift');
 if (readiness.status !== 'ready') failures.push(`v1 status is ${readiness.status}, expected ready`);
@@ -62,4 +63,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log(`v1 readiness audit passed ${readiness.programmes.length} programmes at ${readiness.programmePercent}% with ${readiness.metrics.canonicalRecords} canonical records, ${readiness.researchQueue.count} controlled research records and ${readiness.commandCentre.searchRecords} Command Centre records.`);
+console.log(`v1 readiness audit passed Guide v${readiness.guideVersion}, ${readiness.programmes.length} programmes at ${readiness.programmePercent}% with ${readiness.metrics.canonicalRecords} canonical records, ${readiness.researchQueue.count} controlled research records and ${readiness.commandCentre.searchRecords} Command Centre records.`);

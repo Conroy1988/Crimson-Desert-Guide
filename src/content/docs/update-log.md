@@ -8,6 +8,17 @@ spoilerLevel: none
 patchStatus: current
 ---
 
+## 26 July 2026 — Guide v1.1.0 production release
+
+- Released the Pywel Expedition Command Centre with full-guide search, recent-guide continuation, private session planning and unified local progress summaries.
+- Added persistent safe, minor and full spoiler profiles across compatible guide tools.
+- Added a validated five-source Guide Vault for exporting and restoring Completion, Atlas, Collectibles, Build Laboratory and Research Queue state together.
+- Added a provenance-controlled official Pearl Abyss media registry for characters, bosses, weapons, mounts and world imagery.
+- Added the global “Hymn for the Unsung Blade” player with non-looping playback, one-time visitor autoplay and persistent pause preference.
+- Added the Research Queue Centre for controlled evidence gaps, in-game verification protocols and private local research notes.
+- Promoted the guide package and readiness report to v1.1.0 while retaining Patch 1.15.00 as the verified game baseline.
+- Preserved root and `/crimsondesert/` deployment validation for the future TKB Gaming domain migration.
+
 ## 26 July 2026 — Character mastery, Build Laboratory and v1.0 evidence closure
 
 - Added current-patch capability profiles for Kliff, Oongka and Damiane from official Steam and Patch 1.03–1.15 records.
