@@ -66,6 +66,14 @@ export default defineConfig({
           tag: 'link',
           attrs: { rel: 'manifest', href: withBase('site.webmanifest') },
         },
+        {
+          tag: 'script',
+          attrs: {
+            async: true,
+            src: 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9109373076539277',
+            crossorigin: 'anonymous',
+          },
+        },
       ],
       sidebar: [
         {
