@@ -1,7 +1,7 @@
 <div align="center">
 
 <a href="https://crimson-desert-guide.dannyconroy.workers.dev/">
-  <img src="https://s1.pearlcdn.com/cd/brand/media_GLOBAL/2026/03/13/5474a45367f20260313113457875.jpg" alt="Crimson Desert — Kliff before the fire" width="100%">
+  <img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3321460/fa05258232b2b970e2730d2ad5917842e914283c/library_hero_2x.jpg" alt="Official Crimson Desert key art for the world of Pywel" width="100%">
 </a>
 
 # Crimson Desert Guide
