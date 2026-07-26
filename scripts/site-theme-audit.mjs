@@ -1,8 +1,22 @@
 import { readFile } from 'node:fs/promises';
 
-const [config, css, pageTitle, footer, atlas, catalogue, mastery, buildLab, readiness] = await Promise.all([
+const [
+  config,
+  css,
+  mobileCss,
+  home,
+  pageTitle,
+  footer,
+  atlas,
+  catalogue,
+  mastery,
+  buildLab,
+  readiness,
+] = await Promise.all([
   readFile(new URL('../astro.config.mjs', import.meta.url), 'utf8'),
   readFile(new URL('../src/styles/site-theme.css', import.meta.url), 'utf8'),
+  readFile(new URL('../src/styles/mobile-text.css', import.meta.url), 'utf8'),
+  readFile(new URL('../src/components/HomeExperience.astro', import.meta.url), 'utf8'),
   readFile(new URL('../src/components/PageTitle.astro', import.meta.url), 'utf8'),
   readFile(new URL('../src/components/GuideFooter.astro', import.meta.url), 'utf8'),
   readFile(new URL('../src/components/PywelAtlas.astro', import.meta.url), 'utf8'),
@@ -15,9 +29,12 @@ const [config, css, pageTitle, footer, atlas, catalogue, mastery, buildLab, read
 const failures = [];
 const configThemeIndex = config.indexOf("'./src/styles/site-theme.css'");
 const configLightIndex = config.indexOf("'./src/styles/light-mode.css'");
+const configMobileIndex = config.indexOf("'./src/styles/mobile-text.css'");
 if (configThemeIndex === -1) failures.push('astro.config.mjs does not load site-theme.css');
 if (configLightIndex === -1) failures.push('astro.config.mjs does not load light-mode.css');
+if (configMobileIndex === -1) failures.push('astro.config.mjs does not load mobile-text.css');
 if (configThemeIndex > configLightIndex) failures.push('site-theme.css must load before light-mode.css so the accessibility layer remains authoritative');
+if (configMobileIndex < configLightIndex) failures.push('mobile-text.css must load after light-mode.css so mobile resilience remains authoritative');
 if (!config.includes("directory: 'atlas'")) failures.push('astro.config.mjs does not expose the Pywel Atlas');
 
 const requiredShellSelectors = [
@@ -27,6 +44,27 @@ const requiredShellSelectors = [
   ":root[data-theme='light'] .sl-markdown-content", ":root[data-theme='light'] .sidebar-pane",
 ];
 for (const selector of requiredShellSelectors) if (!css.includes(selector)) failures.push(`Missing site-theme selector: ${selector}`);
+
+const requiredMobileTextFragments = [
+  'overflow-wrap: break-word',
+  'overflow-wrap: anywhere',
+  '@media (max-width: 42rem)',
+  '.cd-portal-home .portal-hero h1 span',
+  '.cd-portal-home .portal-patch-badge',
+  'clip-path: none',
+  '.cd-portal-home .portal-cta span',
+  '.cd-portal-home .portal-quick__links strong',
+  '.cd-portal-home .portal-issues__list strong',
+  '.pagination-links .link-title',
+];
+for (const fragment of requiredMobileTextFragments) {
+  if (!mobileCss.includes(fragment)) failures.push(`Missing mobile text resilience rule: ${fragment}`);
+}
+
+const homeMobileBoundary = home.indexOf('@media (max-width: 42rem)');
+if (homeMobileBoundary === -1) failures.push('Homepage does not retain its mobile layout breakpoint');
+if (!home.includes('.portal-hero h1 span')) failures.push('Homepage is missing the cinematic hero title selector');
+if (!home.includes('.portal-patch-badge')) failures.push('Homepage is missing the live patch badge selector');
 
 const requiredSections = [
   "id: 'updates'", "id: 'start'", "id: 'combat'", "id: 'gear'", "id: 'world'", "id: 'mounts'",
@@ -56,4 +94,6 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log(`Site theme audit passed ${requiredShellSelectors.length} shell scopes, ${requiredSections.length} section heroes and ${scopes.length} premium interactive component families.`);
+console.log(
+  `Site theme audit passed ${requiredShellSelectors.length} shell scopes, ${requiredMobileTextFragments.length} mobile text safeguards, ${requiredSections.length} section heroes and ${scopes.length} premium interactive component families.`,
+);
