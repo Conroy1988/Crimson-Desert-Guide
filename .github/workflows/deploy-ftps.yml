@@ -1,0 +1,278 @@
+name: Manual FTPS Production Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: Choose a connection preflight or a real production deployment
+        required: true
+        default: preflight
+        type: choice
+        options:
+          - preflight
+          - deploy
+      confirmation:
+        description: Type DEPLOY when action is deploy
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: crimson-desert-ftps-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: ${{ inputs.action == 'deploy' && 'Deploy current main over FTPS' || 'Validate FTPS connection' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Validate deployment request
+        env:
+          DEPLOY_ACTION: ${{ inputs.action }}
+          DEPLOY_CONFIRMATION: ${{ inputs.confirmation }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          case "$DEPLOY_ACTION" in
+            preflight)
+              ;;
+            deploy)
+              if [[ "$DEPLOY_CONFIRMATION" != "DEPLOY" ]]; then
+                echo "A production deployment requires confirmation value DEPLOY."
+                exit 1
+              fi
+              ;;
+            *)
+              echo "Unsupported action: $DEPLOY_ACTION"
+              exit 1
+              ;;
+          esac
+
+      - name: Check out current main
+        uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Confirm exact current main commit
+        id: release
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags --depth=1 origin main
+          checked_out="$(git rev-parse HEAD)"
+          current_main="$(git rev-parse origin/main)"
+          if [[ "$checked_out" != "$current_main" ]]; then
+            echo "Refusing stale deployment: checked out $checked_out but current main is $current_main."
+            exit 1
+          fi
+          echo "sha=$checked_out" >> "$GITHUB_OUTPUT"
+
+      - name: Validate FTPS secrets
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$FTP_SERVER"
+          test -n "$FTP_USERNAME"
+          test -n "$FTP_PASSWORD"
+
+      - name: Install FTPS client
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install --yes --no-install-recommends lftp
+
+      - name: Validate restricted FTPS target
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          marker="$(mktemp)"
+          trap 'rm -f "$marker"' EXIT
+
+          lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "ftp://$FTP_SERVER:21" <<LFTP
+          set cmd:fail-exit yes
+          set net:max-retries 2
+          set net:timeout 20
+          set ftp:passive-mode true
+          set ftp:ssl-auth TLS
+          set ftp:ssl-force true
+          set ftp:ssl-protect-data true
+          set ssl:verify-certificate yes
+          get .github-deploy-target -o "$marker"
+          bye
+          LFTP
+
+          if [[ "$(tr -d '\r\n' < "$marker")" != "crimson-desert-guide" ]]; then
+            echo "Refusing FTPS access: the restricted target marker is missing or incorrect."
+            exit 1
+          fi
+
+      - name: Set up Node.js
+        if: ${{ inputs.action == 'deploy' }}
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22.12.0
+          package-manager-cache: false
+
+      - name: Install dependencies
+        if: ${{ inputs.action == 'deploy' }}
+        run: npm install --no-audit --no-fund
+
+      - name: Build canonical production release
+        if: ${{ inputs.action == 'deploy' }}
+        env:
+          CD_GUIDE_SITE: https://tkb-gaming.scot
+          CD_GUIDE_BASE_PATH: /games/crimson-desert/guides/
+          CD_GUIDE_DIST_ROOT: dist-ftps
+          RELEASE_SHA: ${{ steps.release.outputs.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run build
+
+          output="dist-ftps/games/crimson-desert/guides"
+          test -f "$output/index.html"
+          test -f "$output/command-centre/index.html"
+          test -f "$output/standards/advertising-and-monetisation/index.html"
+          test -f "$output/media/hymn-for-the-unsung-blade.m4a"
+
+          rm -f "$output/_headers"
+          cat > "$output/.htaccess" <<'HTACCESS'
+          DirectoryIndex index.html
+          Options -Indexes
+          ErrorDocument 404 /games/crimson-desert/guides/404.html
+          HTACCESS
+
+          printf '%s\n' 'crimson-desert-guide' > "$output/.github-deploy-target"
+
+          cat > "$output/deployment.json" <<EOF
+          {
+            "guide": "Crimson Desert Guide",
+            "version": "$(node -p "require('./package.json').version")",
+            "commit": "$RELEASE_SHA",
+            "builtAt": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "publicUrl": "https://tkb-gaming.scot/games/crimson-desert/guides/",
+            "transport": "explicit-ftps"
+          }
+          EOF
+
+      - name: Upload release through explicit FTPS
+        if: ${{ inputs.action == 'deploy' }}
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          local_dir="$GITHUB_WORKSPACE/dist-ftps/games/crimson-desert/guides"
+
+          lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "ftp://$FTP_SERVER:21" <<LFTP
+          set cmd:fail-exit yes
+          set net:max-retries 2
+          set net:timeout 30
+          set ftp:passive-mode true
+          set ftp:ssl-auth TLS
+          set ftp:ssl-force true
+          set ftp:ssl-protect-data true
+          set ssl:verify-certificate yes
+          lcd "$local_dir"
+          mirror --reverse --delete --verbose=1 --parallel=4 --exclude-glob .ftpquota ./ /
+          bye
+          LFTP
+
+      - name: Verify uploaded FTPS metadata
+        if: ${{ inputs.action == 'deploy' }}
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          RELEASE_SHA: ${{ steps.release.outputs.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          marker="$(mktemp)"
+          metadata="$(mktemp)"
+          trap 'rm -f "$marker" "$metadata"' EXIT
+
+          lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "ftp://$FTP_SERVER:21" <<LFTP
+          set cmd:fail-exit yes
+          set net:max-retries 2
+          set net:timeout 20
+          set ftp:passive-mode true
+          set ftp:ssl-auth TLS
+          set ftp:ssl-force true
+          set ftp:ssl-protect-data true
+          set ssl:verify-certificate yes
+          get .github-deploy-target -o "$marker"
+          get deployment.json -o "$metadata"
+          bye
+          LFTP
+
+          test "$(tr -d '\r\n' < "$marker")" = "crimson-desert-guide"
+          uploaded_commit="$(node -e "const fs=require('fs'); const data=JSON.parse(fs.readFileSync(process.argv[1], 'utf8')); process.stdout.write(data.commit ?? '')" "$metadata")"
+          test "$uploaded_commit" = "$RELEASE_SHA"
+
+      - name: Verify public production release
+        if: ${{ inputs.action == 'deploy' }}
+        env:
+          RELEASE_SHA: ${{ steps.release.outputs.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="https://tkb-gaming.scot/games/crimson-desert/guides"
+          verified="false"
+
+          for attempt in $(seq 1 12); do
+            if payload="$(curl -fsSL --connect-timeout 10 --max-time 30 -H 'Cache-Control: no-cache' "$base/deployment.json?commit=$RELEASE_SHA")"; then
+              live_commit="$(node -e "const data=JSON.parse(process.argv[1]); process.stdout.write(data.commit ?? '')" "$payload")"
+              if [[ "$live_commit" == "$RELEASE_SHA" ]]; then
+                verified="true"
+                break
+              fi
+            fi
+            echo "Production metadata has not updated yet; retrying ($attempt/12)."
+            sleep 10
+          done
+
+          if [[ "$verified" != "true" ]]; then
+            echo "Production deployment.json did not reach commit $RELEASE_SHA."
+            exit 1
+          fi
+
+          curl -fsSL --connect-timeout 10 --max-time 30 "$base/" >/dev/null
+          curl -fsSL --connect-timeout 10 --max-time 30 "$base/command-centre/" >/dev/null
+          curl -fsSL --connect-timeout 10 --max-time 30 "$base/standards/advertising-and-monetisation/" >/dev/null
+
+      - name: Record result
+        if: always()
+        env:
+          DEPLOY_ACTION: ${{ inputs.action }}
+          RELEASE_SHA: ${{ steps.release.outputs.sha }}
+        shell: bash
+        run: |
+          {
+            echo "### Manual FTPS production workflow"
+            echo ""
+            echo "- Action: \`$DEPLOY_ACTION\`"
+            echo "- Current main commit: \`$RELEASE_SHA\`"
+            echo "- Target: restricted Crimson Desert Guide FTP root"
+            if [[ "$DEPLOY_ACTION" == "deploy" ]]; then
+              echo "- Public URL: https://tkb-gaming.scot/games/crimson-desert/guides/"
+            else
+              echo "- Result: connection, TLS and deployment-marker preflight only; no files uploaded"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
