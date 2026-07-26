@@ -1,0 +1,645 @@
+{
+  "schemaVersion": 1,
+  "datasetVersion": "1.0.0",
+  "gamePatch": "1.15.00",
+  "lastVerified": "2026-07-27",
+  "policy": "Only direct official Pearl Abyss facts may enter confirmedFacts. Unpublished routes, weaknesses, phases, statistics, rewards and rematch locations remain unresolved.",
+  "rematchRules": [
+    {
+      "label": "Activation",
+      "value": "A boss Memory Fragment becomes active after that boss is defeated.",
+      "patch": "1.05.00",
+      "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=88"
+    },
+    {
+      "label": "Access",
+      "value": "Documented rematches begin from the relevant Memory Fragment at the previous encounter site.",
+      "patch": "1.05.00",
+      "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=88"
+    },
+    {
+      "label": "Modes",
+      "value": "Reminisce preserves the original boss state; Resonate scales the boss when player progression is higher.",
+      "patch": "1.05.00",
+      "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=88"
+    },
+    {
+      "label": "Resources",
+      "value": "Consumables are restored after a rematch and separate rematch loot is not awarded under the documented system.",
+      "patch": "1.05.00",
+      "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=88"
+    },
+    {
+      "label": "Discovery",
+      "value": "Known Memory Fragment locations can be reviewed through Journal > Knowledge > Memory Fragments > Bosses.",
+      "patch": "1.07.00",
+      "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=92"
+    }
+  ],
+  "records": [
+    {
+      "recordId": "boss-muskan",
+      "intelligenceStatus": "verified-rematch",
+      "aliases": [],
+      "doNotMergeWith": [],
+      "confirmedFacts": [
+        {
+          "label": "Rematch location",
+          "value": "Bonepit",
+          "patch": "1.07.00",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=92"
+        },
+        {
+          "label": "Activation",
+          "value": "Defeat Muskan once to activate its Memory Fragment.",
+          "patch": "1.05.00",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=88"
+        }
+      ],
+      "patchHistory": [
+        {
+          "patch": "1.05.00",
+          "note": "The Memory Fragment rematch system established first-defeat activation and Reminisce/Resonate behaviour.",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=88"
+        },
+        {
+          "patch": "1.07.00",
+          "note": "The official rematch list identified Bonepit as the Memory Fragment location.",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=92"
+        }
+      ],
+      "unresolved": [
+        "Exact first-defeat route and prerequisite chain.",
+        "Encounter phases, weaknesses and exact statistics.",
+        "First-defeat reward table and any non-rematch rewards."
+      ],
+      "researchFocus": [
+        "Capture a repeatable route from a named landmark to the first encounter.",
+        "Record visible phase transitions and arena hazards without inferring hidden values.",
+        "Capture the complete first-defeat reward presentation."
+      ]
+    },
+    {
+      "recordId": "boss-corrupted-caliburn",
+      "intelligenceStatus": "verified-rematch",
+      "aliases": [],
+      "doNotMergeWith": ["boss-awakened-caliburn"],
+      "confirmedFacts": [
+        {
+          "label": "Rematch location",
+          "value": "Fort Musket",
+          "patch": "1.07.00",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=92"
+        },
+        {
+          "label": "Activation",
+          "value": "Defeat Corrupted Caliburn once to activate its Memory Fragment.",
+          "patch": "1.05.00",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=88"
+        }
+      ],
+      "patchHistory": [
+        {
+          "patch": "1.05.00",
+          "note": "The Memory Fragment rematch system established first-defeat activation and Reminisce/Resonate behaviour.",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=88"
+        },
+        {
+          "patch": "1.07.00",
+          "note": "The official rematch list identified Fort Musket as the Memory Fragment location.",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=92"
+        }
+      ],
+      "unresolved": [
+        "Exact first-defeat route and prerequisite chain.",
+        "Encounter phases, weaknesses and exact statistics.",
+        "First-defeat reward table and any non-rematch rewards."
+      ],
+      "researchFocus": [
+        "Capture a repeatable route from a named landmark to the first encounter.",
+        "Record visible phase transitions and arena hazards without inferring hidden values.",
+        "Capture the complete first-defeat reward presentation."
+      ]
+    },
+    {
+      "recordId": "boss-goyen",
+      "intelligenceStatus": "verified-rematch",
+      "aliases": [],
+      "doNotMergeWith": [],
+      "confirmedFacts": [
+        {
+          "label": "Rematch location",
+          "value": "Spire of the Sun",
+          "patch": "1.07.00",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=92"
+        },
+        {
+          "label": "Activation",
+          "value": "Defeat Goyen once to activate its Memory Fragment.",
+          "patch": "1.05.00",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=88"
+        }
+      ],
+      "patchHistory": [
+        {
+          "patch": "1.05.00",
+          "note": "The Memory Fragment rematch system established first-defeat activation and Reminisce/Resonate behaviour.",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=88"
+        },
+        {
+          "patch": "1.07.00",
+          "note": "The official rematch list identified Spire of the Sun as the Memory Fragment location.",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=92"
+        }
+      ],
+      "unresolved": [
+        "Exact first-defeat route and prerequisite chain.",
+        "Encounter phases, weaknesses and exact statistics.",
+        "First-defeat reward table and any non-rematch rewards."
+      ],
+      "researchFocus": [
+        "Capture a repeatable route from a named landmark to the first encounter.",
+        "Record visible phase transitions and arena hazards without inferring hidden values.",
+        "Capture the complete first-defeat reward presentation."
+      ]
+    },
+    {
+      "recordId": "boss-draven-crowcaller",
+      "intelligenceStatus": "verified-rematch",
+      "aliases": [],
+      "doNotMergeWith": [],
+      "confirmedFacts": [
+        {
+          "label": "Rematch location",
+          "value": "Church of West Demeniss",
+          "patch": "1.07.00",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=92"
+        },
+        {
+          "label": "Activation",
+          "value": "Defeat Draven, the Crowcaller once to activate its Memory Fragment.",
+          "patch": "1.05.00",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=88"
+        }
+      ],
+      "patchHistory": [
+        {
+          "patch": "1.05.00",
+          "note": "The Memory Fragment rematch system established first-defeat activation and Reminisce/Resonate behaviour.",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=88"
+        },
+        {
+          "patch": "1.07.00",
+          "note": "The official rematch list identified Church of West Demeniss as the Memory Fragment location.",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=92"
+        }
+      ],
+      "unresolved": [
+        "Exact first-defeat route and prerequisite chain.",
+        "Encounter phases, weaknesses and exact statistics.",
+        "First-defeat reward table and any non-rematch rewards."
+      ],
+      "researchFocus": [
+        "Capture a repeatable route from a named landmark to the first encounter.",
+        "Record visible phase transitions and arena hazards without inferring hidden values.",
+        "Capture the complete first-defeat reward presentation."
+      ]
+    },
+    {
+      "recordId": "boss-clockwork-white-horn",
+      "intelligenceStatus": "verified-rematch",
+      "aliases": [],
+      "doNotMergeWith": ["boss-white-horn"],
+      "confirmedFacts": [
+        {
+          "label": "Rematch location",
+          "value": "Gate to Advancement",
+          "patch": "1.07.00",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=92"
+        },
+        {
+          "label": "Activation",
+          "value": "Defeat Clockwork White Horn once to activate its Memory Fragment.",
+          "patch": "1.05.00",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=88"
+        }
+      ],
+      "patchHistory": [
+        {
+          "patch": "1.05.00",
+          "note": "The Memory Fragment rematch system established first-defeat activation and Reminisce/Resonate behaviour.",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=88"
+        },
+        {
+          "patch": "1.07.00",
+          "note": "The official rematch list identified Gate to Advancement as the Memory Fragment location.",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=92"
+        }
+      ],
+      "unresolved": [
+        "Exact first-defeat route and prerequisite chain.",
+        "Encounter phases, weaknesses and exact statistics.",
+        "First-defeat reward table and any non-rematch rewards."
+      ],
+      "researchFocus": [
+        "Capture a repeatable route from a named landmark to the first encounter.",
+        "Record visible phase transitions and arena hazards without inferring hidden values.",
+        "Capture the complete first-defeat reward presentation."
+      ]
+    },
+    {
+      "recordId": "boss-queen-spider",
+      "intelligenceStatus": "official-mechanics",
+      "aliases": [],
+      "doNotMergeWith": [],
+      "confirmedFacts": [
+        {
+          "label": "Encounter behaviour",
+          "value": "The battle can spawn acid spiders; Patch 1.06 fixed lock-on behaviour for those adds.",
+          "patch": "1.06.00",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511"
+        }
+      ],
+      "patchHistory": [
+        {
+          "patch": "1.06.00",
+          "note": "Fixed an issue where lock-on did not work correctly against acid spiders spawned during the Queen Spider battle.",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511"
+        }
+      ],
+      "unresolved": [
+        "Stable first-defeat route and arena location.",
+        "Prerequisite chain and objective sequence.",
+        "Rewards, completion trigger and rematch availability.",
+        "Full phase order, weaknesses and exact statistics."
+      ],
+      "researchFocus": [
+        "Verify where the encounter begins and what unlocks it.",
+        "Record when acid spiders appear and how the arena communicates the mechanic.",
+        "Capture completion and reward screens."
+      ]
+    },
+    {
+      "recordId": "boss-titan",
+      "intelligenceStatus": "official-rematch",
+      "aliases": [],
+      "doNotMergeWith": [],
+      "confirmedFacts": [
+        {
+          "label": "Replay status",
+          "value": "Official patch notes explicitly document a Titan rematch.",
+          "patch": "1.06.00",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511"
+        },
+        {
+          "label": "Arena boundary",
+          "value": "Patch 1.06 fixed Titan stopping when the player moved too far from the combat area.",
+          "patch": "1.06.00",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511"
+        }
+      ],
+      "patchHistory": [
+        {
+          "patch": "1.06.00",
+          "note": "Fixed a rematch start state that could leave the player struck immediately and a boundary case that could stop Titan moving.",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511"
+        }
+      ],
+      "unresolved": [
+        "Memory Fragment location and activation presentation.",
+        "Stable first-defeat route and prerequisites.",
+        "Rewards, completion trigger and encounter phase order.",
+        "Weaknesses and exact statistics."
+      ],
+      "researchFocus": [
+        "Locate Titan's Memory Fragment through the Journal and confirm the world position.",
+        "Capture first-defeat and rematch start states separately.",
+        "Test arena-boundary behaviour only on the current patch."
+      ]
+    },
+    {
+      "recordId": "boss-dreadnought",
+      "intelligenceStatus": "official-mechanics",
+      "aliases": [],
+      "doNotMergeWith": [],
+      "confirmedFacts": [
+        {
+          "label": "Directional interaction",
+          "value": "Patch 1.06 fixed attacks from behind sometimes failing during the Dreadnought battle.",
+          "patch": "1.06.00",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511"
+        }
+      ],
+      "patchHistory": [
+        {
+          "patch": "1.06.00",
+          "note": "Corrected a battle issue affecting attacks made from behind Dreadnought.",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511"
+        }
+      ],
+      "unresolved": [
+        "Exact route, prerequisites and arena location.",
+        "Whether rear positioning has a current-patch mechanic beyond the repaired defect.",
+        "Rewards, completion trigger and rematch availability.",
+        "Phases, weaknesses and exact statistics."
+      ],
+      "researchFocus": [
+        "Retest rear-position attacks without converting a fixed defect into a claimed weakness.",
+        "Capture a repeatable first-defeat route.",
+        "Record completion, rewards and any Memory Fragment entry."
+      ]
+    },
+    {
+      "recordId": "boss-storm-crusher",
+      "intelligenceStatus": "official-mechanics",
+      "aliases": [],
+      "doNotMergeWith": [],
+      "confirmedFacts": [
+        {
+          "label": "Explosive mechanic",
+          "value": "Storm Crusher places explosives during battle; Patch 1.06 fixed placed bombs failing to damage the player.",
+          "patch": "1.06.00",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511"
+        }
+      ],
+      "patchHistory": [
+        {
+          "patch": "1.06.00",
+          "note": "Corrected bomb damage for explosives placed during this encounter.",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511"
+        }
+      ],
+      "unresolved": [
+        "Exact route, prerequisites and arena location.",
+        "Telegraph, timing and safe response for the explosive mechanic.",
+        "Rewards, completion trigger and rematch availability.",
+        "Full phase order, weaknesses and exact statistics."
+      ],
+      "researchFocus": [
+        "Capture the explosive placement telegraph and detonation sequence.",
+        "Record a repeatable route and start condition.",
+        "Verify completion, rewards and replay behaviour."
+      ]
+    },
+    {
+      "recordId": "boss-thunder-crusher",
+      "intelligenceStatus": "official-mechanics",
+      "aliases": [],
+      "doNotMergeWith": [],
+      "confirmedFacts": [
+        {
+          "label": "Explosive mechanic",
+          "value": "Thunder Crusher places explosives during battle; Patch 1.06 fixed placed bombs failing to damage the player.",
+          "patch": "1.06.00",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511"
+        }
+      ],
+      "patchHistory": [
+        {
+          "patch": "1.06.00",
+          "note": "Corrected bomb damage for explosives placed during this encounter.",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511"
+        }
+      ],
+      "unresolved": [
+        "Exact route, prerequisites and arena location.",
+        "Telegraph, timing and safe response for the explosive mechanic.",
+        "Rewards, completion trigger and rematch availability.",
+        "Full phase order, weaknesses and exact statistics."
+      ],
+      "researchFocus": [
+        "Capture the explosive placement telegraph and detonation sequence.",
+        "Record a repeatable route and start condition.",
+        "Verify completion, rewards and replay behaviour."
+      ]
+    },
+    {
+      "recordId": "boss-awakened-caliburn",
+      "intelligenceStatus": "official-mechanics",
+      "aliases": [],
+      "doNotMergeWith": ["boss-corrupted-caliburn"],
+      "confirmedFacts": [
+        {
+          "label": "Encounter entry",
+          "value": "Patch 1.06 fixed an Abyss Gate sometimes remaining after entering Awakened Caliburn's chamber.",
+          "patch": "1.06.00",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511"
+        }
+      ],
+      "patchHistory": [
+        {
+          "patch": "1.06.00",
+          "note": "Corrected an Abyss Gate persistence issue inside the boss chamber.",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511"
+        }
+      ],
+      "unresolved": [
+        "Route to the chamber and prerequisite chain.",
+        "Relationship, if any, to other Caliburn identities beyond the shared name.",
+        "Rewards, completion trigger and rematch availability.",
+        "Phases, weaknesses and exact statistics."
+      ],
+      "researchFocus": [
+        "Capture the route into the chamber and the Abyss Gate state before and after entry.",
+        "Keep Awakened and Corrupted Caliburn records separate unless an official source links them.",
+        "Record completion and reward evidence."
+      ]
+    },
+    {
+      "recordId": "boss-myurdin-avatar-umbra",
+      "intelligenceStatus": "official-mechanics",
+      "aliases": [],
+      "doNotMergeWith": [],
+      "confirmedFacts": [
+        {
+          "label": "Attack behaviour",
+          "value": "Patch 1.06 fixed an unintended attack-pattern state for Myurdin, the Avatar of Umbra.",
+          "patch": "1.06.00",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511"
+        }
+      ],
+      "patchHistory": [
+        {
+          "patch": "1.06.00",
+          "note": "Corrected abnormal attack-pattern behaviour during the encounter.",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511"
+        }
+      ],
+      "unresolved": [
+        "Exact route, prerequisites and arena location.",
+        "Normal current-patch phase order and attack sequence.",
+        "Rewards, completion trigger and rematch availability.",
+        "Weaknesses and exact statistics."
+      ],
+      "researchFocus": [
+        "Record the current-patch attack sequence without relying on pre-1.06 footage.",
+        "Capture the first-defeat route and objective context.",
+        "Verify completion, rewards and replay behaviour."
+      ]
+    },
+    {
+      "recordId": "boss-white-horn",
+      "intelligenceStatus": "official-identity",
+      "aliases": [],
+      "doNotMergeWith": ["boss-clockwork-white-horn"],
+      "confirmedFacts": [
+        {
+          "label": "Official portrayal",
+          "value": "Official promotional material describes White Horn as a mountain spirit.",
+          "patch": "pre-release-demo",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=35"
+        }
+      ],
+      "patchHistory": [
+        {
+          "patch": "gamescom-2024-demo",
+          "note": "The identity appeared in official boss-battle promotional material recorded from a work-in-progress demo.",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=35"
+        }
+      ],
+      "unresolved": [
+        "Current-release route, prerequisites and arena location.",
+        "Whether the promotional behaviour remained unchanged at release.",
+        "Rewards, completion trigger and rematch availability.",
+        "Phases, weaknesses and exact statistics."
+      ],
+      "researchFocus": [
+        "Verify the current-release encounter independently of the promotional demo.",
+        "Capture route, completion and reward evidence.",
+        "Do not transfer facts from similarly named bosses."
+      ],
+      "caveat": "The official footage was labelled work in progress and subject to change."
+    },
+    {
+      "recordId": "boss-staglord",
+      "intelligenceStatus": "official-identity",
+      "aliases": [],
+      "doNotMergeWith": [],
+      "confirmedFacts": [
+        {
+          "label": "Official portrayal",
+          "value": "Official promotional material presents Staglord as a fallen king on a forsaken throne.",
+          "patch": "pre-release-demo",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=35"
+        }
+      ],
+      "patchHistory": [
+        {
+          "patch": "gamescom-2024-demo",
+          "note": "The identity appeared in official boss-battle promotional material recorded from a work-in-progress demo.",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=35"
+        }
+      ],
+      "unresolved": [
+        "Current-release route, prerequisites and arena location.",
+        "Whether the promotional behaviour remained unchanged at release.",
+        "Rewards, completion trigger and rematch availability.",
+        "Phases, weaknesses and exact statistics."
+      ],
+      "researchFocus": [
+        "Verify the current-release encounter independently of the promotional demo.",
+        "Capture route, completion and reward evidence.",
+        "Do not transfer facts from similarly named bosses."
+      ],
+      "caveat": "The official footage was labelled work in progress and subject to change."
+    },
+    {
+      "recordId": "boss-reed-devil",
+      "intelligenceStatus": "official-identity",
+      "aliases": [],
+      "doNotMergeWith": [],
+      "confirmedFacts": [
+        {
+          "label": "Official portrayal",
+          "value": "Official promotional material describes Reed Devil as a slum-dweller of Hernand attempting to rewrite his fate.",
+          "patch": "pre-release-demo",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=35"
+        }
+      ],
+      "patchHistory": [
+        {
+          "patch": "gamescom-2024-demo",
+          "note": "The identity appeared in official boss-battle promotional material recorded from a work-in-progress demo.",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=35"
+        }
+      ],
+      "unresolved": [
+        "Current-release route, prerequisites and arena location.",
+        "Whether the promotional behaviour remained unchanged at release.",
+        "Rewards, completion trigger and rematch availability.",
+        "Phases, weaknesses and exact statistics."
+      ],
+      "researchFocus": [
+        "Verify the current-release encounter independently of the promotional demo.",
+        "Capture route, completion and reward evidence.",
+        "Do not transfer facts from similarly named bosses."
+      ],
+      "caveat": "The official footage was labelled work in progress and subject to change."
+    },
+    {
+      "recordId": "boss-queen-stoneback-crab",
+      "intelligenceStatus": "official-identity",
+      "aliases": [],
+      "doNotMergeWith": [],
+      "confirmedFacts": [
+        {
+          "label": "Official portrayal",
+          "value": "Official promotional material describes Queen Stoneback Crab as a monster adorned with rare gems of Pywel.",
+          "patch": "pre-release-demo",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=35"
+        }
+      ],
+      "patchHistory": [
+        {
+          "patch": "gamescom-2024-demo",
+          "note": "The identity appeared in official boss-battle promotional material recorded from a work-in-progress demo.",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=35"
+        }
+      ],
+      "unresolved": [
+        "Current-release route, prerequisites and arena location.",
+        "Whether the promotional behaviour remained unchanged at release.",
+        "Rewards, completion trigger and rematch availability.",
+        "Phases, weaknesses and exact statistics."
+      ],
+      "researchFocus": [
+        "Verify the current-release encounter independently of the promotional demo.",
+        "Capture route, completion and reward evidence.",
+        "Do not transfer facts from similarly named bosses."
+      ],
+      "caveat": "The official footage was labelled work in progress and subject to change."
+    },
+    {
+      "recordId": "boss-one-armed-ludvig",
+      "intelligenceStatus": "official-identity",
+      "aliases": ["Injured Ludvig"],
+      "doNotMergeWith": [],
+      "confirmedFacts": [
+        {
+          "label": "Official alias history",
+          "value": "Knowledge > Bosses renamed Injured Ludvig to One-Armed Ludvig.",
+          "patch": "1.13.00",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=105"
+        }
+      ],
+      "patchHistory": [
+        {
+          "patch": "1.13.00",
+          "note": "The official English boss name was standardised from Injured Ludvig to One-Armed Ludvig.",
+          "source": "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=105"
+        }
+      ],
+      "unresolved": [
+        "Exact route, prerequisites and arena location.",
+        "Whether other Ludvig variants are separate encounters or states.",
+        "Rewards, completion trigger and rematch availability.",
+        "Phases, weaknesses and exact statistics."
+      ],
+      "researchFocus": [
+        "Use One-Armed Ludvig as the canonical current name while retaining the old alias for search.",
+        "Capture the current Journal entry and encounter start state.",
+        "Keep other Ludvig names separate unless official evidence links them."
+      ]
+    }
+  ]
+}
