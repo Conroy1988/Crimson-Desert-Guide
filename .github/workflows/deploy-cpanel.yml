@@ -62,16 +62,16 @@ jobs:
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
-      - name: Build cPanel subpath release
+      - name: Build cPanel game-guide release
         env:
           CD_GUIDE_SITE: https://tkb-gaming.scot
-          CD_GUIDE_BASE_PATH: /crimsondesert/
+          CD_GUIDE_BASE_PATH: /games/crimson-desert/guides/
           CD_GUIDE_DIST_ROOT: dist-cpanel
         shell: bash
         run: |
           set -euo pipefail
           npm run build
-          output="dist-cpanel/crimsondesert"
+          output="dist-cpanel/games/crimson-desert/guides"
           test -f "$output/index.html"
           test -f "$output/command-centre/index.html"
           test -f "$output/media/hymn-for-the-unsung-blade.m4a"
@@ -79,14 +79,15 @@ jobs:
           cat > "$output/.htaccess" <<'HTACCESS'
           DirectoryIndex index.html
           Options -Indexes
-          ErrorDocument 404 /crimsondesert/404.html
+          ErrorDocument 404 /games/crimson-desert/guides/404.html
           HTACCESS
           cat > "$output/deployment.json" <<EOF
           {
             "guide": "Crimson Desert Guide",
             "version": "$(node -p "require('./package.json').version")",
             "commit": "${{ steps.release.outputs.sha }}",
-            "builtAt": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            "builtAt": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "publicUrl": "https://tkb-gaming.scot/games/crimson-desert/guides/"
           }
           EOF
 
@@ -95,17 +96,43 @@ jobs:
         run: |
           set -euo pipefail
           rm -rf publish
-          mkdir -p publish/site
-          cp -a dist-cpanel/crimsondesert/. publish/site/
+          mkdir -p publish/site publish/legacy
+          cp -a dist-cpanel/games/crimson-desert/guides/. publish/site/
+
+          cat > publish/legacy/.htaccess <<'HTACCESS'
+          RewriteEngine On
+          RewriteRule ^(.*)$ /games/crimson-desert/guides/$1 [R=301,L,NE]
+          HTACCESS
+
+          cat > publish/legacy/index.html <<'HTML'
+          <!doctype html>
+          <html lang="en-GB">
+            <head>
+              <meta charset="utf-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1">
+              <meta http-equiv="refresh" content="0; url=/games/crimson-desert/guides/">
+              <link rel="canonical" href="https://tkb-gaming.scot/games/crimson-desert/guides/">
+              <title>Crimson Desert Guide moved</title>
+            </head>
+            <body>
+              <p>The Crimson Desert Guide has moved to <a href="/games/crimson-desert/guides/">TKB Gaming → Games → Crimson Desert → Game Guides</a>.</p>
+            </body>
+          </html>
+          HTML
+
           cat > publish/.cpanel.yml <<'CPANEL'
           ---
           deployment:
             tasks:
-              - /bin/bash -lc 'set -eu; target="/home/jtdlxqpa/public_html/crimsondesert"; test -d "$target"; test -f "$target/.github-deploy-target"; test "$(cat "$target/.github-deploy-target")" = "crimson-desert-guide"; test -f site/index.html; test -f site/command-centre/index.html'
-              - /bin/bash -lc 'set -eu; target="/home/jtdlxqpa/public_html/crimsondesert"; /usr/bin/find "$target" -mindepth 1 -maxdepth 1 ! -name ".github-deploy-target" -exec /bin/rm -rf -- {} +'
-              - /bin/cp -a site/. /home/jtdlxqpa/public_html/crimsondesert/
-              - /bin/bash -lc 'set -eu; test -f /home/jtdlxqpa/public_html/crimsondesert/index.html; test -f /home/jtdlxqpa/public_html/crimsondesert/deployment.json; test -f /home/jtdlxqpa/public_html/crimsondesert/.github-deploy-target'
+              - /bin/bash -lc 'set -eu; target="/home/jtdlxqpa/public_html/games/crimson-desert/guides"; legacy="/home/jtdlxqpa/public_html/crimsondesert"; test -d "$target"; test -f "$target/.github-deploy-target"; test "$(cat "$target/.github-deploy-target")" = "crimson-desert-guide"; test -d "$legacy"; test -f "$legacy/.github-deploy-target"; test "$(cat "$legacy/.github-deploy-target")" = "crimson-desert-guide"; test -f site/index.html; test -f site/command-centre/index.html; test -f legacy/.htaccess; test -f legacy/index.html'
+              - /bin/bash -lc 'set -eu; target="/home/jtdlxqpa/public_html/games/crimson-desert/guides"; /usr/bin/find "$target" -mindepth 1 -maxdepth 1 ! -name ".github-deploy-target" -exec /bin/rm -rf -- {} +'
+              - /bin/cp -a site/. /home/jtdlxqpa/public_html/games/crimson-desert/guides/
+              - /bin/bash -lc 'set -eu; test -f /home/jtdlxqpa/public_html/games/crimson-desert/guides/index.html; test -f /home/jtdlxqpa/public_html/games/crimson-desert/guides/deployment.json; test -f /home/jtdlxqpa/public_html/games/crimson-desert/guides/.github-deploy-target'
+              - /bin/bash -lc 'set -eu; legacy="/home/jtdlxqpa/public_html/crimsondesert"; /usr/bin/find "$legacy" -mindepth 1 -maxdepth 1 ! -name ".github-deploy-target" -exec /bin/rm -rf -- {} +'
+              - /bin/cp -a legacy/. /home/jtdlxqpa/public_html/crimsondesert/
+              - /bin/bash -lc 'set -eu; test -f /home/jtdlxqpa/public_html/crimsondesert/.htaccess; test -f /home/jtdlxqpa/public_html/crimsondesert/index.html; test -f /home/jtdlxqpa/public_html/crimsondesert/.github-deploy-target'
           CPANEL
+
           cat > publish/README.md <<EOF
           # Crimson Desert Guide — cPanel deployment branch
 
@@ -113,8 +140,10 @@ jobs:
 
           - Source branch: `main`
           - Source commit: `${{ steps.release.outputs.sha }}`
-          - Public URL: https://tkb-gaming.scot/crimsondesert/
-          - cPanel target: `/home/jtdlxqpa/public_html/crimsondesert`
+          - Public hierarchy: TKB Gaming → Games → Crimson Desert → Game Guides
+          - Public URL: https://tkb-gaming.scot/games/crimson-desert/guides/
+          - cPanel target: `/home/jtdlxqpa/public_html/games/crimson-desert/guides`
+          - Legacy redirect: `https://tkb-gaming.scot/crimsondesert/`
 
           Use cPanel Git Version Control → **Update from Remote** → **Deploy HEAD Commit**.
           EOF
@@ -155,5 +184,7 @@ jobs:
             echo ""
             echo "- Source commit: \`${{ steps.release.outputs.sha }}\`"
             echo "- Deployment branch: \`cpanel-deploy\`"
+            echo "- Public URL: https://tkb-gaming.scot/games/crimson-desert/guides/"
+            echo "- Legacy URL becomes a permanent redirect after cPanel deployment"
             echo "- Next step in cPanel: **Update from Remote**, then **Deploy HEAD Commit**"
           } >> "$GITHUB_STEP_SUMMARY"
