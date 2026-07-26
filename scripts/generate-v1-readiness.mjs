@@ -25,7 +25,7 @@ const programmes = [
   {
     id: 'world-mounts',
     label: 'World, settlements and mounts',
-    requiredPaths: ['src/content/docs/world/index.mdx', 'src/content/docs/world/hernand.mdx', 'src/content/docs/mounts/index.mdx', 'src/content/docs/mounts/blackstar.mdx', 'data/world.json'],
+    requiredPaths: ['src/content/docs/world/index.mdx', 'src/content/docs/world/hernand.mdx', 'src/content/docs/mounts/index.mdx', 'src/content/docs/mounts/blackstar.mdx', 'data/world-locations.json', 'data/mounts.json'],
   },
   {
     id: 'completion',
