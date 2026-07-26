@@ -15,7 +15,7 @@ The canonical production guide is published to:
 3. `CI` validates the exact `main` commit and produces both root and `/crimsondesert/` builds.
 4. `Deploy cPanel Production` runs only after the successful `main` CI result.
 5. The workflow rebuilds the exact accepted commit for `https://tkb-gaming.scot/crimsondesert/`.
-6. A dedicated SSH identity uploads a compressed release to a private staging directory.
+6. A dedicated encrypted SSH identity uploads a compressed release to a private staging directory.
 7. The remote target and sentinel are verified before `rsync --delete-delay` is permitted.
 8. The workflow writes `deployment.json` and verifies the public commit after deployment.
 
@@ -32,24 +32,27 @@ Add these environment secrets:
 | `CPANEL_HOST` | The SSH hostname supplied by the hosting provider |
 | `CPANEL_PORT` | The SSH port supplied by the hosting provider |
 | `CPANEL_USER` | `jtdlxqpa` |
-| `CPANEL_SSH_PRIVATE_KEY` | The complete unencrypted private key for the dedicated deployment identity |
+| `CPANEL_SSH_PRIVATE_KEY` | The complete encrypted private key for the dedicated deployment identity |
+| `CPANEL_SSH_KEY_PASSPHRASE` | The passphrase protecting that private key |
 | `CPANEL_KNOWN_HOSTS` | A verified `known_hosts` entry for the exact SSH hostname and port |
 
-Never commit or paste the private key into repository files, issues, pull requests or logs.
+Never commit or paste the private key or its passphrase into repository files, issues, pull requests, chat messages or logs.
 
 ## Dedicated SSH key
 
-Generate a dedicated key on a trusted local computer. Import only its public key into cPanel:
+The hosting provider requires a strong passphrase for keys generated in cPanel:
 
 1. Open **cPanel → SSH Access → Manage SSH Keys**.
-2. Choose **Import Key**.
-3. Name it `github_actions_crimson_desert`.
-4. Paste the public key into the public-key field.
-5. Leave the private-key field empty.
-6. Import the key.
+2. Select **Generate a New Key**.
+3. Use a clear deployment-only name such as `tkb_crimson_desert_deploy`.
+4. Choose **RSA** with a **4096-bit** key size.
+5. Use a strong unique passphrase and store it in the shared password manager.
+6. Generate the key.
 7. Open **Manage** beside the new public key and select **Authorize**.
+8. Open **View/Download** beside the private key and retain the OpenSSH private-key material securely.
+9. Store the private key and passphrase as separate GitHub environment secrets.
 
-The matching private key belongs only in the GitHub `cpanel-production` environment secret.
+The workflow starts an ephemeral `ssh-agent`, unlocks the encrypted key through GitHub's masked secret handling, removes the temporary passphrase helper and uses the loaded key for the remaining deployment steps.
 
 ## Protected deployment sentinel
 
