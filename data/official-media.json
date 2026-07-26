@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "datasetVersion": "1.0.0",
+  "lastVerified": "2026-07-26",
+  "publisher": "Pearl Abyss",
+  "mediaPage": "https://crimsondesert.pearlabyss.com/en-US/Media",
+  "fanKit": "https://static.pearlcdn.com/asset/brand/cd/contents_cd/files/fankit_241206.zip",
+  "fanGuidelines": "https://crimsondesert.pearlabyss.com/en-US/Policy?_policyNo=130",
+  "policy": "Only official Pearl Abyss, official Crimson Desert or official Steam storefront media may be registered. Every asset requires a direct source URL, an official landing page and a precise subject description. Generic fantasy imagery and unsourced community captures are prohibited.",
+  "assets": [
+    {
+      "id": "official-kliff-launch",
+      "title": "Kliff — Launch Trailer",
+      "category": "character",
+      "subjects": ["kliff", "greymanes", "story"],
+      "src": "https://s1.pearlcdn.com/cd/brand/media_GLOBAL/2026/03/13/5474a45367f20260313113457875.jpg",
+      "sourcePage": "https://crimsondesert.pearlabyss.com/en-US/Media",
+      "sourceKind": "official-pearl-abyss-media",
+      "alt": "Official Crimson Desert launch-trailer artwork showing Kliff",
+      "credit": "Official Crimson Desert media © Pearl Abyss Corp."
+    },
+    {
+      "id": "official-pywel-horse",
+      "title": "Pywel on Horseback",
+      "category": "mount",
+      "subjects": ["horse", "mount", "pywel", "exploration"],
+      "src": "https://static.pearlcdn.com/asset/brand/cd/contents_cd/img/main/image_trailer/trail_image_3.png?v=251205",
+      "sourcePage": "https://crimsondesert.pearlabyss.com/en-US/Main",
+      "sourceKind": "official-pearl-abyss-site",
+      "alt": "Official Crimson Desert artwork showing a rider overlooking Pywel",
+      "credit": "Official Crimson Desert website artwork © Pearl Abyss Corp."
+    },
+    {
+      "id": "official-weapon-pickaxe",
+      "title": "Weapon and Resource Fieldwork",
+      "category": "weapon",
+      "subjects": ["weapon", "tool", "equipment", "resource"],
+      "src": "https://s1.pearlcdn.com/cd/brand/media_GLOBAL/2026/04/02/d3fe7df905d20260402105209790.png",
+      "sourcePage": "https://crimsondesert.pearlabyss.com/en-US/Media?_mediatype=1",
+      "sourceKind": "official-pearl-abyss-screenshot",
+      "alt": "Official Crimson Desert screenshot showing a character using a pickaxe beside mineral formations",
+      "credit": "Official Crimson Desert screenshot © Pearl Abyss Corp."
+    },
+    {
+      "id": "official-boss-forest-colossus",
+      "title": "Forest Colossus Encounter",
+      "category": "boss",
+      "subjects": ["boss", "creature", "forest", "encounter"],
+      "src": "https://s1.pearlcdn.com/cd/brand/media_GLOBAL/2026/04/02/88160ecb27920260402105234327.png",
+      "sourcePage": "https://crimsondesert.pearlabyss.com/en-US/Media?_mediatype=1",
+      "sourceKind": "official-pearl-abyss-screenshot",
+      "alt": "Official Crimson Desert screenshot showing a towering forest creature encounter",
+      "credit": "Official Crimson Desert screenshot © Pearl Abyss Corp."
+    },
+    {
+      "id": "official-settlement-lakeside",
+      "title": "Lakeside Settlement",
+      "category": "world",
+      "subjects": ["settlement", "world", "services", "exploration"],
+      "src": "https://s1.pearlcdn.com/cd/brand/media_GLOBAL/2026/04/02/e9bb44003d820260402105157401.png",
+      "sourcePage": "https://crimsondesert.pearlabyss.com/en-US/Media?_mediatype=1",
+      "sourceKind": "official-pearl-abyss-screenshot",
+      "alt": "Official Crimson Desert screenshot overlooking a lakeside settlement",
+      "credit": "Official Crimson Desert screenshot © Pearl Abyss Corp."
+    },
+    {
+      "id": "official-world-river-valley",
+      "title": "Pywel River Valley",
+      "category": "world",
+      "subjects": ["world", "river", "route", "exploration"],
+      "src": "https://s1.pearlcdn.com/cd/brand/media_GLOBAL/2026/04/02/9cf1d2ace3a20260402105221785.png",
+      "sourcePage": "https://crimsondesert.pearlabyss.com/en-US/Media?_mediatype=1",
+      "sourceKind": "official-pearl-abyss-screenshot",
+      "alt": "Official Crimson Desert screenshot showing a river valley route through Pywel",
+      "credit": "Official Crimson Desert screenshot © Pearl Abyss Corp."
+    }
+  ]
+}
