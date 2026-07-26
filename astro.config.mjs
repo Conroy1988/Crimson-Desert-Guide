@@ -27,7 +27,7 @@ export default defineConfig({
   },
   integrations: [
     starlight({
-      title: 'Crimson Desert Guide · DEPLOYMENT TEST',
+      title: 'Crimson Desert Guide',
       description:
         'An evidence-backed, patch-aware Crimson Desert guide, database and expedition companion.',
       logo: {
