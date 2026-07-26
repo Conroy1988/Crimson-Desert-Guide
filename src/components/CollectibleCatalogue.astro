@@ -1,0 +1,474 @@
+---
+import catalogue from '../../data/collectible-catalogue.json';
+import completion from '../../data/completion.json';
+
+const subtypeLabel = (value: string) => value
+  .split('-')
+  .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+  .join(' ');
+
+const subtypes = [...new Set(catalogue.records.map((record) => record.subtype))]
+  .sort((a, b) => subtypeLabel(a).localeCompare(subtypeLabel(b)));
+const categories = catalogue.records.filter((record) => record.scope === 'category').length;
+const individuals = catalogue.records.length - categories;
+const verifiedIndividuals = catalogue.records.filter((record) => record.support === 'individual-verified').length;
+---
+
+<section class="collectible-catalogue" aria-labelledby="collectible-catalogue-title">
+  <header class="collectible-catalogue__hero">
+    <div>
+      <p class="collectible-catalogue__kicker">Completion intelligence · Patch {catalogue.gamePatch}</p>
+      <h2 id="collectible-catalogue-title">Collectibles, Knowledge & Challenges</h2>
+      <p>
+        Official category conditions are separated from individually verified entries. Unknown totals,
+        coordinates, routes and rewards remain unavailable rather than estimated.
+      </p>
+    </div>
+    <dl class="collectible-catalogue__stats">
+      <div><dt>Records</dt><dd>{catalogue.records.length}</dd></div>
+      <div><dt>Categories</dt><dd>{categories}</dd></div>
+      <div><dt>Individuals</dt><dd>{individuals}</dd></div>
+      <div><dt>Verified items</dt><dd>{verifiedIndividuals}</dd></div>
+    </dl>
+  </header>
+
+  <div class="collectible-catalogue__notice">
+    <strong>Local research only.</strong>
+    Discovery counts, notes and research flags stay in this browser. They never alter canonical totals
+    or the Completion Companion's evidence-backed milestones.
+  </div>
+
+  <form class="collectible-catalogue__filters" data-catalogue-filters>
+    <label>
+      <span>Search</span>
+      <input type="search" name="search" placeholder="Title, category, region or blocker" autocomplete="off" />
+    </label>
+    <label>
+      <span>Type</span>
+      <select name="type">
+        <option value="all">All types</option>
+        <option value="challenge">Challenges</option>
+        <option value="knowledge">Knowledge</option>
+      </select>
+    </label>
+    <label>
+      <span>Scope</span>
+      <select name="scope">
+        <option value="all">Categories and individuals</option>
+        <option value="category">Category goals</option>
+        <option value="individual">Individual entries</option>
+      </select>
+    </label>
+    <label>
+      <span>Support</span>
+      <select name="support">
+        <option value="all">All evidence states</option>
+        <option value="category-verified">Official category</option>
+        <option value="individual-verified">Verified individual</option>
+        <option value="research">Research required</option>
+      </select>
+    </label>
+    <label>
+      <span>Category</span>
+      <select name="subtype">
+        <option value="all">All categories</option>
+        {subtypes.map((subtype) => <option value={subtype}>{subtypeLabel(subtype)}</option>)}
+      </select>
+    </label>
+    <label>
+      <span>Spoilers</span>
+      <select name="spoiler">
+        <option value="all">All spoiler levels</option>
+        <option value="none">No spoilers</option>
+        <option value="minor">Minor spoilers</option>
+        <option value="full">Major spoilers</option>
+      </select>
+    </label>
+    <label>
+      <span>Completion</span>
+      <select name="completion">
+        <option value="all">All completion states</option>
+        <option value="complete">Complete</option>
+        <option value="incomplete">Incomplete</option>
+        <option value="untracked">Not in Companion</option>
+      </select>
+    </label>
+  </form>
+
+  <div class="collectible-catalogue__toolbar">
+    <p data-catalogue-result-count aria-live="polite">Showing {catalogue.records.length} records</p>
+    <div>
+      <button type="button" data-catalogue-export>Export research</button>
+      <button type="button" data-catalogue-import>Import research</button>
+      <button type="button" class="danger" data-catalogue-reset>Reset local research</button>
+      <input type="file" accept="application/json,.json" hidden data-catalogue-file />
+    </div>
+    <p class="collectible-catalogue__status" data-catalogue-status aria-live="polite"></p>
+  </div>
+
+  <div class="collectible-catalogue__grid" data-catalogue-grid>
+    {catalogue.records.map((record) => {
+      const protectedTitle = record.spoilerLevel === 'full';
+      const searchable = [
+        record.title,
+        record.summary,
+        record.subtype,
+        record.region,
+        ...record.tags,
+        ...record.blockers,
+        ...record.unknowns,
+      ].join(' ').toLowerCase();
+      return (
+        <article
+          class="collectible-card"
+          data-catalogue-card
+          data-id={record.id}
+          data-type={record.type}
+          data-scope={record.scope}
+          data-support={record.support}
+          data-subtype={record.subtype}
+          data-spoiler={record.spoilerLevel}
+          data-completion-id={record.completionEntryId ?? ''}
+          data-search={searchable}
+        >
+          <header class="collectible-card__header">
+            <div>
+              <p>{record.scope === 'category' ? 'Category goal' : 'Individual record'} · {subtypeLabel(record.subtype)}</p>
+              <h3 data-card-title>{protectedTitle ? 'Spoiler-protected entry' : record.title}</h3>
+            </div>
+            <span class={`collectible-card__support collectible-card__support--${record.support}`}>
+              {record.support === 'category-verified'
+                ? 'Official category'
+                : record.support === 'individual-verified'
+                  ? 'Verified individual'
+                  : 'Research required'}
+            </span>
+          </header>
+
+          {protectedTitle && (
+            <button class="collectible-card__reveal" type="button" data-reveal-title data-title={record.title}>
+              Reveal identity
+            </button>
+          )}
+
+          <p class="collectible-card__summary">{record.summary}</p>
+
+          <dl class="collectible-card__meta">
+            <div><dt>Evidence</dt><dd>{record.evidence}</dd></div>
+            <div><dt>Region</dt><dd>{subtypeLabel(record.region)}</dd></div>
+            <div><dt>Patch</dt><dd>{record.firstSupportedPatch}</dd></div>
+            <div><dt>Official total</dt><dd>{record.officialTotal ?? 'Unknown'}</dd></div>
+          </dl>
+
+          <div class="collectible-card__completion" data-completion-panel>
+            <span data-completion-label>{record.completionEntryId ? 'Checking Companion…' : 'Not tracked in Companion'}</span>
+            {record.officialCondition && <p>{record.officialCondition}</p>}
+          </div>
+
+          <details>
+            <summary>Operational guidance</summary>
+            <ul>{record.guidance.map((item) => <li>{item}</li>)}</ul>
+          </details>
+
+          {record.blockers.length > 0 && (
+            <details>
+              <summary>Known blocker history</summary>
+              <ul>{record.blockers.map((item) => <li>{item}</li>)}</ul>
+            </details>
+          )}
+
+          <details>
+            <summary>Unresolved research</summary>
+            <ul>{record.unknowns.map((item) => <li>{item}</li>)}</ul>
+          </details>
+
+          <fieldset class="collectible-card__research">
+            <legend>Private research state</legend>
+            <label>
+              <span>Discovered count {record.officialTotal ? `(max ${record.officialTotal})` : '(personal count)'}</span>
+              <input
+                type="number"
+                min="0"
+                max={record.officialTotal ?? 99999}
+                step="1"
+                value="0"
+                inputmode="numeric"
+                data-count
+              />
+            </label>
+            <label class="collectible-card__flag">
+              <input type="checkbox" data-research-flag />
+              <span>Keep in my research queue</span>
+            </label>
+            <label>
+              <span>Private notes</span>
+              <textarea maxlength="5000" rows="3" placeholder="Route observations, missing entries or test conditions" data-note></textarea>
+            </label>
+          </fieldset>
+
+          <footer class="collectible-card__footer">
+            <div>
+              {record.guideLinks.map((href) => <a href={href}>Related guide</a>)}
+            </div>
+            <a href={record.sources[0]} target="_blank" rel="noreferrer">Official source ↗</a>
+          </footer>
+        </article>
+      );
+    })}
+  </div>
+
+  <p class="collectible-catalogue__empty" hidden data-catalogue-empty>No catalogue records match these filters.</p>
+</section>
+
+<script id="collectible-catalogue-data" type="application/json" set:html={JSON.stringify(catalogue)}></script>
+<script id="collectible-completion-data" type="application/json" set:html={JSON.stringify(completion)}></script>
+
+<script>
+  import {
+    createCollectibleExport,
+    createEmptyCollectibleState,
+    loadCollectibleState,
+    parseCollectibleImport,
+    saveCollectibleState,
+  } from '../lib/collectible-state.mjs';
+
+  const root = document.querySelector('.collectible-catalogue');
+  const dataNode = document.querySelector('#collectible-catalogue-data');
+  const completionNode = document.querySelector('#collectible-completion-data');
+  if (root && dataNode && completionNode) {
+    const dataset = JSON.parse(dataNode.textContent || '{}');
+    const completionDataset = JSON.parse(completionNode.textContent || '{}');
+    const cards = [...root.querySelectorAll('[data-catalogue-card]')];
+    const filters = root.querySelector('[data-catalogue-filters]');
+    const status = root.querySelector('[data-catalogue-status]');
+    const resultCount = root.querySelector('[data-catalogue-result-count]');
+    const empty = root.querySelector('[data-catalogue-empty]');
+    const fileInput = root.querySelector('[data-catalogue-file]');
+    let state = createEmptyCollectibleState(dataset);
+    let completionIds = new Set();
+
+    const report = (message, error = false) => {
+      if (!status) return;
+      status.textContent = message;
+      status.toggleAttribute('data-error', error);
+    };
+
+    try {
+      const loaded = loadCollectibleState(window.localStorage, dataset);
+      state = loaded.state;
+      if (loaded.error) report(loaded.error, true);
+    } catch (error) {
+      report(error instanceof Error ? error.message : 'Local catalogue state could not be loaded.', true);
+    }
+
+    try {
+      const raw = window.localStorage.getItem(completionDataset.storageKey);
+      const parsed = raw ? JSON.parse(raw) : null;
+      completionIds = new Set(Array.isArray(parsed?.completed) ? parsed.completed : []);
+    } catch {
+      completionIds = new Set();
+    }
+
+    const persist = () => {
+      try {
+        state = saveCollectibleState(window.localStorage, state, dataset).state;
+        report('Research saved locally.');
+      } catch (error) {
+        report(error instanceof Error ? error.message : 'Research could not be saved.', true);
+      }
+    };
+
+    const hydrate = () => {
+      for (const card of cards) {
+        const id = card.dataset.id;
+        const count = card.querySelector('[data-count]');
+        const note = card.querySelector('[data-note]');
+        const flag = card.querySelector('[data-research-flag]');
+        const completionId = card.dataset.completionId;
+        const completionLabel = card.querySelector('[data-completion-label]');
+        if (count) count.value = String(state.counts[id] ?? 0);
+        if (note) note.value = state.notes[id] ?? '';
+        if (flag) flag.checked = state.research.includes(id);
+        if (completionId && completionLabel) {
+          const complete = completionIds.has(completionId);
+          completionLabel.textContent = complete ? 'Complete in Companion' : 'Incomplete in Companion';
+          card.dataset.completionState = complete ? 'complete' : 'incomplete';
+        } else {
+          card.dataset.completionState = 'untracked';
+        }
+      }
+    };
+
+    const applyFilters = () => {
+      const form = new FormData(filters);
+      const search = String(form.get('search') ?? '').trim().toLowerCase();
+      const values = Object.fromEntries(['type', 'scope', 'support', 'subtype', 'spoiler', 'completion'].map((key) => [key, String(form.get(key) ?? 'all')]));
+      let visible = 0;
+      for (const card of cards) {
+        const matches = (!search || card.dataset.search.includes(search))
+          && Object.entries(values).every(([key, value]) => value === 'all' || card.dataset[key] === value);
+        card.hidden = !matches;
+        if (matches) visible += 1;
+      }
+      if (resultCount) resultCount.textContent = `Showing ${visible} of ${cards.length} records`;
+      if (empty) empty.hidden = visible !== 0;
+    };
+
+    root.addEventListener('input', (event) => {
+      const target = event.target;
+      const card = target.closest?.('[data-catalogue-card]');
+      if (!card) {
+        applyFilters();
+        return;
+      }
+      const id = card.dataset.id;
+      if (target.matches('[data-count]')) {
+        const value = Number(target.value || 0);
+        state.counts[id] = Number.isInteger(value) && value > 0 ? value : 0;
+      }
+      if (target.matches('[data-note]')) {
+        state.notes[id] = target.value;
+      }
+      persist();
+    });
+
+    root.addEventListener('change', (event) => {
+      const target = event.target;
+      if (target.closest?.('[data-catalogue-filters]')) {
+        applyFilters();
+        return;
+      }
+      const card = target.closest?.('[data-catalogue-card]');
+      if (card && target.matches('[data-research-flag]')) {
+        const ids = new Set(state.research);
+        target.checked ? ids.add(card.dataset.id) : ids.delete(card.dataset.id);
+        state.research = [...ids];
+        persist();
+      }
+    });
+
+    root.addEventListener('click', async (event) => {
+      const target = event.target.closest('button');
+      if (!target) return;
+      if (target.matches('[data-reveal-title]')) {
+        const card = target.closest('[data-catalogue-card]');
+        const title = card?.querySelector('[data-card-title]');
+        if (title) title.textContent = target.dataset.title;
+        target.remove();
+      }
+      if (target.matches('[data-catalogue-export]')) {
+        const backup = createCollectibleExport(state, dataset);
+        const blob = new Blob([`${JSON.stringify(backup, null, 2)}\n`], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `crimson-desert-collectibles-${new Date().toISOString().slice(0, 10)}.json`;
+        link.click();
+        URL.revokeObjectURL(url);
+        report('Research backup exported.');
+      }
+      if (target.matches('[data-catalogue-import]')) fileInput?.click();
+      if (target.matches('[data-catalogue-reset]') && window.confirm('Reset all local catalogue counts, notes and research flags?')) {
+        state = createEmptyCollectibleState(dataset);
+        persist();
+        hydrate();
+      }
+    });
+
+    fileInput?.addEventListener('change', async () => {
+      const file = fileInput.files?.[0];
+      if (!file) return;
+      try {
+        state = parseCollectibleImport(JSON.parse(await file.text()), dataset);
+        persist();
+        hydrate();
+        report('Research backup imported.');
+      } catch (error) {
+        report(error instanceof Error ? error.message : 'Research backup could not be imported.', true);
+      } finally {
+        fileInput.value = '';
+      }
+    });
+
+    filters?.addEventListener('input', applyFilters);
+    hydrate();
+    applyFilters();
+  }
+</script>
+
+<style>
+  .collectible-catalogue { display: grid; gap: 1.25rem; }
+  .collectible-catalogue__hero { position: relative; display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(18rem, .8fr); gap: 1.5rem; overflow: hidden; padding: clamp(1.4rem, 4vw, 2.5rem); border: 1px solid rgb(210 160 78 / 35%); border-radius: 1rem; background: radial-gradient(circle at 92% 5%, rgb(154 39 24 / 32%), transparent 37%), linear-gradient(135deg, #11100e, #080807); box-shadow: 0 1.5rem 4rem rgb(0 0 0 / 28%); }
+  .collectible-catalogue__hero h2 { margin: .2rem 0 .7rem; font-family: var(--cd-font-display); font-size: clamp(2rem, 5vw, 4rem); line-height: .98; color: #fff5df; }
+  .collectible-catalogue__hero p { max-width: 54rem; color: #cfc0a7; }
+  .collectible-catalogue__kicker { margin: 0; font-size: .7rem; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; color: #d9aa59 !important; }
+  .collectible-catalogue__stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: .7rem; margin: 0; align-self: center; }
+  .collectible-catalogue__stats div { padding: .85rem; border: 1px solid rgb(217 168 86 / 24%); border-radius: .65rem; background: rgb(0 0 0 / 35%); }
+  .collectible-catalogue__stats dt { font-size: .62rem; letter-spacing: .09em; text-transform: uppercase; color: #9e907b; }
+  .collectible-catalogue__stats dd { margin: .15rem 0 0; font-family: var(--cd-font-display); font-size: 1.8rem; color: #f4d18f; }
+  .collectible-catalogue__notice { padding: .9rem 1rem; border-left: .22rem solid #b83d28; background: rgb(137 38 24 / 12%); color: var(--sl-color-gray-2); }
+  .collectible-catalogue__filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr)); gap: .75rem; padding: 1rem; border: 1px solid var(--sl-color-gray-5); border-radius: .8rem; background: var(--sl-color-gray-6); }
+  .collectible-catalogue label { display: grid; gap: .35rem; }
+  .collectible-catalogue label > span, .collectible-card__research legend { font-size: .65rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--sl-color-gray-2); }
+  .collectible-catalogue input, .collectible-catalogue select, .collectible-catalogue textarea, .collectible-catalogue button { min-height: 2.65rem; border: 1px solid var(--sl-color-gray-4); border-radius: .5rem; background: var(--sl-color-black); color: var(--sl-color-white); font: inherit; }
+  .collectible-catalogue input, .collectible-catalogue select, .collectible-catalogue textarea { padding: .6rem .7rem; }
+  .collectible-catalogue button { padding: .55rem .8rem; cursor: pointer; }
+  .collectible-catalogue button:hover { border-color: #d7a657; }
+  .collectible-catalogue button.danger { border-color: rgb(184 61 40 / 50%); }
+  .collectible-catalogue__toolbar { display: flex; flex-wrap: wrap; gap: .7rem 1rem; align-items: center; justify-content: space-between; }
+  .collectible-catalogue__toolbar > div { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .collectible-catalogue__toolbar p { margin: 0; }
+  .collectible-catalogue__status { flex-basis: 100%; min-height: 1.3rem; color: #8fc59b; }
+  .collectible-catalogue__status[data-error] { color: #ee8f82; }
+  .collectible-catalogue__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: 1rem; }
+  .collectible-card { display: grid; align-content: start; gap: .9rem; padding: 1rem; border: 1px solid rgb(210 160 78 / 24%); border-radius: .8rem; background: linear-gradient(145deg, rgb(24 22 19 / 96%), rgb(10 10 9 / 98%)); box-shadow: 0 .9rem 2rem rgb(0 0 0 / 18%); }
+  .collectible-card[hidden] { display: none; }
+  .collectible-card__header { display: flex; gap: .7rem; justify-content: space-between; align-items: start; }
+  .collectible-card__header p { margin: 0 0 .25rem; font-size: .64rem; letter-spacing: .08em; text-transform: uppercase; color: #a8987e; }
+  .collectible-card h3 { margin: 0; font-family: var(--cd-font-display); font-size: 1.35rem; color: #fff1d5; }
+  .collectible-card__support { flex: 0 0 auto; padding: .28rem .45rem; border-radius: 999px; font-size: .58rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+  .collectible-card__support--category-verified { background: rgb(150 103 32 / 22%); color: #e5bc70; }
+  .collectible-card__support--individual-verified { background: rgb(45 118 68 / 24%); color: #9ad0a7; }
+  .collectible-card__support--research { background: rgb(138 77 35 / 24%); color: #dba77c; }
+  .collectible-card__reveal { width: fit-content; min-height: 2.2rem !important; }
+  .collectible-card__summary { margin: 0; color: var(--sl-color-gray-2); }
+  .collectible-card__meta { display: grid; grid-template-columns: repeat(2, 1fr); gap: .5rem; margin: 0; }
+  .collectible-card__meta div { padding: .55rem; border: 1px solid var(--sl-color-gray-5); border-radius: .45rem; }
+  .collectible-card__meta dt { font-size: .58rem; text-transform: uppercase; color: var(--sl-color-gray-3); }
+  .collectible-card__meta dd { margin: .15rem 0 0; color: var(--sl-color-gray-1); }
+  .collectible-card__completion { padding: .7rem; border: 1px solid rgb(90 139 93 / 30%); border-radius: .5rem; background: rgb(47 93 57 / 12%); }
+  .collectible-card__completion span { font-weight: 800; color: #9dccaa; }
+  .collectible-card__completion p { margin: .35rem 0 0; font-size: .9rem; }
+  .collectible-card details { border-top: 1px solid var(--sl-color-gray-5); padding-top: .65rem; }
+  .collectible-card summary { cursor: pointer; font-weight: 750; color: var(--sl-color-gray-1); }
+  .collectible-card ul { margin-bottom: 0; padding-left: 1.15rem; }
+  .collectible-card__research { display: grid; gap: .75rem; margin: 0; padding: .8rem; border: 1px solid var(--sl-color-gray-5); border-radius: .55rem; }
+  .collectible-card__flag { grid-template-columns: auto 1fr; align-items: center; }
+  .collectible-card__flag input { min-height: auto; width: 1.1rem; height: 1.1rem; }
+  .collectible-card__footer { display: flex; flex-wrap: wrap; gap: .65rem; justify-content: space-between; padding-top: .5rem; border-top: 1px solid var(--sl-color-gray-5); }
+  .collectible-card__footer div { display: flex; flex-wrap: wrap; gap: .55rem; }
+  .collectible-card__footer a { font-size: .78rem; }
+  .collectible-catalogue__empty { padding: 2rem; text-align: center; color: var(--sl-color-gray-2); }
+  :global(:root[data-theme='light']) .collectible-catalogue__hero { border-color: #b99c70; background: radial-gradient(circle at 92% 5%, rgb(157 45 32 / 15%), transparent 37%), linear-gradient(135deg, #fffaf1, #eee0cd); box-shadow: 0 1.2rem 3rem rgb(91 55 32 / 15%); }
+  :global(:root[data-theme='light']) .collectible-catalogue__hero h2 { color: #2c1b12; }
+  :global(:root[data-theme='light']) .collectible-catalogue__hero p { color: #514032; }
+  :global(:root[data-theme='light']) .collectible-catalogue__stats div { border-color: #c2a578; background: rgb(255 253 249 / 72%); }
+  :global(:root[data-theme='light']) .collectible-catalogue__stats dd { color: #603607; }
+  :global(:root[data-theme='light']) .collectible-card { border-color: #c2a578; background: linear-gradient(145deg, #fffdf8, #f1e5d4); box-shadow: 0 .7rem 1.6rem rgb(91 55 32 / 12%); }
+  :global(:root[data-theme='light']) .collectible-card h3 { color: #2b1b12; }
+  :global(:root[data-theme='light']) .collectible-card__completion span { color: #24643b; }
+  @media (max-width: 46rem) {
+    .collectible-catalogue__hero { grid-template-columns: 1fr; }
+    .collectible-catalogue__stats { grid-template-columns: repeat(4, 1fr); }
+    .collectible-catalogue__stats div { padding: .6rem; }
+    .collectible-catalogue__stats dd { font-size: 1.3rem; }
+    .collectible-card__header { display: grid; }
+    .collectible-card__support { width: fit-content; }
+  }
+  @media (max-width: 31rem) {
+    .collectible-catalogue__stats { grid-template-columns: repeat(2, 1fr); }
+    .collectible-catalogue__toolbar { align-items: stretch; }
+    .collectible-catalogue__toolbar > div { display: grid; width: 100%; }
+    .collectible-card__meta { grid-template-columns: 1fr; }
+  }
+</style>
