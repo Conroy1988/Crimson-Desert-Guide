@@ -45,6 +45,8 @@ export default defineConfig({
       components: {
         PageTitle: './src/components/PageTitle.astro',
         Footer: './src/components/GuideFooter.astro',
+        SocialIcons: './src/components/GuideSocialIcons.astro',
+        Sidebar: './src/components/GuideSidebar.astro',
       },
       lastUpdated: true,
       editLink: {

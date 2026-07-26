@@ -7,6 +7,8 @@ const [
   home,
   pageTitle,
   footer,
+  socialIcons,
+  sidebar,
   atlas,
   catalogue,
   mastery,
@@ -22,6 +24,8 @@ const [
   readFile(new URL('../src/components/HomeExperience.astro', import.meta.url), 'utf8'),
   readFile(new URL('../src/components/PageTitle.astro', import.meta.url), 'utf8'),
   readFile(new URL('../src/components/GuideFooter.astro', import.meta.url), 'utf8'),
+  readFile(new URL('../src/components/GuideSocialIcons.astro', import.meta.url), 'utf8'),
+  readFile(new URL('../src/components/GuideSidebar.astro', import.meta.url), 'utf8'),
   readFile(new URL('../src/components/PywelAtlas.astro', import.meta.url), 'utf8'),
   readFile(new URL('../src/components/CollectibleCatalogue.astro', import.meta.url), 'utf8'),
   readFile(new URL('../src/components/CharacterMasteryCentre.astro', import.meta.url), 'utf8'),
@@ -43,6 +47,8 @@ if (configThemeIndex > configLightIndex) failures.push('site-theme.css must load
 if (configMobileIndex < configLightIndex) failures.push('mobile-text.css must load after light-mode.css so mobile resilience remains authoritative');
 if (!config.includes("directory: 'atlas'")) failures.push('astro.config.mjs does not expose the Pywel Atlas');
 if (!config.includes("slug: 'command-centre'")) failures.push('astro.config.mjs does not expose the Expedition Command Centre');
+if (!config.includes("SocialIcons: './src/components/GuideSocialIcons.astro'")) failures.push('astro.config.mjs does not install the TKB home navigation component');
+if (!config.includes("Sidebar: './src/components/GuideSidebar.astro'")) failures.push('astro.config.mjs does not install the mobile TKB home navigation component');
 
 const requiredShellSelectors = [
   '.header', '.site-title', '.sidebar-pane', '.sidebar-content a[aria-current=\'page\']', '.main-pane',
@@ -72,6 +78,13 @@ const homeMobileBoundary = home.indexOf('@media (max-width: 42rem)');
 if (homeMobileBoundary === -1) failures.push('Homepage does not retain its mobile layout breakpoint');
 if (!home.includes('.portal-hero h1 span')) failures.push('Homepage is missing the cinematic hero title selector');
 if (!home.includes('.portal-patch-badge')) failures.push('Homepage is missing the live patch badge selector');
+const tkbHomeUrl = 'https://tkb-gaming.scot/';
+if (!home.includes(`href="${tkbHomeUrl}"`)) failures.push('Homepage navigation is missing the TKB home link');
+if (!socialIcons.includes(`href="${tkbHomeUrl}"`)) failures.push('Guide shell navigation is missing the TKB home link');
+if (!socialIcons.includes('TKB Home')) failures.push('Guide shell navigation is missing a visible TKB Home label');
+if (!sidebar.includes(`href="${tkbHomeUrl}"`)) failures.push('Mobile guide navigation is missing the TKB home link');
+if (!sidebar.includes('tkb-mobile-home')) failures.push('Mobile guide navigation is missing the top-positioned TKB home control');
+if (!css.includes('.sidebar-content .tkb-mobile-home')) failures.push('Guide shell is missing the mobile TKB Home button style');
 
 const requiredSections = [
   "id: 'command'", "id: 'updates'", "id: 'start'", "id: 'combat'", "id: 'gear'", "id: 'world'", "id: 'mounts'",
