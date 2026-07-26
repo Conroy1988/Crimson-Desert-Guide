@@ -8,7 +8,7 @@ const npmCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 const env = {
   ...process.env,
   CD_GUIDE_SITE: 'https://tkb-gaming.scot',
-  CD_GUIDE_BASE_PATH: '/crimsondesert/',
+  CD_GUIDE_BASE_PATH: '/games/crimson-desert/guides/',
   CD_GUIDE_DIST_ROOT: 'dist-subpath',
 };
 
@@ -48,5 +48,5 @@ await run('build');
 await run('smoke:deployment');
 
 console.log(
-  'Subpath deployment validation passed for https://tkb-gaming.scot/crimsondesert/.',
+  'Subpath deployment validation passed for https://tkb-gaming.scot/games/crimson-desert/guides/.',
 );
