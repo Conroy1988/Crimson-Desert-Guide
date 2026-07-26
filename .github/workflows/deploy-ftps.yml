@@ -99,8 +99,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          marker="$(mktemp)"
-          trap 'rm -f "$marker"' EXIT
+          temp_dir="$(mktemp -d)"
+          marker="$temp_dir/.github-deploy-target"
+          trap 'rm -rf "$temp_dir"' EXIT
 
           lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "ftp://$FTP_SERVER:21" <<LFTP
           set cmd:fail-exit yes
@@ -204,9 +205,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          marker="$(mktemp)"
-          metadata="$(mktemp)"
-          trap 'rm -f "$marker" "$metadata"' EXIT
+          temp_dir="$(mktemp -d)"
+          marker="$temp_dir/.github-deploy-target"
+          metadata="$temp_dir/deployment.json"
+          trap 'rm -rf "$temp_dir"' EXIT
 
           lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "ftp://$FTP_SERVER:21" <<LFTP
           set cmd:fail-exit yes
@@ -262,17 +264,23 @@ jobs:
         env:
           DEPLOY_ACTION: ${{ inputs.action }}
           RELEASE_SHA: ${{ steps.release.outputs.sha }}
+          JOB_STATUS: ${{ job.status }}
         shell: bash
         run: |
           {
             echo "### Manual FTPS production workflow"
             echo ""
             echo "- Action: \`$DEPLOY_ACTION\`"
-            echo "- Current main commit: \`$RELEASE_SHA\`"
+            echo "- Current main commit: \`${RELEASE_SHA:-unavailable}\`"
             echo "- Target: restricted Crimson Desert Guide FTP root"
-            if [[ "$DEPLOY_ACTION" == "deploy" ]]; then
+            echo "- Workflow status: \`$JOB_STATUS\`"
+
+            if [[ "$JOB_STATUS" != "success" ]]; then
+              echo "- Result: workflow failed before completion; review the failed step. No successful preflight or deployment is claimed."
+            elif [[ "$DEPLOY_ACTION" == "deploy" ]]; then
+              echo "- Result: production deployment and public verification completed"
               echo "- Public URL: https://tkb-gaming.scot/games/crimson-desert/guides/"
             else
-              echo "- Result: connection, TLS and deployment-marker preflight only; no files uploaded"
+              echo "- Result: connection, TLS and deployment-marker preflight completed; no files uploaded"
             fi
           } >> "$GITHUB_STEP_SUMMARY"
