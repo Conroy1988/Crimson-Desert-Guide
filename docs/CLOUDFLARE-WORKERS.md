@@ -1,28 +1,37 @@
-# Cloudflare Workers Deployment
+# Cloudflare Workers Preview Deployment
 
-The production guide is deployed through Cloudflare Workers Builds from `Conroy1988/Crimson-Desert-Guide`.
+Cloudflare Workers Builds remains connected to `Conroy1988/Crimson-Desert-Guide` for branch previews and the legacy Worker mirror.
 
-## Production service
+## Canonical production
 
-- **Public URL:** https://crimson-desert-guide.dannyconroy.workers.dev/
-- **Worker name:** `crimson-desert-guide`
+The canonical guide now lives at:
+
+- **Public URL:** `https://tkb-gaming.scot/crimsondesert/`
+- **Production host:** cPanel static hosting
 - **Production branch:** `main`
+- **Deployment workflow:** `.github/workflows/deploy-cpanel.yml`
+- **Operator guide:** `docs/CPANEL-DEPLOYMENT.md`
+
+Do not treat a successful Cloudflare branch preview as proof that the canonical cPanel site deployed.
+
+## Cloudflare service
+
+- **Legacy/mirror URL:** `https://crimson-desert-guide.dannyconroy.workers.dev/`
+- **Worker name:** `crimson-desert-guide`
+- **Connected repository:** `Conroy1988/Crimson-Desert-Guide`
 - **Root directory:** `/`
 - **Build command:** `npm run build`
 - **Deploy command:** `npx wrangler deploy`
 - **Static asset directory:** `dist`
 - **Node.js version:** `22.12.0`
 
-The static-assets configuration is stored in `wrangler.jsonc`. The site does not require the Astro Cloudflare SSR adapter, runtime bindings or application secrets.
+The static-assets configuration remains in `wrangler.jsonc`. The mirror does not require the Astro Cloudflare SSR adapter, runtime bindings or application secrets.
 
 ## Deployment policy
 
-- Production deployments originate only from `main`.
-- Non-production branches receive preview deployments.
-- Pull requests must pass `Quality Gate` and `CodeQL` before merging.
-- Cloudflare automatically deploys each accepted `main` commit.
-- The canonical site URL in `astro.config.mjs`, `public/robots.txt` and repository metadata must remain aligned with the production hostname.
+- Pull requests must pass **Quality Gate** and **CodeQL** before merging.
+- Non-production branches may continue to receive Cloudflare preview deployments.
+- Canonical releases are built for the `/crimsondesert/` base path and published to cPanel only after successful `main` CI.
+- Canonical URLs, robots and sitemap references for cPanel are generated with `CD_GUIDE_SITE=https://tkb-gaming.scot` and `CD_GUIDE_BASE_PATH=/crimsondesert/`.
 
-## Custom domain
-
-A custom domain can be attached later without changing the application architecture. When one is adopted, update all canonical URL references in the same pull request before directing search engines or users to it.
+Cloudflare may be retired later after the custom-domain deployment has proven stable and any useful preview role has been replaced.
