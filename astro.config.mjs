@@ -34,7 +34,7 @@ export default defineConfig({
         src: './src/assets/logo.svg',
         alt: 'Crimson Desert Guide crest',
       },
-      favicon: withBase('favicon.svg'),
+      favicon: '/favicon.svg',
       customCss: [
         './src/styles/custom.css',
         './src/styles/home-overrides.css',
