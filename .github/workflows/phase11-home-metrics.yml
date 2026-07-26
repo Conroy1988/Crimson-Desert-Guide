@@ -1,0 +1,42 @@
+name: Phase 11 Homepage Metrics
+
+on:
+  push:
+    branches:
+      - agent/phase11-collectibles-challenges
+
+permissions:
+  contents: write
+
+concurrency:
+  group: phase11-home-metrics
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: agent/phase11-collectibles-challenges
+          fetch-depth: 0
+      - name: Update homepage metrics
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('src/components/HomeExperience.astro')
+          text = path.read_text()
+          text = text.replace("{ label: 'Content database', detail: '67 sourced records', icon: 'scroll', href: '/database/' },", "{ label: 'Content database', detail: '85 sourced records', icon: 'scroll', href: '/database/' },")
+          text = text.replace("{ label: 'Database', count: 1, width: 25 },", "{ label: 'Database', count: 3, width: 75 },")
+          path.write_text(text)
+          Path('.github/workflows/phase11-home-metrics.yml').unlink()
+          PY
+      - name: Commit verified integration
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Phase 11: update homepage catalogue metrics"
+          git push origin HEAD:agent/phase11-collectibles-challenges
