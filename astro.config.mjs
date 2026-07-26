@@ -1,8 +1,26 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 
+function normaliseBasePath(value) {
+  const candidate = String(value ?? '/').trim();
+  if (!candidate || candidate === '/') return '/';
+  return `/${candidate.replace(/^\/+|\/+$/g, '')}/`;
+}
+
+const base = normaliseBasePath(process.env.CD_GUIDE_BASE_PATH);
+const site = String(
+  process.env.CD_GUIDE_SITE ?? 'https://crimson-desert-guide.dannyconroy.workers.dev',
+).replace(/\/+$/g, '');
+const distRoot = String(process.env.CD_GUIDE_DIST_ROOT ?? 'dist')
+  .replace(/^\.\//, '')
+  .replace(/\/+$/g, '');
+const outDir = base === '/' ? `./${distRoot}` : `./${distRoot}${base}`;
+const withBase = (value) => `${base}${String(value).replace(/^\/+/, '')}`;
+
 export default defineConfig({
-  site: 'https://crimson-desert-guide.dannyconroy.workers.dev',
+  site,
+  base,
+  outDir,
   trailingSlash: 'always',
   build: {
     inlineStylesheets: 'always',
@@ -45,7 +63,7 @@ export default defineConfig({
         },
         {
           tag: 'link',
-          attrs: { rel: 'manifest', href: '/site.webmanifest' },
+          attrs: { rel: 'manifest', href: withBase('site.webmanifest') },
         },
       ],
       sidebar: [

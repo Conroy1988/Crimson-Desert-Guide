@@ -2,13 +2,35 @@ import { access, readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const dist = fileURLToPath(new URL('../dist/', import.meta.url));
+const repositoryRoot = fileURLToPath(new URL('../', import.meta.url));
+
+function normaliseBasePath(value) {
+  const candidate = String(value ?? '/').trim();
+  if (!candidate || candidate === '/') return '/';
+  return `/${candidate.replace(/^\/+|\/+$/g, '')}/`;
+}
+
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+const base = normaliseBasePath(process.env.CD_GUIDE_BASE_PATH);
+const distRootName = String(process.env.CD_GUIDE_DIST_ROOT ?? 'dist')
+  .replace(/^\.\//, '')
+  .replace(/\/+$/g, '');
+const distRoot = path.resolve(repositoryRoot, distRootName);
+const dist =
+  base === '/'
+    ? distRoot
+    : path.join(distRoot, ...base.split('/').filter(Boolean));
 const failures = [];
 let htmlCount = 0;
 let assetReferenceCount = 0;
 let optionalCodeStylesheetCount = 0;
 
-const optionalCodeStylesheet = /^\/_astro\/ec\.[A-Za-z0-9_-]+\.css$/;
+const optionalCodeStylesheet = new RegExp(
+  `^${escapeRegExp(base)}_astro/ec\\.[A-Za-z0-9_-]+\\.css$`,
+);
 
 async function walk(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -31,9 +53,12 @@ function getAttribute(tag, name) {
 }
 
 function localAssetPath(url) {
-  if (!url.startsWith('/')) return null;
-  const clean = decodeURIComponent(url.split(/[?#]/, 1)[0]);
-  return path.join(dist, clean.replace(/^\/+/, ''));
+  if (!url.startsWith('/') || url.startsWith('//')) return null;
+  if (base !== '/' && !url.startsWith(base)) return { escapedBase: true };
+
+  const withoutBase = base === '/' ? url.slice(1) : url.slice(base.length);
+  const clean = decodeURIComponent(withoutBase.split(/[?#]/, 1)[0]);
+  return { absolute: path.join(dist, clean) };
 }
 
 for (const file of await walk(dist)) {
@@ -59,6 +84,20 @@ for (const file of await walk(dist)) {
     );
   }
 
+  for (const match of source.matchAll(
+    /\b(?:href|src|action|poster|data|content)\s*=\s*(?:"([^"]*)"|'([^']*)')/gi,
+  )) {
+    const url = match[1] ?? match[2] ?? '';
+    if (
+      base !== '/' &&
+      url.startsWith('/') &&
+      !url.startsWith('//') &&
+      !url.startsWith(base)
+    ) {
+      failures.push(`${relative}: root-relative URL escapes configured base path: ${url}`);
+    }
+  }
+
   const tags = source.match(/<(?:link|script)\b[^>]*>/gi) ?? [];
 
   for (const tag of tags) {
@@ -80,17 +119,22 @@ for (const file of await walk(dist)) {
     for (const url of [href, src]) {
       const asset = localAssetPath(url);
       if (!asset) continue;
+      if (asset.escapedBase) {
+        failures.push(`${relative}: referenced asset escapes configured base path: ${url}`);
+        continue;
+      }
+
       assetReferenceCount += 1;
       try {
-        await access(asset);
+        await access(asset.absolute);
       } catch {
-        failures.push(`${relative}: referenced asset does not exist in dist: ${url}`);
+        failures.push(`${relative}: referenced asset does not exist in output: ${url}`);
       }
     }
   }
 }
 
-if (htmlCount === 0) failures.push('dist: no generated HTML pages found');
+if (htmlCount === 0) failures.push(`${path.relative(repositoryRoot, dist)}: no generated HTML pages found`);
 
 if (failures.length > 0) {
   console.error('Deployment smoke test failed:\n');
@@ -99,5 +143,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  `Deployment smoke test passed for ${htmlCount} HTML pages, ${assetReferenceCount} local asset references and ${optionalCodeStylesheetCount} optional Expressive Code stylesheet references.`,
+  `Deployment smoke test passed for ${htmlCount} HTML pages at base ${base}, ${assetReferenceCount} local asset references and ${optionalCodeStylesheetCount} optional Expressive Code stylesheet references.`,
 );
