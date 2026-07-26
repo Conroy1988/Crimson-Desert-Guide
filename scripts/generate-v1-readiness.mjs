@@ -63,6 +63,19 @@ const programmes = [
     requiredPaths: ['src/content/docs/database/details.mdx', 'src/components/GuideDetailCentre.astro', 'data/guide-details.json', 'src/lib/guide-notes-state.mjs'],
   },
   {
+    id: 'boss-intelligence',
+    label: 'Boss Intelligence Centre and official encounter dossiers',
+    requiredPaths: [
+      'src/content/docs/database/bosses.mdx',
+      'src/components/BossIntelligenceCentre.astro',
+      'data/boss-intelligence-notes.json',
+      'data/boss-intelligence.json',
+      'scripts/generate-boss-intelligence.mjs',
+      'scripts/boss-intelligence-audit.mjs',
+      'steam/boss-intelligence.md',
+    ],
+  },
+  {
     id: 'catalogue',
     label: 'Collectibles, knowledge and challenges',
     requiredPaths: ['src/content/docs/database/catalogue.mdx', 'src/components/CollectibleCatalogue.astro', 'data/collectible-catalogue.json', 'src/lib/collectible-state.mjs'],
@@ -123,11 +136,12 @@ async function walk(directory) {
   return output;
 }
 
-const [database, research, completion, details, catalogue, atlas, technical, mastery, builds, command, officialMedia, steam, packageJson] = await Promise.all([
+const [database, research, completion, details, bosses, catalogue, atlas, technical, mastery, builds, command, officialMedia, steam, packageJson] = await Promise.all([
   readFile(new URL('data/content-database.json', rootUrl), 'utf8').then(JSON.parse),
   readFile(new URL('data/research-queue.json', rootUrl), 'utf8').then(JSON.parse),
   readFile(new URL('data/completion.json', rootUrl), 'utf8').then(JSON.parse),
   readFile(new URL('data/guide-details.json', rootUrl), 'utf8').then(JSON.parse),
+  readFile(new URL('data/boss-intelligence.json', rootUrl), 'utf8').then(JSON.parse),
   readFile(new URL('data/collectible-catalogue.json', rootUrl), 'utf8').then(JSON.parse),
   readFile(new URL('data/atlas.json', rootUrl), 'utf8').then(JSON.parse),
   readFile(new URL('data/technical-issues.json', rootUrl), 'utf8').then(JSON.parse),
@@ -145,7 +159,7 @@ const verifiedRecords = database.records.filter((record) => record.recordStatus 
 const completedProgrammes = programmes.filter((programme) => programme.status === 'complete').length;
 const programmePercent = Math.round((completedProgrammes / programmes.length) * 100);
 const requiredScripts = [
-  'check:all', 'generate:research', 'generate:command', 'audit:content', 'audit:database', 'audit:research', 'audit:atlas', 'audit:details', 'audit:catalogue',
+  'check:all', 'generate:bosses', 'generate:research', 'generate:command', 'audit:content', 'audit:database', 'audit:bosses', 'audit:research', 'audit:atlas', 'audit:details', 'audit:catalogue',
   'audit:characters', 'audit:technical', 'audit:theme', 'audit:site-theme', 'audit:soundtrack', 'audit:command', 'audit:v1',
   'test:completion', 'test:atlas', 'test:guide-notes', 'test:catalogue', 'test:build-lab', 'test:research', 'test:command',
 ];
@@ -156,7 +170,7 @@ const output = {
   schemaVersion: 1,
   guideVersion: packageJson.version,
   gamePatch: database.gamePatch,
-  lastVerified: '2026-07-26',
+  lastVerified: '2026-07-27',
   status: releaseReady ? 'ready' : 'blocked',
   programmePercent,
   programmes,
@@ -172,6 +186,9 @@ const output = {
     researchQueueRecords: research.records.length,
     completionMilestones: completion.entries.length,
     guideDetailRecords: details.records.length,
+    bossIntelligenceRecords: bosses.records.length,
+    bossVerifiedRematches: bosses.metrics.verifiedRematches,
+    bossOfficialMechanics: bosses.metrics.officialRematches + bosses.metrics.mechanicDossiers,
     catalogueRecords: catalogue.records.length,
     atlasLocations: atlas.locations.length,
     technicalRecords: technical.records.length,
@@ -187,6 +204,14 @@ const output = {
     explanation: 'Officially named or otherwise supported records whose route, objective, total, reward, mechanics or exact statistics remain incomplete. They are visible, converted into controlled research protocols and explicitly excluded from unsupported completion claims.',
     ids: research.records.map((record) => record.id),
   },
+  bossIntelligence: {
+    records: bosses.records.length,
+    verifiedRematches: bosses.metrics.verifiedRematches,
+    officialMechanicRecords: bosses.metrics.officialRematches + bosses.metrics.mechanicDossiers,
+    identityRecords: bosses.metrics.identityDossiers,
+    unresolvedFields: bosses.metrics.unresolvedFields,
+    explanation: 'Consolidates direct official boss facts, Memory Fragment locations, patch history, aliases and identity-separation rules while leaving routes, rewards, phases, weaknesses and exact statistics explicitly unresolved.',
+  },
   commandCentre: {
     searchRecords: command.records.length,
     plannerRecords: command.plannerRecords.length,
@@ -200,10 +225,10 @@ const output = {
     gameExhaustiveness: 'The research queue remains open for unpublished or not-yet-tested game details and is maintained through patch and evidence updates.',
   },
   deferredOperations: [
-    'Move the canonical site to https://tkb-gaming.scot/crimsondesert/ after the domain and hosting path are live.',
-    'Add consent-managed advertising only after the custom domain migration and AdSense approval.',
+    'Coordinate final source migration into the canonical TKB-Website repository when the site monorepo plan is approved.',
+    'Enable consent-managed advertising only after AdSense approval and privacy controls are live.',
   ],
 };
 
 await writeFile(new URL('data/v1-readiness.json', rootUrl), `${JSON.stringify(output, null, 2)}\n`, 'utf8');
-console.log(`Generated v1 readiness: ${programmePercent}% programmes, ${database.records.length} canonical records, ${research.records.length} controlled research records and ${command.records.length} command records.`);
+console.log(`Generated guide readiness: ${programmePercent}% programmes, ${database.records.length} canonical records, ${bosses.records.length} boss dossiers, ${research.records.length} controlled research records and ${command.records.length} command records.`);

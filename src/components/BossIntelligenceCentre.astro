@@ -1,0 +1,871 @@
+---
+import dataset from '../../data/boss-intelligence.json';
+import officialMedia from '../../data/official-media.json';
+
+const heroAsset = officialMedia.assets.find((asset) => asset.id === 'official-boss-forest-colossus');
+const regions = [...new Map(
+  dataset.records
+    .filter((record) => record.region !== 'unknown')
+    .map((record) => [record.region, record.regionLabel]),
+).entries()].map(([id, label]) => ({ id, label }));
+---
+
+<section
+  class="boss-intelligence"
+  data-boss-intelligence
+  style={`--boss-hero-art: url('${heroAsset?.src ?? ''}')`}
+>
+  <header class="boss-intelligence__hero">
+    <div class="boss-intelligence__hero-copy">
+      <p class="boss-intelligence__eyebrow">Phase 15 · Official encounter intelligence</p>
+      <h2>Boss Intelligence Centre</h2>
+      <p>
+        A patch-aware dossier for every officially supported boss record—separating confirmed
+        rematches and mechanics from identities that still require controlled in-game research.
+      </p>
+      <div class="boss-intelligence__hero-actions">
+        <button type="button" data-boss-reveal-all aria-pressed="false">Reveal all identities</button>
+        <a href="/database/research-queue/">Open Research Queue →</a>
+      </div>
+    </div>
+    <dl class="boss-intelligence__metrics">
+      <div><dt>Dossiers</dt><dd>{dataset.metrics.total}</dd></div>
+      <div><dt>Verified rematches</dt><dd>{dataset.metrics.verifiedRematches}</dd></div>
+      <div><dt>Official mechanic records</dt><dd>{dataset.metrics.mechanicDossiers + dataset.metrics.officialRematches}</dd></div>
+      <div><dt>Identity dossiers</dt><dd>{dataset.metrics.identityDossiers}</dd></div>
+      <div><dt>Open evidence fields</dt><dd>{dataset.metrics.unresolvedFields}</dd></div>
+      <div><dt>Patch</dt><dd>{dataset.gamePatch}</dd></div>
+    </dl>
+    {heroAsset && (
+      <p class="boss-intelligence__credit">
+        <a href={heroAsset.sourcePage} target="_blank" rel="noreferrer">{heroAsset.credit}</a>
+      </p>
+    )}
+  </header>
+
+  <aside class="boss-intelligence__boundary">
+    <strong>Evidence boundary</strong>
+    <p>{dataset.policy}</p>
+  </aside>
+
+  <section class="boss-intelligence__rules" aria-labelledby="boss-rematch-rules">
+    <header>
+      <span>Memory Fragment doctrine</span>
+      <h3 id="boss-rematch-rules">What the official rematch system actually confirms</h3>
+    </header>
+    <div>
+      {dataset.rematchRules.map((rule) => (
+        <article>
+          <span>{rule.patch}</span>
+          <strong>{rule.label}</strong>
+          <p>{rule.value}</p>
+          <a href={rule.source} target="_blank" rel="noreferrer">Official source ↗</a>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <div class="boss-intelligence__filters" aria-label="Boss intelligence filters">
+    <label>
+      <span>Search dossiers</span>
+      <input type="search" placeholder="Boss, alias, patch, region or mechanic" data-boss-search />
+    </label>
+    <label>
+      <span>Evidence state</span>
+      <select data-boss-status>
+        <option value="all">All dossiers</option>
+        {dataset.statusDefinitions.map((status) => <option value={status.id}>{status.label}</option>)}
+      </select>
+    </label>
+    <label>
+      <span>Region</span>
+      <select data-boss-region>
+        <option value="all">All regions</option>
+        <option value="unknown">Location unresolved</option>
+        {regions.map((region) => <option value={region.id}>{region.label}</option>)}
+      </select>
+    </label>
+  </div>
+
+  <div class="boss-intelligence__result" aria-live="polite">
+    <span><strong data-boss-count>{dataset.records.length}</strong> dossiers shown</span>
+    <button type="button" data-boss-reset>Reset filters</button>
+  </div>
+
+  <div class="boss-intelligence__grid">
+    {dataset.records.map((record) => (
+      <article
+        class={`boss-dossier boss-dossier--${record.intelligenceStatus}`}
+        data-boss-card
+        data-status={record.intelligenceStatus}
+        data-region={record.region}
+        data-search={record.searchText}
+        data-title={record.title}
+      >
+        <header class="boss-dossier__header">
+          <div>
+            <span class={`boss-dossier__state boss-dossier__state--${record.intelligenceStatus}`}>
+              {record.intelligenceStatusLabel}
+            </span>
+            <span>Patch {record.firstSupportedPatch}</span>
+          </div>
+          <button type="button" data-boss-reveal aria-expanded="false">Reveal dossier</button>
+        </header>
+
+        <h3 data-boss-title>Spoiler-hidden boss dossier</h3>
+        <p>{record.summary}</p>
+
+        <div class="boss-dossier__sensitive" data-boss-sensitive hidden>
+          <dl class="boss-dossier__overview">
+            <div><dt>Region</dt><dd>{record.regionLabel}</dd></div>
+            <div><dt>Replay</dt><dd>{record.replayability}</dd></div>
+            <div><dt>Evidence</dt><dd>{record.evidence}</dd></div>
+            <div><dt>Story role</dt><dd>{record.storyRole}</dd></div>
+          </dl>
+
+          {record.aliases.length > 0 && (
+            <p class="boss-dossier__aliases"><strong>Official aliases:</strong> {record.aliases.join(', ')}</p>
+          )}
+
+          {record.doNotMergeWith.length > 0 && (
+            <aside class="boss-dossier__separation">
+              <strong>Identity separation</strong>
+              <p>Do not merge this dossier with: {record.doNotMergeWith.join(', ')}.</p>
+            </aside>
+          )}
+
+          {record.caveat && <aside class="boss-dossier__caveat">{record.caveat}</aside>}
+
+          <section class="boss-dossier__facts">
+            <h4>Confirmed facts</h4>
+            <div>
+              {record.confirmedFacts.map((fact) => (
+                <article>
+                  <span>{fact.patch}</span>
+                  <strong>{fact.label}</strong>
+                  <p>{fact.value}</p>
+                  <a href={fact.source} target="_blank" rel="noreferrer">Source ↗</a>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <section class="boss-dossier__timeline">
+            <h4>Official patch history</h4>
+            <ol>
+              {record.patchHistory.map((entry) => (
+                <li>
+                  <span>{entry.patch}</span>
+                  <p>{entry.note}</p>
+                  <a href={entry.source} target="_blank" rel="noreferrer">Notice ↗</a>
+                </li>
+              ))}
+            </ol>
+          </section>
+
+          <div class="boss-dossier__research-grid">
+            <section>
+              <h4>Still unresolved</h4>
+              <ul>{record.unresolved.map((item) => <li>{item}</li>)}</ul>
+            </section>
+            <section>
+              <h4>Next controlled checks</h4>
+              <ol>{record.researchFocus.map((item) => <li>{item}</li>)}</ol>
+            </section>
+          </div>
+
+          <footer>
+            <a href="/database/details/">Encounter Encyclopaedia</a>
+            <a href="/database/research-queue/">Research protocol</a>
+            <div>
+              {record.sources.map((source, index) => (
+                <a href={source} target="_blank" rel="noreferrer">Official {index + 1}</a>
+              ))}
+            </div>
+          </footer>
+        </div>
+      </article>
+    ))}
+  </div>
+
+  <p class="boss-intelligence__empty" data-boss-empty hidden>
+    No boss dossiers match the current filters.
+  </p>
+</section>
+
+<script>
+  const bindBossIntelligence = () => {
+    for (const root of document.querySelectorAll('[data-boss-intelligence]')) {
+      if (!(root instanceof HTMLElement) || root.dataset.bound === 'true') continue;
+      root.dataset.bound = 'true';
+
+      const search = root.querySelector('[data-boss-search]');
+      const status = root.querySelector('[data-boss-status]');
+      const region = root.querySelector('[data-boss-region]');
+      const count = root.querySelector('[data-boss-count]');
+      const empty = root.querySelector('[data-boss-empty]');
+      const revealAll = root.querySelector('[data-boss-reveal-all]');
+      const cards = [...root.querySelectorAll('[data-boss-card]')];
+
+      const selected = (control) => control instanceof HTMLSelectElement ? control.value : 'all';
+
+      const revealCard = (card, reveal) => {
+        if (!(card instanceof HTMLElement)) return;
+        const title = card.querySelector('[data-boss-title]');
+        const sensitive = card.querySelector('[data-boss-sensitive]');
+        const button = card.querySelector('[data-boss-reveal]');
+
+        if (title) title.textContent = reveal ? (card.dataset.title ?? 'Boss dossier') : 'Spoiler-hidden boss dossier';
+        if (sensitive instanceof HTMLElement) sensitive.hidden = !reveal;
+        if (button instanceof HTMLButtonElement) {
+          button.setAttribute('aria-expanded', String(reveal));
+          button.textContent = reveal ? 'Hide dossier' : 'Reveal dossier';
+        }
+        card.dataset.revealed = String(reveal);
+      };
+
+      const syncRevealAll = () => {
+        if (!(revealAll instanceof HTMLButtonElement)) return;
+        const allRevealed = cards.length > 0 && cards.every((card) => card instanceof HTMLElement && card.dataset.revealed === 'true');
+        revealAll.setAttribute('aria-pressed', String(allRevealed));
+        revealAll.textContent = allRevealed ? 'Mask all identities' : 'Reveal all identities';
+      };
+
+      const applyProfile = () => {
+        const reveal = document.documentElement.dataset.spoilerProfile === 'full';
+        for (const card of cards) revealCard(card, reveal);
+        syncRevealAll();
+      };
+
+      const filter = () => {
+        const query = search instanceof HTMLInputElement ? search.value.trim().toLowerCase() : '';
+        let visible = 0;
+        for (const card of cards) {
+          if (!(card instanceof HTMLElement)) continue;
+          const show = (!query || (card.dataset.search ?? '').includes(query))
+            && (selected(status) === 'all' || card.dataset.status === selected(status))
+            && (selected(region) === 'all' || card.dataset.region === selected(region));
+          card.hidden = !show;
+          if (show) visible += 1;
+        }
+        if (count) count.textContent = String(visible);
+        if (empty instanceof HTMLElement) empty.hidden = visible !== 0;
+      };
+
+      for (const control of [search, status, region]) {
+        control?.addEventListener(control instanceof HTMLInputElement ? 'input' : 'change', filter);
+      }
+
+      root.querySelector('[data-boss-reset]')?.addEventListener('click', () => {
+        if (search instanceof HTMLInputElement) search.value = '';
+        if (status instanceof HTMLSelectElement) status.value = 'all';
+        if (region instanceof HTMLSelectElement) region.value = 'all';
+        filter();
+        search instanceof HTMLInputElement && search.focus();
+      });
+
+      for (const button of root.querySelectorAll('[data-boss-reveal]')) {
+        if (!(button instanceof HTMLButtonElement)) continue;
+        button.addEventListener('click', () => {
+          const card = button.closest('[data-boss-card]');
+          if (!(card instanceof HTMLElement)) return;
+          revealCard(card, card.dataset.revealed !== 'true');
+          syncRevealAll();
+        });
+      }
+
+      revealAll?.addEventListener('click', () => {
+        const reveal = !(revealAll instanceof HTMLButtonElement && revealAll.getAttribute('aria-pressed') === 'true');
+        for (const card of cards) revealCard(card, reveal);
+        syncRevealAll();
+      });
+
+      applyProfile();
+      filter();
+      window.addEventListener('crimson-desert:spoiler-profile', applyProfile);
+    }
+  };
+
+  bindBossIntelligence();
+  document.addEventListener('astro:page-load', bindBossIntelligence);
+</script>
+
+<style>
+  .boss-intelligence {
+    display: grid;
+    gap: 1rem;
+    margin-block: 1.5rem 3rem;
+  }
+
+  .boss-intelligence__hero {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(18rem, .7fr);
+    gap: 2rem;
+    min-height: 25rem;
+    overflow: hidden;
+    padding: clamp(1.3rem, 4vw, 2.5rem);
+    border: 1px solid rgb(213 163 80 / 32%);
+    border-radius: 1rem;
+    background: #090908;
+    box-shadow: 0 1.6rem 4rem rgb(0 0 0 / 28%);
+  }
+
+  .boss-intelligence__hero::before {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    content: '';
+    background-image: var(--boss-hero-art);
+    background-position: center;
+    background-size: cover;
+    opacity: .46;
+  }
+
+  .boss-intelligence__hero::after {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    content: '';
+    background:
+      linear-gradient(90deg, rgb(7 7 6 / 98%) 0%, rgb(9 8 7 / 91%) 48%, rgb(9 8 7 / 48%) 100%),
+      linear-gradient(0deg, rgb(7 7 6 / 92%), transparent 62%);
+  }
+
+  .boss-intelligence__hero-copy {
+    display: grid;
+    align-content: center;
+    max-width: 48rem;
+  }
+
+  .boss-intelligence__eyebrow {
+    margin: 0 0 .65rem !important;
+    color: #d7a85f !important;
+    font-size: .68rem;
+    font-weight: 850;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+  }
+
+  .boss-intelligence__hero h2 {
+    margin: 0 !important;
+    border: 0 !important;
+    color: #fff0d0 !important;
+    font-size: clamp(2.3rem, 6vw, 4.9rem) !important;
+    line-height: .95;
+  }
+
+  .boss-intelligence__hero-copy > p:not(.boss-intelligence__eyebrow) {
+    max-width: 42rem;
+    color: #cbbda7 !important;
+    font-size: clamp(.95rem, 1.6vw, 1.12rem);
+  }
+
+  .boss-intelligence__hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .7rem;
+    margin-top: 1rem;
+  }
+
+  .boss-intelligence__hero-actions :is(button, a) {
+    min-height: 2.7rem;
+    padding: .65rem .9rem;
+    border: 1px solid #795b2c;
+    border-radius: .45rem;
+    background: rgb(12 11 9 / 78%);
+    color: #f0cd83;
+    font-size: .7rem;
+    font-weight: 800;
+    letter-spacing: .07em;
+    text-decoration: none;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .boss-intelligence__metrics {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .65rem;
+    align-content: center;
+    margin: 0;
+  }
+
+  .boss-intelligence__metrics div {
+    display: grid;
+    place-content: center;
+    min-height: 5rem;
+    padding: .7rem;
+    border: 1px solid rgb(213 163 80 / 24%);
+    border-radius: .55rem;
+    background: rgb(3 3 3 / 52%);
+    text-align: center;
+    backdrop-filter: blur(8px);
+  }
+
+  .boss-intelligence__metrics dt {
+    color: #a89a82;
+    font-size: .56rem;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+  }
+
+  .boss-intelligence__metrics dd {
+    margin: .2rem 0 0;
+    color: #f0ca7e;
+    font-family: var(--cd-font-display);
+    font-size: 1.45rem;
+  }
+
+  .boss-intelligence__credit {
+    position: absolute;
+    right: 1rem;
+    bottom: .7rem;
+    margin: 0 !important;
+    font-size: .58rem;
+  }
+
+  .boss-intelligence__credit a {
+    color: #b9ab94;
+  }
+
+  .boss-intelligence__boundary,
+  .boss-intelligence__filters,
+  .boss-intelligence__result,
+  .boss-intelligence__rules {
+    border: 1px solid var(--cd-border);
+    border-radius: .75rem;
+    background: var(--cd-surface);
+  }
+
+  .boss-intelligence__boundary {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: .8rem;
+    align-items: start;
+    padding: .9rem 1rem;
+  }
+
+  .boss-intelligence__boundary strong {
+    color: var(--sl-color-accent-high);
+  }
+
+  .boss-intelligence__boundary p {
+    margin: 0 !important;
+  }
+
+  .boss-intelligence__rules {
+    padding: 1rem;
+  }
+
+  .boss-intelligence__rules > header span {
+    color: var(--sl-color-accent-high);
+    font-size: .62rem;
+    font-weight: 850;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+
+  .boss-intelligence__rules h3 {
+    margin: .25rem 0 1rem !important;
+  }
+
+  .boss-intelligence__rules > div {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: .65rem;
+  }
+
+  .boss-intelligence__rules article,
+  .boss-dossier__facts article {
+    display: grid;
+    gap: .3rem;
+    padding: .75rem;
+    border: 1px solid var(--cd-border);
+    border-radius: .55rem;
+    background: rgb(0 0 0 / 12%);
+  }
+
+  .boss-intelligence__rules article > span,
+  .boss-dossier__facts article > span {
+    color: var(--sl-color-gray-4);
+    font-size: .55rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  .boss-intelligence__rules article p,
+  .boss-dossier__facts article p {
+    margin: 0 !important;
+    font-size: .76rem;
+  }
+
+  .boss-intelligence__rules article a,
+  .boss-dossier__facts article a {
+    font-size: .65rem;
+    font-weight: 750;
+  }
+
+  .boss-intelligence__filters {
+    display: grid;
+    grid-template-columns: minmax(15rem, 2fr) repeat(2, minmax(10rem, 1fr));
+    gap: .7rem;
+    padding: 1rem;
+  }
+
+  .boss-intelligence__filters label {
+    display: grid;
+    gap: .3rem;
+  }
+
+  .boss-intelligence__filters label > span {
+    color: var(--sl-color-gray-3);
+    font-size: .6rem;
+    font-weight: 800;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+  }
+
+  .boss-intelligence__filters :is(input, select) {
+    width: 100%;
+    min-height: 2.55rem;
+    padding: .5rem .65rem;
+    border: 1px solid var(--cd-border);
+    border-radius: .45rem;
+    background: color-mix(in srgb, var(--sl-color-black) 82%, transparent);
+    color: var(--sl-color-gray-1);
+  }
+
+  .boss-intelligence__result {
+    display: flex;
+    justify-content: space-between;
+    padding: .65rem .85rem;
+    color: var(--sl-color-gray-3);
+    font-size: .78rem;
+  }
+
+  .boss-intelligence__result button {
+    border: 0;
+    background: transparent;
+    color: var(--sl-color-accent-high);
+    font-weight: 750;
+    cursor: pointer;
+  }
+
+  .boss-intelligence__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .boss-dossier {
+    display: grid;
+    gap: .8rem;
+    align-content: start;
+    padding: 1rem;
+    border: 1px solid rgb(210 160 78 / 24%);
+    border-radius: .8rem;
+    background:
+      linear-gradient(145deg, rgb(255 255 255 / 2.5%), transparent 55%),
+      var(--cd-surface);
+    box-shadow: 0 1rem 2.4rem rgb(0 0 0 / 11%);
+  }
+
+  .boss-dossier[hidden] {
+    display: none;
+  }
+
+  .boss-dossier--official-identity {
+    border-style: dashed;
+  }
+
+  .boss-dossier__header,
+  .boss-dossier__header > div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem;
+    align-items: center;
+  }
+
+  .boss-dossier__header {
+    justify-content: space-between;
+  }
+
+  .boss-dossier__header span {
+    padding: .24rem .45rem;
+    border: 1px solid var(--cd-border);
+    border-radius: 999px;
+    color: var(--sl-color-gray-3);
+    font-size: .55rem;
+    font-weight: 800;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+
+  .boss-dossier__state--verified-rematch {
+    color: #91c69d !important;
+  }
+
+  .boss-dossier__state--official-rematch,
+  .boss-dossier__state--official-mechanics {
+    color: #e2b568 !important;
+  }
+
+  .boss-dossier__state--official-identity {
+    color: #a9a096 !important;
+  }
+
+  .boss-dossier__header button {
+    padding: .4rem .6rem;
+    border: 1px solid rgb(209 155 70 / 36%);
+    border-radius: .4rem;
+    background: rgb(154 43 24 / 18%);
+    color: #edc478;
+    font-size: .64rem;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .boss-dossier > h3 {
+    margin: 0 !important;
+    font-size: clamp(1.4rem, 2.5vw, 2rem) !important;
+  }
+
+  .boss-dossier > p {
+    margin: 0 !important;
+  }
+
+  .boss-dossier__sensitive {
+    display: grid;
+    gap: .85rem;
+  }
+
+  .boss-dossier__sensitive[hidden] {
+    display: none;
+  }
+
+  .boss-dossier__overview {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: .45rem;
+    margin: 0;
+  }
+
+  .boss-dossier__overview div {
+    padding: .55rem;
+    border: 1px solid var(--cd-border);
+    border-radius: .45rem;
+    background: rgb(0 0 0 / 10%);
+  }
+
+  .boss-dossier__overview dt {
+    color: var(--sl-color-gray-4);
+    font-size: .54rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  .boss-dossier__overview dd {
+    margin: .18rem 0 0;
+    font-size: .7rem;
+  }
+
+  .boss-dossier__aliases,
+  .boss-dossier__separation,
+  .boss-dossier__caveat {
+    margin: 0 !important;
+    padding: .7rem;
+    border: 1px solid var(--cd-border);
+    border-radius: .5rem;
+    background: rgb(0 0 0 / 10%);
+    font-size: .76rem;
+  }
+
+  .boss-dossier__separation {
+    border-color: rgb(196 81 55 / 38%);
+    background: rgb(125 35 25 / 12%);
+  }
+
+  .boss-dossier__caveat {
+    border-color: rgb(210 160 78 / 34%);
+    color: var(--sl-color-gray-2);
+  }
+
+  .boss-dossier h4 {
+    margin: 0 0 .6rem !important;
+    color: var(--sl-color-accent-high) !important;
+    font-family: var(--sl-font) !important;
+    font-size: .68rem !important;
+    font-weight: 850 !important;
+    letter-spacing: .09em !important;
+    text-transform: uppercase;
+  }
+
+  .boss-dossier__facts > div {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .5rem;
+  }
+
+  .boss-dossier__timeline ol {
+    display: grid;
+    gap: .5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .boss-dossier__timeline li {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: .6rem;
+    align-items: start;
+    padding: .65rem;
+    border-left: 2px solid var(--sl-color-accent);
+    background: rgb(0 0 0 / 9%);
+  }
+
+  .boss-dossier__timeline li > span,
+  .boss-dossier__timeline li > a {
+    font-size: .65rem;
+    font-weight: 750;
+  }
+
+  .boss-dossier__timeline li p {
+    margin: 0 !important;
+    font-size: .76rem;
+  }
+
+  .boss-dossier__research-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .7rem;
+  }
+
+  .boss-dossier__research-grid section {
+    padding: .75rem;
+    border: 1px solid var(--cd-border);
+    border-radius: .55rem;
+    background: rgb(0 0 0 / 9%);
+  }
+
+  .boss-dossier__research-grid :is(ul, ol) {
+    margin: 0;
+    padding-left: 1.15rem;
+  }
+
+  .boss-dossier__research-grid li {
+    font-size: .76rem;
+  }
+
+  .boss-dossier footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .55rem;
+    justify-content: space-between;
+    padding-top: .7rem;
+    border-top: 1px solid var(--cd-border);
+  }
+
+  .boss-dossier footer > div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .45rem;
+  }
+
+  .boss-dossier footer a {
+    font-size: .68rem;
+    font-weight: 750;
+  }
+
+  .boss-intelligence__empty {
+    padding: 2rem;
+    border: 1px dashed var(--cd-border);
+    border-radius: .7rem;
+    text-align: center;
+  }
+
+  :global(:root[data-theme='light']) .boss-intelligence__hero {
+    border-color: #b99a69;
+    background: #f5ecdf;
+    box-shadow: 0 1.4rem 3rem rgb(91 55 32 / 15%);
+  }
+
+  :global(:root[data-theme='light']) .boss-intelligence__hero::before {
+    opacity: .2;
+  }
+
+  :global(:root[data-theme='light']) .boss-intelligence__hero::after {
+    background:
+      linear-gradient(90deg, rgb(255 252 245 / 99%) 0%, rgb(255 250 241 / 94%) 56%, rgb(255 250 241 / 62%) 100%),
+      linear-gradient(0deg, rgb(255 250 241 / 92%), transparent 62%);
+  }
+
+  :global(:root[data-theme='light']) .boss-intelligence__hero h2 {
+    color: #3f2513 !important;
+  }
+
+  :global(:root[data-theme='light']) .boss-intelligence__hero-copy > p:not(.boss-intelligence__eyebrow),
+  :global(:root[data-theme='light']) .boss-intelligence__credit a {
+    color: #5f4e40 !important;
+  }
+
+  :global(:root[data-theme='light']) .boss-intelligence__metrics div,
+  :global(:root[data-theme='light']) .boss-intelligence__rules article,
+  :global(:root[data-theme='light']) .boss-dossier__facts article {
+    background: rgb(255 255 255 / 70%);
+  }
+
+  @media (max-width: 64rem) {
+    .boss-intelligence__rules > div {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 48rem) {
+    .boss-intelligence__hero,
+    .boss-intelligence__filters,
+    .boss-intelligence__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .boss-intelligence__hero {
+      min-height: 0;
+    }
+
+    .boss-intelligence__metrics {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .boss-intelligence__boundary,
+    .boss-dossier__research-grid,
+    .boss-dossier__facts > div {
+      grid-template-columns: 1fr;
+    }
+
+    .boss-dossier__overview {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 34rem) {
+    .boss-intelligence__metrics,
+    .boss-intelligence__rules > div {
+      grid-template-columns: 1fr;
+    }
+
+    .boss-dossier__timeline li {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .boss-intelligence *,
+    .boss-intelligence *::before,
+    .boss-intelligence *::after {
+      scroll-behavior: auto !important;
+      transition: none !important;
+    }
+  }
+</style>

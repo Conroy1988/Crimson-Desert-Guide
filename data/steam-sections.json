@@ -1,5 +1,5 @@
 {
-  "title": "Crimson Desert Guide – Complete Evidence-Safe v1.0",
+  "title": "Crimson Desert Guide – Complete Evidence-Safe v1.1",
   "sections": [
     {"heading":"Update Log","source":"src/content/docs/update-log.md"},
     {"heading":"Patch Notes","source":"src/content/docs/patch-notes.md"},
@@ -20,6 +20,7 @@
     {"heading":"15. Pywel Atlas & Route Intelligence","source":"steam/pywel-atlas.md"},
     {"heading":"16. Deep Quest & Encounter Guidance","source":"steam/deep-quest-encounters.md"},
     {"heading":"17. Collectibles, Knowledge & Challenges","source":"steam/collectibles-knowledge-challenges.md"},
-    {"heading":"18. Character Mastery & Evidence-Safe Builds","source":"steam/character-mastery-build-lab.md"}
+    {"heading":"18. Character Mastery & Evidence-Safe Builds","source":"steam/character-mastery-build-lab.md"},
+    {"heading":"19. Boss Intelligence Centre","source":"steam/boss-intelligence.md"}
   ]
 }

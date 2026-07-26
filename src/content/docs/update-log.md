@@ -2,11 +2,23 @@
 title: Update Log
 description: Chronological record of material changes made to the Crimson Desert Guide.
 currentPatch: 1.15.00
-lastVerified: "2026-07-26"
+lastVerified: "2026-07-27"
 evidence: verified
 spoilerLevel: none
 patchStatus: current
 ---
+
+## 27 July 2026 — Phase 15 Boss Intelligence Centre
+
+- Added a spoiler-controlled Boss Intelligence Centre covering all 17 canonical boss records.
+- Consolidated five verified Memory Fragment locations and first-defeat activation rules into dedicated rematch dossiers.
+- Added an official-rematch classification for Titan while keeping its unknown Memory Fragment location explicit.
+- Added direct official mechanic evidence for Queen Spider, Dreadnought, Storm Crusher, Thunder Crusher, Awakened Caliburn and Myurdin, the Avatar of Umbra.
+- Added work-in-progress evidence caveats for White Horn, Staglord, Reed Devil and Queen Stoneback Crab.
+- Preserved Injured Ludvig as an official searchable alias for One-Armed Ludvig.
+- Added reciprocal identity-separation rules for White Horn versus Clockwork White Horn and Awakened versus Corrupted Caliburn.
+- Added per-dossier patch history, unresolved evidence fields, controlled research priorities and official source links.
+- Added Boss Intelligence to the Command Centre, Steam Guide export, readiness programme and protected audit suite.
 
 ## 26 July 2026 — Guide v1.1.0 production release
 

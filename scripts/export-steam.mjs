@@ -4,7 +4,7 @@ const config = JSON.parse(
   await readFile(new URL('../data/steam-sections.json', import.meta.url), 'utf8'),
 );
 
-const canonicalSite = 'https://crimson-desert-guide.dannyconroy.workers.dev';
+const canonicalSite = 'https://tkb-gaming.scot/games/crimson-desert/guides';
 
 function stripFrontmatter(markdown) {
   return markdown.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, '');

@@ -42,6 +42,7 @@ if (dataset.metrics.canonicalRecords !== database.records.length) failures.push(
 if (dataset.metrics.atlasLocations !== atlas.locations.length) failures.push('atlas metric drift');
 if (dataset.records.filter((record) => record.kind === 'content').length !== database.records.length) failures.push('canonical command index parity failed');
 if (dataset.records.filter((record) => record.kind === 'location').length !== atlas.locations.length) failures.push('atlas command index parity failed');
+if (!dataset.records.some((record) => record.id === 'tool-boss-intelligence' && record.href === '/database/bosses/')) failures.push('Boss Intelligence tool is missing from the Command Centre');
 if (!Array.isArray(dataset.stateSources) || dataset.stateSources.length !== 5) failures.push('expected five supported guide-vault sources');
 if (dataset.storageKey !== 'crimson-desert-guide.command-centre.v1') failures.push('command-centre storage key drift');
 if (dataset.spoilerKey !== 'crimson-desert-guide.spoiler-profile.v1') failures.push('spoiler-profile key drift');
