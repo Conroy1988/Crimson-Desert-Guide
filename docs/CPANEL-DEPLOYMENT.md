@@ -6,57 +6,57 @@ The canonical production guide is published to:
 - **cPanel account:** `jtdlxqpa`
 - **Document root:** `/home/jtdlxqpa/public_html/crimsondesert`
 - **Source branch:** `main`
+- **Generated deployment branch:** `cpanel-deploy`
 - **Workflow:** `.github/workflows/deploy-cpanel.yml`
 
 ## Deployment model
 
 1. A pull request passes **Quality Gate** and **CodeQL**.
 2. The accepted change is merged into `main`.
-3. `CI` validates the exact `main` commit and produces both root and `/crimsondesert/` builds.
-4. `Deploy cPanel Production` runs only after the successful `main` CI result.
-5. The workflow rebuilds the exact accepted commit for `https://tkb-gaming.scot/crimsondesert/`.
-6. A dedicated encrypted SSH identity uploads a compressed release to a private staging directory.
-7. The remote target and sentinel are verified before `rsync --delete-delay` is permitted.
-8. The workflow writes `deployment.json` and verifies the public commit after deployment.
+3. `CI` validates the exact `main` commit.
+4. `Publish cPanel Deployment Branch` rebuilds that exact commit for `https://tkb-gaming.scot/crimsondesert/`.
+5. GitHub publishes only the compiled static site, `.cpanel.yml` and deployment metadata to `cpanel-deploy`.
+6. cPanel Git Version Control pulls the generated branch into a private repository path.
+7. **Deploy HEAD Commit** runs `.cpanel.yml`, verifies the protected target and publishes the site.
 
-No Node.js application, database, WordPress installation or cPanel Git checkout is required on the production host.
+No Node.js build, WordPress installation, database or source checkout is required inside the public website directory.
 
-## Required GitHub environment
+## Initial cPanel Git setup
 
-Create an environment named `cpanel-production` and restrict it to the `main` branch.
+Wait until the GitHub workflow has created the `cpanel-deploy` branch. Then open:
 
-Add these environment secrets:
+**cPanel → Files → Git Version Control → Create**
 
-| Secret | Value |
-|---|---|
-| `CPANEL_HOST` | The SSH hostname supplied by the hosting provider |
-| `CPANEL_PORT` | The SSH port supplied by the hosting provider |
-| `CPANEL_USER` | `jtdlxqpa` |
-| `CPANEL_SSH_PRIVATE_KEY` | The complete encrypted private key for the dedicated deployment identity |
-| `CPANEL_SSH_KEY_PASSPHRASE` | The passphrase protecting that private key |
-| `CPANEL_KNOWN_HOSTS` | A verified `known_hosts` entry for the exact SSH hostname and port |
+Use:
 
-Never commit or paste the private key or its passphrase into repository files, issues, pull requests, chat messages or logs.
+- **Clone a Repository:** enabled
+- **Clone URL:** `https://github.com/Conroy1988/Crimson-Desert-Guide.git`
+- **Repository Path:** `repositories/crimson-desert-guide-deploy`
+- **Repository Name:** `Crimson Desert Guide Deployment`
 
-## Dedicated SSH key
+After the clone completes:
 
-The hosting provider requires a strong passphrase for keys generated in cPanel:
+1. Open **Manage**.
+2. Change the checked-out branch to `cpanel-deploy`.
+3. Open **Pull or Deploy**.
+4. Select **Update from Remote**.
+5. Select **Deploy HEAD Commit**.
 
-1. Open **cPanel → SSH Access → Manage SSH Keys**.
-2. Select **Generate a New Key**.
-3. Use a clear deployment-only name such as `tkb_crimson_desert_deploy`.
-4. Choose **RSA** with a **4096-bit** key size.
-5. Use a strong unique passphrase and store it in the shared password manager.
-6. Generate the key.
-7. Open **Manage** beside the new public key and select **Authorize**.
-8. Open **View/Download** beside the private key and retain the OpenSSH private-key material securely.
-9. Store the private key and passphrase as separate GitHub environment secrets.
+The repository checkout remains private at:
 
-The workflow starts an ephemeral `ssh-agent`, unlocks the encrypted key through GitHub's masked secret handling, removes the temporary passphrase helper and uses the loaded key for the remaining deployment steps.
+```text
+/home/jtdlxqpa/repositories/crimson-desert-guide-deploy
+```
+
+The generated website is deployed to:
+
+```text
+/home/jtdlxqpa/public_html/crimsondesert
+```
 
 ## Protected deployment sentinel
 
-The live directory must contain this file:
+The live directory must contain:
 
 ```text
 /home/jtdlxqpa/public_html/crimsondesert/.github-deploy-target
@@ -68,25 +68,39 @@ Its complete content must be:
 crimson-desert-guide
 ```
 
-The workflow refuses to deploy or delete stale files unless:
+The `.cpanel.yml` deployment refuses to clean or publish unless:
 
-- the deploy path exactly matches `/home/jtdlxqpa/public_html/crimsondesert`;
-- the directory exists;
-- the sentinel exists;
-- the sentinel content matches;
-- both `tar` and `rsync` are available on the host.
+- the target is exactly `/home/jtdlxqpa/public_html/crimsondesert`;
+- the target directory exists;
+- the deployment sentinel exists and matches;
+- the generated site contains `index.html` and the Command Centre route.
 
-## Manual production deployment
+The deployment excludes the sentinel from cleanup, removes stale top-level output and copies the complete generated release into the protected target.
 
-After the environment secrets and sentinel are configured:
+## Routine releases
 
-1. Open **GitHub → Actions → Deploy cPanel Production**.
-2. Select **Run workflow** on `main`.
-3. Confirm that the workflow reaches **Verify live production site**.
-4. Open `https://tkb-gaming.scot/crimsondesert/deployment.json` and confirm the commit matches `main`.
+Every accepted `main` commit automatically refreshes `cpanel-deploy` after CI passes.
 
-Subsequent accepted `main` commits deploy automatically after CI succeeds.
+To publish it on the host:
+
+1. Open **cPanel → Git Version Control**.
+2. Open **Manage** for `Crimson Desert Guide Deployment`.
+3. Open **Pull or Deploy**.
+4. Click **Update from Remote**.
+5. Click **Deploy HEAD Commit**.
+6. Open `https://tkb-gaming.scot/crimsondesert/deployment.json` and confirm the commit matches the current `main` release.
+
+This is cPanel pull deployment. cPanel does not automatically deploy a new commit merely because the remote GitHub repository changed. Automatic cPanel push deployment would require pushing directly to the cPanel-managed repository, which depends on reliable SSH access.
 
 ## Rollback
 
-Use a normal Git revert or a dedicated rollback pull request. After the rollback commit passes CI and reaches `main`, the same protected deployment workflow republishes it. Do not manually delete the live directory and do not point the workflow at `public_html` itself.
+Use a normal Git revert or dedicated rollback pull request. Once the rollback reaches `main` and the generated `cpanel-deploy` branch updates:
+
+1. Select **Update from Remote** in cPanel.
+2. Select **Deploy HEAD Commit**.
+
+Do not edit the generated branch manually, do not deploy the source `main` branch, and do not point deployment at the whole `public_html` directory.
+
+## Retired SSH configuration
+
+The previous SSH deployment design is not used. The GitHub `cpanel-production` environment secrets and the dedicated cPanel SSH key may be removed after this Git-based path is verified.
