@@ -3,7 +3,7 @@
 This branch contains generated production files only. Do not edit it manually.
 
 - Source branch: main
-- Source commit: b455a1513c2ddde6e82eaf650c81a09a954cfe36
+- Source commit: f71e4bc35a7639a63099bc3ac13239ccfd20e1ac
 - Public hierarchy: TKB Gaming → Games → Crimson Desert → Game Guides
 - Public URL: https://tkb-gaming.scot/games/crimson-desert/guides/
 - cPanel target: /home/jtdlxqpa/public_html/games/crimson-desert/guides
