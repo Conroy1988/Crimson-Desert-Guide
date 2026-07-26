@@ -118,6 +118,10 @@ const verifiedLabel = new Intl.DateTimeFormat('en-GB', {
     </a>
 
     <nav class="portal-nav__links" aria-label="Homepage navigation" data-portal-links>
+      <a class="portal-home-link" href="https://tkb-gaming.scot/">
+        <span aria-hidden="true">←</span>
+        <span>TKB Home</span>
+      </a>
       <a href="/start-here/beginner-roadmap/">Beginner</a>
       <a href="/systems/combat/">Combat & Gear</a>
       <a href="/world/">World & Mounts</a>
@@ -376,6 +380,10 @@ const verifiedLabel = new Intl.DateTimeFormat('en-GB', {
   .portal-nav__links a::after { position: absolute; right: 50%; bottom: 0; left: 50%; height: 1px; content: ''; background: var(--portal-gold); transition: right 160ms ease, left 160ms ease; }
   .portal-nav__links a:hover { color: var(--portal-gold-bright); }
   .portal-nav__links a:hover::after { right: 0; left: 0; }
+  .portal-nav__links a.portal-home-link { display: inline-flex; gap: 0.42rem; align-items: center; padding: 0.48rem 0.68rem; border: 1px solid #713025; border-radius: 0.35rem; background: linear-gradient(135deg, rgb(117 31 24 / 46%), rgb(43 18 14 / 52%)); color: #f0ddbf; font-family: var(--sl-font); font-size: 0.65rem; font-weight: 800; letter-spacing: 0.08em; line-height: 1; text-transform: uppercase; }
+  .portal-nav__links a.portal-home-link::after { display: none; }
+  .portal-nav__links a.portal-home-link:hover { border-color: var(--portal-gold); background: linear-gradient(135deg, rgb(139 38 29 / 64%), rgb(58 22 16 / 66%)); }
+  .portal-home-link span[aria-hidden='true'] { color: var(--portal-gold-bright); font-size: 0.95rem; line-height: 0; }
 
   .portal-nav__actions { display: flex; gap: 0.55rem; align-items: center; }
   .portal-icon-button,
@@ -554,6 +562,7 @@ const verifiedLabel = new Intl.DateTimeFormat('en-GB', {
     .portal-nav__links { position: absolute; top: 100%; right: 0; left: 0; display: none; grid-template-columns: repeat(2, 1fr); gap: 0; padding: 0.6rem 1rem 1rem; border-bottom: 1px solid var(--portal-line); background: rgb(8 8 7 / 98%); box-shadow: 0 1rem 2rem rgb(0 0 0 / 45%); }
     .portal-nav__links[data-open='true'] { display: grid; }
     .portal-nav__links a { padding: 0.8rem; border-bottom: 1px solid var(--portal-line-soft); }
+    .portal-nav__links a.portal-home-link { grid-column: 1 / -1; justify-content: center; border: 1px solid #713025; }
     .portal-menu { display: grid; }
     .portal-track span { display: none; }
     .portal-track { min-width: 2.75rem; justify-content: center; padding-inline: 0.7rem; }

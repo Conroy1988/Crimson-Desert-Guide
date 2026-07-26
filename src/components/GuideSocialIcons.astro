@@ -1,0 +1,50 @@
+---
+import DefaultSocialIcons from '@astrojs/starlight/components/SocialIcons.astro';
+---
+
+<DefaultSocialIcons />
+
+<a class="tkb-home-link" href="https://tkb-gaming.scot/">
+  <span aria-hidden="true">←</span>
+  <span>TKB Home</span>
+</a>
+
+<style>
+  @layer starlight.core {
+    .tkb-home-link {
+      display: inline-flex;
+      gap: 0.42rem;
+      align-items: center;
+      min-height: 2.25rem;
+      padding: 0.38rem 0.68rem;
+      border: 1px solid color-mix(in srgb, var(--sl-color-accent) 58%, var(--cd-border));
+      border-radius: 0.45rem;
+      background: color-mix(in srgb, var(--sl-color-accent-low) 38%, transparent);
+      color: var(--sl-color-accent-high);
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      line-height: 1;
+      text-decoration: none;
+      text-transform: uppercase;
+      white-space: nowrap;
+      transition: border-color 150ms ease, background 150ms ease, color 150ms ease;
+    }
+
+    .tkb-home-link:hover {
+      border-color: var(--sl-color-accent-high);
+      background: color-mix(in srgb, var(--sl-color-accent-low) 65%, transparent);
+      color: var(--sl-color-white);
+    }
+
+    .tkb-home-link span[aria-hidden='true'] {
+      color: var(--sl-color-accent-high);
+      font-size: 1rem;
+      line-height: 0;
+    }
+
+    :global(.mobile-preferences) .tkb-home-link {
+      display: none;
+    }
+  }
+</style>
