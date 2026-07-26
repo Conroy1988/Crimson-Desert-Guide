@@ -1,0 +1,3 @@
+DirectoryIndex index.html
+Options -Indexes
+ErrorDocument 404 /crimsondesert/404.html

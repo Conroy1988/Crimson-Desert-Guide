@@ -1,0 +1,7 @@
+---
+deployment:
+  tasks:
+    - /bin/bash -lc 'set -eu; target="/home/jtdlxqpa/public_html/crimsondesert"; test -d "$target"; test -f "$target/.github-deploy-target"; test "$(cat "$target/.github-deploy-target")" = "crimson-desert-guide"; test -f site/index.html; test -f site/command-centre/index.html'
+    - /bin/bash -lc 'set -eu; target="/home/jtdlxqpa/public_html/crimsondesert"; /usr/bin/find "$target" -mindepth 1 -maxdepth 1 ! -name ".github-deploy-target" -exec /bin/rm -rf -- {} +'
+    - /bin/cp -a site/. /home/jtdlxqpa/public_html/crimsondesert/
+    - /bin/bash -lc 'set -eu; test -f /home/jtdlxqpa/public_html/crimsondesert/index.html; test -f /home/jtdlxqpa/public_html/crimsondesert/deployment.json; test -f /home/jtdlxqpa/public_html/crimsondesert/.github-deploy-target'

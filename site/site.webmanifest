@@ -1,0 +1,17 @@
+{
+  "name": "Crimson Desert Guide",
+  "short_name": "CD Guide",
+  "description": "Patch-aware Crimson Desert guide and completion companion.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#110d0a",
+  "theme_color": "#110d0a",
+  "icons": [
+    {
+      "src": "./favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

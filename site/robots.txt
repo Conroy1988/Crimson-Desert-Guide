@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /crimsondesert/
+
+Sitemap: https://tkb-gaming.scot/crimsondesert/sitemap-index.xml
