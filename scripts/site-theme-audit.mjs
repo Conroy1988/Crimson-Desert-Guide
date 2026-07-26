@@ -12,6 +12,8 @@ const [
   mastery,
   buildLab,
   researchQueue,
+  commandCentre,
+  sessionTracker,
   readiness,
 ] = await Promise.all([
   readFile(new URL('../astro.config.mjs', import.meta.url), 'utf8'),
@@ -25,6 +27,8 @@ const [
   readFile(new URL('../src/components/CharacterMasteryCentre.astro', import.meta.url), 'utf8'),
   readFile(new URL('../src/components/BuildLaboratory.astro', import.meta.url), 'utf8'),
   readFile(new URL('../src/components/ResearchQueueCentre.astro', import.meta.url), 'utf8'),
+  readFile(new URL('../src/components/ExpeditionCommandCentre.astro', import.meta.url), 'utf8'),
+  readFile(new URL('../src/components/GuideSessionTracker.astro', import.meta.url), 'utf8'),
   readFile(new URL('../src/components/V1Readiness.astro', import.meta.url), 'utf8'),
 ]);
 
@@ -38,6 +42,7 @@ if (configMobileIndex === -1) failures.push('astro.config.mjs does not load mobi
 if (configThemeIndex > configLightIndex) failures.push('site-theme.css must load before light-mode.css so the accessibility layer remains authoritative');
 if (configMobileIndex < configLightIndex) failures.push('mobile-text.css must load after light-mode.css so mobile resilience remains authoritative');
 if (!config.includes("directory: 'atlas'")) failures.push('astro.config.mjs does not expose the Pywel Atlas');
+if (!config.includes("slug: 'command-centre'")) failures.push('astro.config.mjs does not expose the Expedition Command Centre');
 
 const requiredShellSelectors = [
   '.header', '.site-title', '.sidebar-pane', '.sidebar-content a[aria-current=\'page\']', '.main-pane',
@@ -69,10 +74,11 @@ if (!home.includes('.portal-hero h1 span')) failures.push('Homepage is missing t
 if (!home.includes('.portal-patch-badge')) failures.push('Homepage is missing the live patch badge selector');
 
 const requiredSections = [
-  "id: 'updates'", "id: 'start'", "id: 'combat'", "id: 'gear'", "id: 'world'", "id: 'mounts'",
+  "id: 'command'", "id: 'updates'", "id: 'start'", "id: 'combat'", "id: 'gear'", "id: 'world'", "id: 'mounts'",
   "id: 'database'", "id: 'completion'", "id: 'technical'", "id: 'standards'",
 ];
 for (const section of requiredSections) if (!pageTitle.includes(section)) failures.push(`Missing section-aware hero configuration: ${section}`);
+if (!pageTitle.includes("id === 'command-centre'")) failures.push('PageTitle does not route Command Centre pages to the official command hero');
 
 const scopes = [
   [atlas, 'Pywel Atlas', ['.pywel-atlas', '.atlas-hero', '.atlas-workspace', '.atlas-planner', '.atlas-card', ':root[data-theme=light] .atlas-hero', '@media(max-width:46rem)']],
@@ -80,6 +86,7 @@ const scopes = [
   [mastery, 'Character Mastery Centre', ['.mastery-centre', '.mastery-hero', '.mastery-grid', '.mastery-card', ":global(:root[data-theme='light']) .mastery-hero", '@media (max-width: 48rem)']],
   [buildLab, 'Build Laboratory', ['.build-lab', '.build-lab__hero', '.build-lab__workspace', '.build-readout', '.saved-tests', ":global(:root[data-theme='light']) .build-lab__hero", '@media (max-width: 48rem)']],
   [researchQueue, 'Research Queue Centre', ['.research-queue', '.research-queue__hero', '.research-queue__filters', '.research-card', '.research-card__protocol', ":global(:root[data-theme='light']) .research-queue__hero", '@media (max-width: 48rem)']],
+  [commandCentre, 'Expedition Command Centre', ['.expedition-command', '.command-hero', '.command-progress', '.command-results', '.command-planner', '.guide-vault', '.media-provenance', ":global(:root[data-theme='light']) .command-hero", '@media(max-width:42rem)']],
   [readiness, 'v1 readiness dashboard', ['.v1-readiness', '.v1-hero', '.v1-programmes', '.v1-metrics', '.v1-research', ":global(:root[data-theme='light']) .v1-hero", '@media (max-width: 48rem)']],
 ];
 for (const [source, label, selectors] of scopes) {
@@ -87,7 +94,11 @@ for (const [source, label, selectors] of scopes) {
 }
 
 if (!pageTitle.includes('shared.akamai.steamstatic.com/store_item_assets/steam/apps/3321460')) failures.push('PageTitle does not use the approved official Steam media source');
+if (!pageTitle.includes("import officialMedia from '../../data/official-media.json'")) failures.push('PageTitle does not load the official Pearl Abyss media registry');
 if (!pageTitle.includes('data-guide-section={section.id}')) failures.push('PageTitle is missing the route-aware section data attribute');
+if (!footer.includes("import GuideSessionTracker from './GuideSessionTracker.astro'")) failures.push('Footer does not install the guide session tracker');
+if (!footer.includes('<GuideSessionTracker />')) failures.push('Footer does not render the guide session tracker');
+if (!sessionTracker.includes("document.addEventListener('astro:page-load'")) failures.push('Guide session tracker is not lifecycle-aware');
 const disclaimer = 'This is unofficial content which contains copyrighted materials and IP from Pearl Abyss';
 if (!footer.includes(disclaimer)) failures.push('Footer is missing the Pearl Abyss fan-content disclaimer');
 
