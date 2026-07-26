@@ -23,10 +23,11 @@
 
 <table>
 <tr>
-<td width="25%" align="center"><a href="https://crimson-desert-guide.dannyconroy.workers.dev/start-here/beginner-roadmap/"><strong>⚔ START HERE</strong><br><sub>Beginner roadmap</sub></a></td>
-<td width="25%" align="center"><a href="https://crimson-desert-guide.dannyconroy.workers.dev/command-centre/"><strong>⌘ COMMAND CENTRE</strong><br><sub>Plan and continue</sub></a></td>
-<td width="25%" align="center"><a href="https://crimson-desert-guide.dannyconroy.workers.dev/atlas/"><strong>🧭 PYWEL ATLAS</strong><br><sub>Routes and discoveries</sub></a></td>
-<td width="25%" align="center"><a href="https://crimson-desert-guide.dannyconroy.workers.dev/completion/"><strong>◆ COMPLETION</strong><br><sub>Track the whole journey</sub></a></td>
+<td width="20%" align="center"><a href="https://crimson-desert-guide.dannyconroy.workers.dev/start-here/beginner-roadmap/"><strong>⚔ START HERE</strong><br><sub>Beginner roadmap</sub></a></td>
+<td width="20%" align="center"><a href="https://crimson-desert-guide.dannyconroy.workers.dev/command-centre/"><strong>⌘ COMMAND CENTRE</strong><br><sub>Plan and continue</sub></a></td>
+<td width="20%" align="center"><a href="https://crimson-desert-guide.dannyconroy.workers.dev/atlas/"><strong>🧭 PYWEL ATLAS</strong><br><sub>Routes and discoveries</sub></a></td>
+<td width="20%" align="center"><a href="https://crimson-desert-guide.dannyconroy.workers.dev/completion/"><strong>◆ COMPLETION</strong><br><sub>Track the whole journey</sub></a></td>
+<td width="20%" align="center"><a href="https://crimson-desert-guide.dannyconroy.workers.dev/patch-notes/"><strong>🔥 PATCH INTELLIGENCE</strong><br><sub>Current verified baseline</sub></a></td>
 </tr>
 </table>
 
@@ -80,6 +81,14 @@ The guide combines complete walkthroughs with a searchable database, interactive
 <p><a href="https://crimson-desert-guide.dannyconroy.workers.dev/atlas/"><strong>Open the Pywel Atlas →</strong></a></p>
 </td>
 <td width="50%" valign="top">
+<a href="https://crimson-desert-guide.dannyconroy.workers.dev/completion/"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3321460/ab4e6544853a3ecb4e1e714b0fa706c50144fbbb/ss_ab4e6544853a3ecb4e1e714b0fa706c50144fbbb.1920x1080.jpg?t=1781661893" alt="Crimson Desert completion and discovery" width="100%"></a>
+<h3>Finish everything</h3>
+<p>Track discoveries and milestones with local-first checklists, progress filters, spoiler controls and importable backups.</p>
+<p><a href="https://crimson-desert-guide.dannyconroy.workers.dev/completion/"><strong>Open the Completion Companion →</strong></a></p>
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top">
 <a href="https://crimson-desert-guide.dannyconroy.workers.dev/command-centre/"><img src="https://s1.pearlcdn.com/cd/brand/media_GLOBAL/2026/04/02/9cf1d2ace3a20260402105221785.png" alt="Official Crimson Desert screenshot showing a river valley route through Pywel" width="100%"></a>
 <h3>Run the expedition</h3>
 <p>Continue your last guide, search the complete knowledge base, plan the next session and protect every local guide state through one validated vault.</p>
@@ -99,9 +108,12 @@ The guide combines complete walkthroughs with a searchable database, interactive
 <td width="33%" valign="top"><strong>📚 Content Database</strong><br><sub>Searchable sourced records spanning quests, encounters, collectibles and world knowledge.</sub></td>
 </tr>
 <tr>
-<td width="33%" valign="top"><strong>⌘ Expedition Command Centre</strong><br><sub>Unified search, session planning, spoiler preferences, recent-guide continuation and complete local backups.</sub></td>
 <td width="33%" valign="top"><strong>🕯 Research Queue Centre</strong><br><sub>Unknowns are tracked as explicit investigation work rather than filled with assumptions.</sub></td>
 <td width="33%" valign="top"><strong>♫ Global OST Player</strong><br><sub>Carry “Hymn for the Unsung Blade” across guide navigation with respectful, non-looping playback.</sub></td>
+<td width="33%" valign="top"><strong>⚙ Technical Centre</strong><br><sub>Official known issues, safe diagnostics and platform-specific performance guidance.</sub></td>
+</tr>
+<tr>
+<td colspan="3" valign="top"><strong>⌘ Expedition Command Centre</strong><br><sub>Unified search, session planning, spoiler preferences, recent-guide continuation and complete local backups.</sub></td>
 </tr>
 </table>
 
