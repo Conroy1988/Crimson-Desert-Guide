@@ -1,0 +1,280 @@
+/*
+ * Mobile text resilience layer.
+ *
+ * This file loads after the cinematic and light-mode themes. It protects
+ * readable wrapping, prevents flex/grid text from forcing horizontal overflow,
+ * and keeps the dark homepage legible when the reader's saved Starlight theme
+ * is light.
+ */
+
+:where(.sl-markdown-content, .pagination-links, .sidebar-content)
+  :where(h1, h2, h3, h4, h5, h6, p, li, blockquote, figcaption, dt, dd, th, td, a, summary, strong, small) {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+.sl-markdown-content :where(a, code, kbd, th, td) {
+  overflow-wrap: anywhere;
+}
+
+.sl-markdown-content :where(h1, h2, h3, h4, h5, h6) {
+  text-wrap: balance;
+}
+
+:where(
+  .completion-tracker,
+  .tech-centre,
+  .pywel-atlas,
+  .collectible-catalogue,
+  .mastery-centre,
+  .build-lab,
+  .v1-readiness
+) :where(h1, h2, h3, h4, p, li, label, legend, button, a, strong, small, dt, dd) {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+/* The portal is permanently dark, including when Starlight remembers light mode. */
+.cd-portal-home .portal-kicker {
+  color: var(--portal-gold) !important;
+}
+
+.cd-portal-home .portal-hero__lede {
+  color: #c3b8a6 !important;
+}
+
+.cd-portal-home .portal-cta {
+  color: #dfd2bd !important;
+}
+
+.cd-portal-home .portal-cta strong {
+  color: #f0dfc2 !important;
+}
+
+.cd-portal-home .portal-cta small {
+  color: #b8aa96 !important;
+}
+
+.cd-portal-home .portal-patch-badge strong {
+  color: #f1dec0 !important;
+}
+
+.cd-portal-home .portal-patch-badge :is(span, small) {
+  color: #d5b77d !important;
+}
+
+.cd-portal-home :where(
+  .portal-brand,
+  .portal-brand span,
+  .portal-hero__content,
+  .portal-hero h1,
+  .portal-hero h1 span,
+  .portal-hero h1 small,
+  .portal-cta,
+  .portal-cta span,
+  .portal-section__heading,
+  .portal-guide-card__copy,
+  .portal-quick__links span,
+  .portal-panel,
+  .portal-panel header,
+  .portal-issues__list a > span:nth-child(2),
+  .portal-update-grid a,
+  .portal-trust p,
+  .portal-community > div
+) {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.cd-portal-home :where(
+  .portal-kicker,
+  .portal-hero__lede,
+  .portal-cta strong,
+  .portal-cta small,
+  .portal-section__heading h2,
+  .portal-section__heading p,
+  .portal-guide-card__copy strong,
+  .portal-guide-card__copy small,
+  .portal-panel header h2,
+  .portal-panel > a,
+  .portal-panel__footer,
+  .portal-update-grid strong,
+  .portal-update-grid p,
+  .portal-trust strong,
+  .portal-trust small,
+  .portal-community h2,
+  .portal-community p
+) {
+  overflow-wrap: break-word;
+  word-break: normal;
+  white-space: normal;
+}
+
+.cd-portal-home .portal-hero h1 span {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: normal;
+  text-wrap: balance;
+  white-space: normal;
+}
+
+.cd-portal-home .portal-cta span {
+  min-width: 0;
+}
+
+@media (max-width: 50rem) {
+  .sl-markdown-content h2 {
+    min-width: 0;
+    flex-wrap: wrap;
+  }
+
+  .pagination-links .link-title,
+  .sidebar-content a {
+    overflow-wrap: anywhere;
+    text-overflow: clip;
+    white-space: normal !important;
+  }
+}
+
+@media (max-width: 64rem) {
+  .cd-portal-home .portal-nav__links a {
+    overflow-wrap: break-word;
+    text-align: center;
+    white-space: normal;
+  }
+}
+
+@media (max-width: 42rem) {
+  .cd-portal-home .portal-brand {
+    min-width: 0;
+  }
+
+  .cd-portal-home .portal-brand span {
+    max-width: clamp(7rem, 36vw, 10rem);
+  }
+
+  .cd-portal-home .portal-brand strong {
+    overflow-wrap: break-word;
+    line-height: 1.05;
+    white-space: normal;
+  }
+
+  .cd-portal-home .portal-hero h1 span {
+    font-size: clamp(2.75rem, 13vw, 4rem) !important;
+    line-height: 0.92;
+    letter-spacing: -0.05em;
+  }
+
+  .cd-portal-home .portal-hero h1 small {
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    font-size: clamp(0.92rem, 4vw, 1.08rem);
+    letter-spacing: 0.18em;
+    line-height: 1.15;
+  }
+
+  .cd-portal-home .portal-hero h1 small::before,
+  .cd-portal-home .portal-hero h1 small::after {
+    flex: 1 1 2rem;
+    max-width: 4rem;
+  }
+
+  .cd-portal-home .portal-kicker {
+    max-width: 100%;
+    font-size: 0.64rem;
+    line-height: 1.4;
+    letter-spacing: 0.13em;
+    text-wrap: balance;
+  }
+
+  .cd-portal-home .portal-hero__lede {
+    font-size: clamp(0.94rem, 4.2vw, 1rem);
+    line-height: 1.5;
+  }
+
+  .cd-portal-home .portal-patch-badge {
+    top: 0.75rem;
+    right: 0.75rem;
+    display: grid;
+    grid-template-columns: auto auto auto;
+    gap: 0.3rem 0.5rem;
+    align-items: center;
+    min-width: 0;
+    max-width: calc(100% - 1.5rem);
+    padding: 0.55rem 0.7rem;
+    clip-path: none;
+    border-radius: 0.35rem;
+  }
+
+  .cd-portal-home .portal-patch-badge :is(span, small) {
+    font-size: 0.54rem;
+    letter-spacing: 0.1em;
+    white-space: normal;
+  }
+
+  .cd-portal-home .portal-patch-badge strong {
+    margin: 0;
+    font-size: 1.05rem !important;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .cd-portal-home .portal-patch-badge svg {
+    display: none;
+  }
+
+  .cd-portal-home .portal-cta {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .cd-portal-home .portal-cta strong {
+    font-size: clamp(0.88rem, 4vw, 1rem);
+    line-height: 1.2;
+    letter-spacing: 0.02em;
+  }
+
+  .cd-portal-home .portal-cta small {
+    line-height: 1.35;
+  }
+
+  .cd-portal-home .portal-quick__links strong,
+  .cd-portal-home .portal-quick__links small,
+  .cd-portal-home .portal-issues__list strong {
+    overflow: visible;
+    overflow-wrap: break-word;
+    text-overflow: clip;
+    white-space: normal;
+  }
+
+  .cd-portal-home .portal-quick__links :is(a, button) {
+    align-items: flex-start;
+    min-height: 4rem;
+  }
+
+  .cd-portal-home .portal-guide-card__copy {
+    width: min(74%, 24rem);
+  }
+}
+
+@media (max-width: 24rem) {
+  .cd-portal-home .portal-brand strong {
+    font-size: 0.84rem;
+  }
+
+  .cd-portal-home .portal-brand small {
+    display: none;
+  }
+
+  .cd-portal-home .portal-hero h1 span {
+    font-size: clamp(2.4rem, 12.5vw, 3.1rem) !important;
+  }
+
+  .cd-portal-home .portal-cta {
+    gap: 0.55rem;
+    padding-inline: 0.7rem;
+  }
+}
