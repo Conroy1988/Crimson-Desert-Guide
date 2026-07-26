@@ -94,7 +94,8 @@ const stateRequirements = [
 ];
 for (const requirement of stateRequirements) if (!state.includes(requirement)) failures.push(`Command Centre state library is missing: ${requirement}`);
 if (!route.includes('<ExpeditionCommandCentre />')) failures.push('Command Centre route does not render the component');
-if (!route.includes('official-media registry') && !route.includes('official imagery')) failures.push('Command Centre route is missing official-media policy guidance');
+const routePolicy = route.toLowerCase();
+if (!routePolicy.includes('official-media registry') && !routePolicy.includes('official imagery')) failures.push('Command Centre route is missing official-media policy guidance');
 
 if (failures.length) {
   console.error('Command Centre audit failed:\n');
