@@ -86,7 +86,7 @@ const scopes = [
   [mastery, 'Character Mastery Centre', ['.mastery-centre', '.mastery-hero', '.mastery-grid', '.mastery-card', ":global(:root[data-theme='light']) .mastery-hero", '@media (max-width: 48rem)']],
   [buildLab, 'Build Laboratory', ['.build-lab', '.build-lab__hero', '.build-lab__workspace', '.build-readout', '.saved-tests', ":global(:root[data-theme='light']) .build-lab__hero", '@media (max-width: 48rem)']],
   [researchQueue, 'Research Queue Centre', ['.research-queue', '.research-queue__hero', '.research-queue__filters', '.research-card', '.research-card__protocol', ":global(:root[data-theme='light']) .research-queue__hero", '@media (max-width: 48rem)']],
-  [commandCentre, 'Expedition Command Centre', ['.expedition-command', '.command-hero', '.command-progress', '.command-results', '.command-planner', '.guide-vault', '.media-provenance', ":global(:root[data-theme='light']) .command-hero", '@media(max-width:42rem)']],
+  [commandCentre, 'Expedition Command Centre', ['.expedition-command', '.command-hero', '.command-progress', '.command-results', '.planner-list', '.guide-vault', '.media-provenance', ":global(:root[data-theme='light']) .command-hero", '@media(max-width:42rem)']],
   [readiness, 'v1 readiness dashboard', ['.v1-readiness', '.v1-hero', '.v1-programmes', '.v1-metrics', '.v1-research', ":global(:root[data-theme='light']) .v1-hero", '@media (max-width: 48rem)']],
 ];
 for (const [source, label, selectors] of scopes) {
