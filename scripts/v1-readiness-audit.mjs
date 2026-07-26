@@ -20,10 +20,11 @@ for (const programme of readiness.programmes ?? []) {
 if (!Array.isArray(readiness.blockers) || readiness.blockers.length !== 0) failures.push('v1 report still has blockers');
 
 const minimums = {
-  guideRoutes: 25,
+  guideRoutes: 26,
   canonicalRecords: 85,
   verifiedRecords: 40,
   researchRecords: 1,
+  researchQueueRecords: 1,
   completionMilestones: 62,
   guideDetailRecords: 32,
   catalogueRecords: 48,
@@ -38,7 +39,8 @@ for (const [field, minimum] of Object.entries(minimums)) {
   if (!Number.isInteger(value) || value < minimum) failures.push(`${field}: expected at least ${minimum}, found ${value}`);
 }
 
-if (readiness.researchQueue?.count !== readiness.metrics?.researchRecords) failures.push('research queue count drift');
+if (readiness.researchQueue?.count !== readiness.metrics?.researchRecords) failures.push('research queue count drift from canonical partial records');
+if (readiness.researchQueue?.count !== readiness.metrics?.researchQueueRecords) failures.push('research queue generated-record count drift');
 if (!Array.isArray(readiness.researchQueue?.ids) || readiness.researchQueue.ids.length !== readiness.researchQueue.count) failures.push('research queue IDs drift');
 if (!readiness.researchQueue?.explanation?.includes('explicitly excluded')) failures.push('research queue exclusion rule missing');
 if (!readiness.interpretation?.evidenceSafety?.includes('unknown values')) failures.push('evidence-safety interpretation missing');
@@ -51,4 +53,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log(`v1 readiness audit passed ${readiness.programmes.length} programmes at ${readiness.programmePercent}% with ${readiness.metrics.canonicalRecords} canonical records and ${readiness.researchQueue.count} explicit research records.`);
+console.log(`v1 readiness audit passed ${readiness.programmes.length} programmes at ${readiness.programmePercent}% with ${readiness.metrics.canonicalRecords} canonical records and ${readiness.researchQueue.count} controlled research records.`);
