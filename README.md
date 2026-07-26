@@ -1,6 +1,6 @@
 <div align="center">
 
-<a href="https://crimson-desert-guide.dannyconroy.workers.dev/">
+<a href="https://tkb-gaming.scot/games/crimson-desert/guides/">
   <img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3321460/fa05258232b2b970e2730d2ad5917842e914283c/library_hero_2x.jpg" alt="Official Crimson Desert key art for the world of Pywel" width="100%">
 </a>
 
@@ -10,28 +10,48 @@
 
 **Reclaim power. Read the world. Master every system. Finish the journey.**
 
-[![Enter the guide](https://img.shields.io/badge/ENTER_THE_GUIDE-LIVE_NOW-8B211A?style=for-the-badge)](https://crimson-desert-guide.dannyconroy.workers.dev/)
-[![Patch](https://img.shields.io/badge/PATCH-1.15.00-C89B53?style=for-the-badge)](https://crimson-desert-guide.dannyconroy.workers.dev/patch-notes/)
+[![Enter the guide](https://img.shields.io/badge/ENTER_THE_GUIDE-LIVE_NOW-8B211A?style=for-the-badge)](https://tkb-gaming.scot/games/crimson-desert/guides/)
+[![Patch](https://img.shields.io/badge/PATCH-1.15.00-C89B53?style=for-the-badge)](https://tkb-gaming.scot/games/crimson-desert/guides/patch-notes/)
 [![Guide version](https://img.shields.io/badge/GUIDE-v1.1.0-231A16?style=for-the-badge)](https://github.com/Conroy1988/Crimson-Desert-Guide/releases)
 
 [![CI](https://github.com/Conroy1988/Crimson-Desert-Guide/actions/workflows/ci.yml/badge.svg)](https://github.com/Conroy1988/Crimson-Desert-Guide/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/Conroy1988/Crimson-Desert-Guide/actions/workflows/codeql.yml/badge.svg)](https://github.com/Conroy1988/Crimson-Desert-Guide/actions/workflows/codeql.yml)
 [![Astro](https://img.shields.io/badge/ASTRO-6.3.8-BC5C32?logo=astro&logoColor=white)](https://astro.build/)
-[![Cloudflare Workers](https://img.shields.io/badge/CLOUDFLARE-WORKERS-EA7B22?logo=cloudflare&logoColor=white)](https://workers.cloudflare.com/)
+[![TKB Gaming](https://img.shields.io/badge/TKB_GAMING-CANONICAL_HOST-111111?style=flat)](https://tkb-gaming.scot/games/crimson-desert/guides/)
 [![Content](https://img.shields.io/badge/CONTENT-PATCH_AWARE-72513A)](#evidence-before-folklore)
 [![Steam export](https://img.shields.io/badge/STEAM_GUIDE-EXPORT_READY-1B2838?logo=steam&logoColor=white)](#one-source-multiple-destinations)
 
 <table>
 <tr>
-<td width="20%" align="center"><a href="https://crimson-desert-guide.dannyconroy.workers.dev/start-here/beginner-roadmap/"><strong>⚔ START HERE</strong><br><sub>Beginner roadmap</sub></a></td>
-<td width="20%" align="center"><a href="https://crimson-desert-guide.dannyconroy.workers.dev/command-centre/"><strong>⌘ COMMAND CENTRE</strong><br><sub>Plan and continue</sub></a></td>
-<td width="20%" align="center"><a href="https://crimson-desert-guide.dannyconroy.workers.dev/atlas/"><strong>🧭 PYWEL ATLAS</strong><br><sub>Routes and discoveries</sub></a></td>
-<td width="20%" align="center"><a href="https://crimson-desert-guide.dannyconroy.workers.dev/completion/"><strong>◆ COMPLETION</strong><br><sub>Track the whole journey</sub></a></td>
-<td width="20%" align="center"><a href="https://crimson-desert-guide.dannyconroy.workers.dev/patch-notes/"><strong>🔥 PATCH INTELLIGENCE</strong><br><sub>Current verified baseline</sub></a></td>
+<td width="20%" align="center"><a href="https://tkb-gaming.scot/games/crimson-desert/guides/start-here/beginner-roadmap/"><strong>⚔ START HERE</strong><br><sub>Beginner roadmap</sub></a></td>
+<td width="20%" align="center"><a href="https://tkb-gaming.scot/games/crimson-desert/guides/command-centre/"><strong>⌘ COMMAND CENTRE</strong><br><sub>Plan and continue</sub></a></td>
+<td width="20%" align="center"><a href="https://tkb-gaming.scot/games/crimson-desert/guides/atlas/"><strong>🧭 PYWEL ATLAS</strong><br><sub>Routes and discoveries</sub></a></td>
+<td width="20%" align="center"><a href="https://tkb-gaming.scot/games/crimson-desert/guides/completion/"><strong>◆ COMPLETION</strong><br><sub>Track the whole journey</sub></a></td>
+<td width="20%" align="center"><a href="https://tkb-gaming.scot/games/crimson-desert/guides/patch-notes/"><strong>🔥 PATCH INTELLIGENCE</strong><br><sub>Current verified baseline</sub></a></td>
 </tr>
 </table>
 
 </div>
+
+---
+
+## TKB Gaming hierarchy
+
+```text
+TKB Gaming
+└── Games
+    └── Crimson Desert
+        └── Game Guides
+            └── Crimson Desert Guide
+```
+
+Canonical URL:
+
+```text
+https://tkb-gaming.scot/games/crimson-desert/guides/
+```
+
+The parent Crimson Desert game hub is designed to hold **Game Guides, Mods, Tools, News, Media and community resources** without forcing those systems into this guide application.
 
 ---
 
@@ -41,7 +61,7 @@ Crimson Desert is too large, interconnected and changeable for a loose pile of a
 
 The guide combines complete walkthroughs with a searchable database, interactive completion tools, build planning, world intelligence, technical diagnostics and automated patch surveillance. Every meaningful gameplay claim carries evidence and patch context, so confirmed information never quietly blends into guesswork.
 
-<a href="https://crimson-desert-guide.dannyconroy.workers.dev/">
+<a href="https://tkb-gaming.scot/games/crimson-desert/guides/">
   <img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3321460/669119c3747653f41a46c59f213168448d094e04/ss_669119c3747653f41a46c59f213168448d094e04.1920x1080.jpg?t=1781661893" alt="Kliff overlooking the open world of Pywel" width="100%">
 </a>
 
@@ -61,38 +81,38 @@ The guide combines complete walkthroughs with a searchable database, interactive
 <table>
 <tr>
 <td width="50%" valign="top">
-<a href="https://crimson-desert-guide.dannyconroy.workers.dev/start-here/beginner-roadmap/"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3321460/4b178bdd24ed576458116d8d3383b5352dad0fae/ss_4b178bdd24ed576458116d8d3383b5352dad0fae.1920x1080.jpg?t=1781661893" alt="Crimson Desert journey through Pywel" width="100%"></a>
+<a href="https://tkb-gaming.scot/games/crimson-desert/guides/start-here/beginner-roadmap/"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3321460/4b178bdd24ed576458116d8d3383b5352dad0fae/ss_4b178bdd24ed576458116d8d3383b5352dad0fae.1920x1080.jpg?t=1781661893" alt="Crimson Desert journey through Pywel" width="100%"></a>
 <h3>Begin the journey</h3>
 <p>Essential priorities, settings, saves, early systems and decisions that prevent expensive mistakes.</p>
-<p><a href="https://crimson-desert-guide.dannyconroy.workers.dev/start-here/beginner-roadmap/"><strong>Open the Beginner Roadmap →</strong></a></p>
+<p><a href="https://tkb-gaming.scot/games/crimson-desert/guides/start-here/beginner-roadmap/"><strong>Open the Beginner Roadmap →</strong></a></p>
 </td>
 <td width="50%" valign="top">
-<a href="https://crimson-desert-guide.dannyconroy.workers.dev/systems/combat/"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3321460/55e514af688f459364b3d0ffb288faf73580c8e5/ss_55e514af688f459364b3d0ffb288faf73580c8e5.1920x1080.jpg?t=1781661893" alt="Crimson Desert combat encounter" width="100%"></a>
+<a href="https://tkb-gaming.scot/games/crimson-desert/guides/systems/combat/"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3321460/55e514af688f459364b3d0ffb288faf73580c8e5/ss_55e514af688f459364b3d0ffb288faf73580c8e5.1920x1080.jpg?t=1781661893" alt="Crimson Desert combat encounter" width="100%"></a>
 <h3>Master combat and builds</h3>
 <p>Defence, positioning, weapons, skills, refinement, extraction and character mastery—connected to a dedicated Build Laboratory.</p>
-<p><a href="https://crimson-desert-guide.dannyconroy.workers.dev/systems/combat/"><strong>Enter Combat &amp; Gear →</strong></a></p>
+<p><a href="https://tkb-gaming.scot/games/crimson-desert/guides/systems/combat/"><strong>Enter Combat &amp; Gear →</strong></a></p>
 </td>
 </tr>
 <tr>
 <td width="50%" valign="top">
-<a href="https://crimson-desert-guide.dannyconroy.workers.dev/atlas/"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3321460/d889c95c5f37b3a081cc7be68daf4ad2ffb9e291/ss_d889c95c5f37b3a081cc7be68daf4ad2ffb9e291.1920x1080.jpg?t=1781661893" alt="Exploring the world and mounts of Crimson Desert" width="100%"></a>
+<a href="https://tkb-gaming.scot/games/crimson-desert/guides/atlas/"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3321460/d889c95c5f37b3a081cc7be68daf4ad2ffb9e291/ss_d889c95c5f37b3a081cc7be68daf4ad2ffb9e291.1920x1080.jpg?t=1781661893" alt="Exploring the world and mounts of Crimson Desert" width="100%"></a>
 <h3>Read the world</h3>
 <p>The Pywel Atlas connects regions, services, settlements, Abyss travel, mounts, creatures and efficient route intelligence.</p>
-<p><a href="https://crimson-desert-guide.dannyconroy.workers.dev/atlas/"><strong>Open the Pywel Atlas →</strong></a></p>
+<p><a href="https://tkb-gaming.scot/games/crimson-desert/guides/atlas/"><strong>Open the Pywel Atlas →</strong></a></p>
 </td>
 <td width="50%" valign="top">
-<a href="https://crimson-desert-guide.dannyconroy.workers.dev/completion/"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3321460/ab4e6544853a3ecb4e1e714b0fa706c50144fbbb/ss_ab4e6544853a3ecb4e1e714b0fa706c50144fbbb.1920x1080.jpg?t=1781661893" alt="Crimson Desert completion and discovery" width="100%"></a>
+<a href="https://tkb-gaming.scot/games/crimson-desert/guides/completion/"><img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3321460/ab4e6544853a3ecb4e1e714b0fa706c50144fbbb/ss_ab4e6544853a3ecb4e1e714b0fa706c50144fbbb.1920x1080.jpg?t=1781661893" alt="Crimson Desert completion and discovery" width="100%"></a>
 <h3>Finish everything</h3>
 <p>Track discoveries and milestones with local-first checklists, progress filters, spoiler controls and importable backups.</p>
-<p><a href="https://crimson-desert-guide.dannyconroy.workers.dev/completion/"><strong>Open the Completion Companion →</strong></a></p>
+<p><a href="https://tkb-gaming.scot/games/crimson-desert/guides/completion/"><strong>Open the Completion Companion →</strong></a></p>
 </td>
 </tr>
 <tr>
 <td colspan="2" valign="top">
-<a href="https://crimson-desert-guide.dannyconroy.workers.dev/command-centre/"><img src="https://s1.pearlcdn.com/cd/brand/media_GLOBAL/2026/04/02/9cf1d2ace3a20260402105221785.png" alt="Official Crimson Desert screenshot showing a river valley route through Pywel" width="100%"></a>
+<a href="https://tkb-gaming.scot/games/crimson-desert/guides/command-centre/"><img src="https://s1.pearlcdn.com/cd/brand/media_GLOBAL/2026/04/02/9cf1d2ace3a20260402105221785.png" alt="Official Crimson Desert screenshot showing a river valley route through Pywel" width="100%"></a>
 <h3>Run the expedition</h3>
 <p>Continue your last guide, search the complete knowledge base, plan the next session and protect every local guide state through one validated vault.</p>
-<p><a href="https://crimson-desert-guide.dannyconroy.workers.dev/command-centre/"><strong>Open the Command Centre →</strong></a></p>
+<p><a href="https://tkb-gaming.scot/games/crimson-desert/guides/command-centre/"><strong>Open the Command Centre →</strong></a></p>
 </td>
 </tr>
 </table>
@@ -153,7 +173,7 @@ OFFICIAL SOURCES + CONTROLLED TESTING + CORROBORATED REPORTS
                             ↓
    WALKTHROUGHS · ATLAS · DATABASE · BUILDS · COMPLETION · TECHNICAL
                             ↓
-       CLOUDFLARE LIVE GUIDE · STEAM GUIDE EXPORT · REVIEW QUEUE
+       TKB GAMING LIVE GUIDE · STEAM GUIDE EXPORT · REVIEW QUEUE
 ```
 
 The repository is the canonical source for the website, structured guide data, patch history, completion systems, research state and automation. The Steam mirror is generated from that same evidence-controlled content rather than maintained as a second drifting guide.
@@ -164,10 +184,11 @@ The repository is the canonical source for the website, structured guide data, p
 
 - **Astro 6 + Starlight** provide the static documentation platform.
 - **Pagefind** supplies fast local full-text search.
-- **Cloudflare Workers Builds** publish production and preview deployments.
+- **cPanel Git Version Control** publishes the canonical TKB Gaming release from the generated `cpanel-deploy` branch.
+- **Cloudflare Workers Builds** retain preview deployments and a legacy mirror.
 - **GitHub Actions** validate content, test local state systems, scan security and monitor patches.
 - **Local-first browser storage** protects Command Centre, completion, Atlas, notes, catalogue, build and research progress.
-- **Root and `/crimsondesert/` subpath builds** remain protected for the planned TKB Gaming migration.
+- **Root and `/games/crimson-desert/guides/` subpath builds** are both validated in CI.
 
 ### Local development
 
@@ -222,7 +243,7 @@ The promotional imagery shown in this README comes from official Crimson Desert 
 
 ### **RECLAIM POWER · REACH BEYOND · LEAVE NOTHING UNDISCOVERED**
 
-[![Enter Pywel](https://img.shields.io/badge/ENTER_PYWEL-OPEN_THE_LIVE_GUIDE-8B211A?style=for-the-badge)](https://crimson-desert-guide.dannyconroy.workers.dev/)
+[![Enter Pywel](https://img.shields.io/badge/ENTER_PYWEL-OPEN_THE_LIVE_GUIDE-8B211A?style=for-the-badge)](https://tkb-gaming.scot/games/crimson-desert/guides/)
 
 **Created and maintained by [Conroy1988](https://github.com/Conroy1988)**
 
