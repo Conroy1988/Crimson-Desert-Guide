@@ -1,0 +1,23 @@
+---
+title: Pywel Expedition Command Centre
+description: Unified local dashboard for expedition planning, guide search, spoiler preferences, progress summaries and complete guide-data backups.
+currentPatch: 1.15.00
+lastVerified: "2026-07-26"
+evidence: verified
+spoilerLevel: minor
+patchStatus: current
+---
+
+import ExpeditionCommandCentre from '../../../components/ExpeditionCommandCentre.astro';
+
+The Command Centre is the guide's **personal operations layer**. It reads only supported local browser state and never converts private notes, checklists or test results into canonical guide claims.
+
+<ExpeditionCommandCentre />
+
+## Operating rules
+
+- Expedition objectives are private planning records, not proof that content has been completed or verified.
+- The guide-wide spoiler profile configures compatible filters but does not delete manually revealed records.
+- The complete guide vault contains only supported local guide keys and validates every included state shape before restoration.
+- Official imagery is selected through the provenance-controlled Pearl Abyss media registry; generic fantasy artwork is not used.
+- Clearing browser storage removes local Command Centre state unless a guide vault has been exported first.
