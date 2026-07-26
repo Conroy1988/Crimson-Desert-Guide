@@ -40,6 +40,7 @@ export default defineConfig({
         './src/styles/home-overrides.css',
         './src/styles/site-theme.css',
         './src/styles/light-mode.css',
+        './src/styles/mobile-text.css',
       ],
       components: {
         PageTitle: './src/components/PageTitle.astro',
