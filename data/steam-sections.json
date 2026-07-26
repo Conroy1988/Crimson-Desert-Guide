@@ -1,5 +1,5 @@
 {
-  "title": "(WIP) Crimson Desert Guide – Beginner Systems, Combat, Gear, Mounts, Completion, Database, Atlas & Technical",
+  "title": "Crimson Desert Guide – Complete Evidence-Safe v1.0",
   "sections": [
     {"heading":"Update Log","source":"src/content/docs/update-log.md"},
     {"heading":"Patch Notes","source":"src/content/docs/patch-notes.md"},
@@ -19,6 +19,7 @@
     {"heading":"14. Bosses, Abysses & Strongholds","source":"steam/bosses-strongholds.md"},
     {"heading":"15. Pywel Atlas & Route Intelligence","source":"steam/pywel-atlas.md"},
     {"heading":"16. Deep Quest & Encounter Guidance","source":"steam/deep-quest-encounters.md"},
-    {"heading":"17. Collectibles, Knowledge & Challenges","source":"steam/collectibles-knowledge-challenges.md"}
+    {"heading":"17. Collectibles, Knowledge & Challenges","source":"steam/collectibles-knowledge-challenges.md"},
+    {"heading":"18. Character Mastery & Evidence-Safe Builds","source":"steam/character-mastery-build-lab.md"}
   ]
 }
