@@ -105,16 +105,33 @@ jobs:
         shell: bash
         env:
           SSH_PRIVATE_KEY: ${{ secrets.CPANEL_SSH_PRIVATE_KEY }}
+          SSH_KEY_PASSPHRASE: ${{ secrets.CPANEL_SSH_KEY_PASSPHRASE }}
           SSH_KNOWN_HOSTS: ${{ secrets.CPANEL_KNOWN_HOSTS }}
         run: |
           set -euo pipefail
           test -n "$SSH_PRIVATE_KEY"
+          test -n "$SSH_KEY_PASSPHRASE"
           test -n "$SSH_KNOWN_HOSTS"
           install -d -m 700 ~/.ssh
           printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/cpanel_deploy
           printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
           chmod 600 ~/.ssh/cpanel_deploy ~/.ssh/known_hosts
-          ssh-keygen -y -f ~/.ssh/cpanel_deploy >/dev/null
+
+          cat > ~/.ssh/askpass.sh <<'ASKPASS'
+          #!/usr/bin/env bash
+          printf '%s\n' "$SSH_KEY_PASSPHRASE"
+          ASKPASS
+          chmod 700 ~/.ssh/askpass.sh
+
+          eval "$(ssh-agent -s)"
+          echo "SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> "$GITHUB_ENV"
+          echo "SSH_AGENT_PID=$SSH_AGENT_PID" >> "$GITHUB_ENV"
+          export SSH_ASKPASS="$HOME/.ssh/askpass.sh"
+          export SSH_ASKPASS_REQUIRE=force
+          export DISPLAY=:0
+          setsid -w ssh-add ~/.ssh/cpanel_deploy </dev/null
+          rm -f ~/.ssh/askpass.sh
+          ssh-add -l
 
       - name: Verify protected cPanel target
         shell: bash
@@ -127,7 +144,7 @@ jobs:
           [[ "$PORT" =~ ^[0-9]+$ ]]
           test -n "$HOST"
           test -n "$USER"
-          ssh -p "$PORT" -i ~/.ssh/cpanel_deploy -o BatchMode=yes -o StrictHostKeyChecking=yes "$USER@$HOST" \
+          ssh -p "$PORT" -o BatchMode=yes -o StrictHostKeyChecking=yes "$USER@$HOST" \
             "set -eu; test '$DEPLOY_PATH' = '/home/jtdlxqpa/public_html/crimsondesert'; test -d '$DEPLOY_PATH'; test -f '$DEPLOY_PATH/$DEPLOY_SENTINEL'; test \"\$(cat '$DEPLOY_PATH/$DEPLOY_SENTINEL')\" = '$DEPLOY_SENTINEL_VALUE'; command -v tar >/dev/null; command -v rsync >/dev/null"
 
       - name: Upload and synchronise release
@@ -143,13 +160,13 @@ jobs:
           remote_archive="$remote_root/$release_sha.tar.gz"
           remote_stage="$remote_root/$release_sha"
 
-          ssh -p "$PORT" -i ~/.ssh/cpanel_deploy -o BatchMode=yes -o StrictHostKeyChecking=yes "$USER@$HOST" \
+          ssh -p "$PORT" -o BatchMode=yes -o StrictHostKeyChecking=yes "$USER@$HOST" \
             "set -eu; mkdir -p '$remote_root'; rm -rf '$remote_stage'; mkdir -p '$remote_stage'"
 
-          scp -P "$PORT" -i ~/.ssh/cpanel_deploy -o BatchMode=yes -o StrictHostKeyChecking=yes \
+          scp -P "$PORT" -o BatchMode=yes -o StrictHostKeyChecking=yes \
             crimson-desert-release.tar.gz "$USER@$HOST:$remote_archive"
 
-          ssh -p "$PORT" -i ~/.ssh/cpanel_deploy -o BatchMode=yes -o StrictHostKeyChecking=yes "$USER@$HOST" \
+          ssh -p "$PORT" -o BatchMode=yes -o StrictHostKeyChecking=yes "$USER@$HOST" \
             "set -eu; \
              tar -xzf '$remote_archive' -C '$remote_stage'; \
              test -f '$remote_stage/index.html'; \
