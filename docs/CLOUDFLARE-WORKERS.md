@@ -4,9 +4,10 @@ Cloudflare Workers Builds remains connected to `Conroy1988/Crimson-Desert-Guide`
 
 ## Canonical production
 
-The canonical guide now lives at:
+The canonical guide now lives inside the TKB Gaming game hierarchy:
 
-- **Public URL:** `https://tkb-gaming.scot/crimsondesert/`
+- **Public hierarchy:** TKB Gaming → Games → Crimson Desert → Game Guides
+- **Public URL:** `https://tkb-gaming.scot/games/crimson-desert/guides/`
 - **Production host:** cPanel static hosting
 - **Production branch:** `main`
 - **Deployment workflow:** `.github/workflows/deploy-cpanel.yml`
@@ -31,7 +32,8 @@ The static-assets configuration remains in `wrangler.jsonc`. The mirror does not
 
 - Pull requests must pass **Quality Gate** and **CodeQL** before merging.
 - Non-production branches may continue to receive Cloudflare preview deployments.
-- Canonical releases are built for the `/crimsondesert/` base path and published to cPanel only after successful `main` CI.
-- Canonical URLs, robots and sitemap references for cPanel are generated with `CD_GUIDE_SITE=https://tkb-gaming.scot` and `CD_GUIDE_BASE_PATH=/crimsondesert/`.
+- Canonical releases are built for the `/games/crimson-desert/guides/` base path and published to cPanel only after successful `main` CI.
+- Canonical URLs, robots and sitemap references for cPanel are generated with `CD_GUIDE_SITE=https://tkb-gaming.scot` and `CD_GUIDE_BASE_PATH=/games/crimson-desert/guides/`.
+- The old `https://tkb-gaming.scot/crimsondesert/` path is retained only as a permanent redirect after migration.
 
 Cloudflare may be retired later after the custom-domain deployment has proven stable and any useful preview role has been replaced.
