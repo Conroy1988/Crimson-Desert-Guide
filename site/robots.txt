@@ -1,4 +1,4 @@
 User-agent: *
-Allow: /crimsondesert/
+Allow: /games/crimson-desert/guides/
 
-Sitemap: https://tkb-gaming.scot/crimsondesert/sitemap-index.xml
+Sitemap: https://tkb-gaming.scot/games/crimson-desert/guides/sitemap-index.xml

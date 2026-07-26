@@ -1,7 +1,10 @@
 ---
 deployment:
   tasks:
-    - /bin/bash -lc 'set -eu; target="/home/jtdlxqpa/public_html/crimsondesert"; test -d "$target"; test -f "$target/.github-deploy-target"; test "$(cat "$target/.github-deploy-target")" = "crimson-desert-guide"; test -f site/index.html; test -f site/command-centre/index.html'
-    - /bin/bash -lc 'set -eu; target="/home/jtdlxqpa/public_html/crimsondesert"; /usr/bin/find "$target" -mindepth 1 -maxdepth 1 ! -name ".github-deploy-target" -exec /bin/rm -rf -- {} +'
-    - /bin/cp -a site/. /home/jtdlxqpa/public_html/crimsondesert/
-    - /bin/bash -lc 'set -eu; test -f /home/jtdlxqpa/public_html/crimsondesert/index.html; test -f /home/jtdlxqpa/public_html/crimsondesert/deployment.json; test -f /home/jtdlxqpa/public_html/crimsondesert/.github-deploy-target'
+    - /bin/bash -lc 'set -eu; target="/home/jtdlxqpa/public_html/games/crimson-desert/guides"; legacy="/home/jtdlxqpa/public_html/crimsondesert"; test -d "$target"; test -f "$target/.github-deploy-target"; test "$(cat "$target/.github-deploy-target")" = "crimson-desert-guide"; test -d "$legacy"; test -f "$legacy/.github-deploy-target"; test "$(cat "$legacy/.github-deploy-target")" = "crimson-desert-guide"; test -f site/index.html; test -f site/command-centre/index.html; test -f legacy/.htaccess; test -f legacy/index.html'
+    - /bin/bash -lc 'set -eu; target="/home/jtdlxqpa/public_html/games/crimson-desert/guides"; /usr/bin/find "$target" -mindepth 1 -maxdepth 1 ! -name ".github-deploy-target" -exec /bin/rm -rf -- {} +'
+    - /bin/cp -a site/. /home/jtdlxqpa/public_html/games/crimson-desert/guides/
+    - /bin/bash -lc 'set -eu; test -f /home/jtdlxqpa/public_html/games/crimson-desert/guides/index.html; test -f /home/jtdlxqpa/public_html/games/crimson-desert/guides/deployment.json; test -f /home/jtdlxqpa/public_html/games/crimson-desert/guides/.github-deploy-target'
+    - /bin/bash -lc 'set -eu; legacy="/home/jtdlxqpa/public_html/crimsondesert"; /usr/bin/find "$legacy" -mindepth 1 -maxdepth 1 ! -name ".github-deploy-target" -exec /bin/rm -rf -- {} +'
+    - /bin/cp -a legacy/. /home/jtdlxqpa/public_html/crimsondesert/
+    - /bin/bash -lc 'set -eu; test -f /home/jtdlxqpa/public_html/crimsondesert/.htaccess; test -f /home/jtdlxqpa/public_html/crimsondesert/index.html; test -f /home/jtdlxqpa/public_html/crimsondesert/.github-deploy-target'
