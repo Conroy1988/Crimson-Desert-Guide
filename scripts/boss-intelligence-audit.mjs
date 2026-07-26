@@ -115,10 +115,13 @@ for (const record of dataset.records ?? []) {
   for (const alias of record.aliases ?? []) {
     if (!record.searchText.includes(alias.toLowerCase())) failures.push(`${record.id}: alias missing from search text`);
   }
-  for (const otherId of record.doNotMergeWith ?? []) {
+  if ((record.doNotMergeWith ?? []).length !== (record.doNotMergeWithIds ?? []).length) {
+    failures.push(`${record.id}: human-readable identity separation drift`);
+  }
+  for (const otherId of record.doNotMergeWithIds ?? []) {
     if (!canonicalById.has(otherId)) failures.push(`${record.id}: identity-separation target does not exist (${otherId})`);
     const reciprocal = datasetByRecordId.get(otherId);
-    if (reciprocal && !(reciprocal.doNotMergeWith ?? []).includes(record.recordId)) {
+    if (reciprocal && !(reciprocal.doNotMergeWithIds ?? []).includes(record.recordId)) {
       failures.push(`${record.id}: identity-separation rule is not reciprocal with ${otherId}`);
     }
   }
