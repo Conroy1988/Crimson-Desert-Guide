@@ -1,0 +1,394 @@
+---
+import queue from '../../data/research-queue.json';
+
+const types = [...new Map(queue.records.map((record) => [record.type, record.typeLabel])).entries()]
+  .map(([id, label]) => ({ id, label }))
+  .sort((a, b) => a.label.localeCompare(b.label));
+const highPriority = queue.records.filter((record) => record.priority === 'high').length;
+const mediumPriority = queue.records.filter((record) => record.priority === 'medium').length;
+---
+
+<section class="research-queue" data-research-queue aria-labelledby="research-queue-title">
+  <header class="research-queue__hero">
+    <div>
+      <p class="research-queue__kicker">Evidence operations · Patch {queue.gamePatch}</p>
+      <h2 id="research-queue-title">Research Queue Centre</h2>
+      <p>
+        Every card is a real, sourced Crimson Desert record with one or more facts still missing.
+        Use the protocol to collect reproducible evidence without turning assumptions into guide claims.
+      </p>
+    </div>
+    <dl>
+      <div><dt>Open records</dt><dd>{queue.records.length}</dd></div>
+      <div><dt>High value</dt><dd>{highPriority}</dd></div>
+      <div><dt>Medium value</dt><dd>{mediumPriority}</dd></div>
+      <div><dt>Saved locally</dt><dd data-research-saved>0</dd></div>
+    </dl>
+  </header>
+
+  <aside class="research-queue__boundary">
+    <strong>Evidence boundary</strong>
+    <span>
+      A local status or note is private planning data. It does not verify a route, reward, mechanic or statistic and is never promoted automatically into the canonical guide.
+    </span>
+  </aside>
+
+  <div class="research-queue__workspace">
+    <div class="research-queue__filters" aria-label="Research queue filters">
+      <label>
+        <span>Search</span>
+        <input type="search" placeholder="Quest, boss, gap, region or blocker" data-research-search />
+      </label>
+      <label>
+        <span>Type</span>
+        <select data-research-type>
+          <option value="all">All types</option>
+          {types.map((type) => <option value={type.id}>{type.label}</option>)}
+        </select>
+      </label>
+      <label>
+        <span>Priority</span>
+        <select data-research-priority>
+          <option value="all">All priorities</option>
+          {queue.priorities.map((priority) => <option value={priority.id}>{priority.label}</option>)}
+        </select>
+      </label>
+      <label>
+        <span>Evidence gap</span>
+        <select data-research-gap>
+          <option value="all">All gaps</option>
+          {queue.gapDefinitions.map((gap) => <option value={gap.id}>{gap.label}</option>)}
+        </select>
+      </label>
+      <label>
+        <span>My stage</span>
+        <select data-research-stage>
+          <option value="all">All stages</option>
+          <option value="untracked">Not tracked</option>
+          <option value="planned">Planned</option>
+          <option value="testing">Testing</option>
+          <option value="evidence-ready">Evidence ready</option>
+        </select>
+      </label>
+      <label>
+        <span>Spoilers</span>
+        <select data-research-spoiler>
+          <option value="all">All, masked</option>
+          <option value="safe">No spoilers</option>
+          <option value="minor">Up to minor</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="research-queue__actions">
+      <div aria-live="polite">
+        <strong data-research-count>{queue.records.length}</strong> records shown
+        <span data-research-stage-counts>0 planned · 0 testing · 0 evidence ready</span>
+      </div>
+      <div>
+        <button type="button" data-research-reset-filters>Reset filters</button>
+        <button type="button" data-research-export>Export my work</button>
+        <button type="button" data-research-import>Import my work</button>
+        <button type="button" class="danger" data-research-reset>Reset local work</button>
+        <input type="file" accept="application/json,.json" hidden data-research-file />
+      </div>
+    </div>
+    <p class="research-queue__status" data-research-status aria-live="polite"></p>
+  </div>
+
+  <div class="research-queue__grid">
+    {queue.records.map((record) => {
+      const masked = record.spoilerLevel === 'full';
+      return (
+        <article
+          class={`research-card research-card--${record.priority}`}
+          data-research-card
+          data-record-id={record.id}
+          data-type={record.type}
+          data-priority={record.priority}
+          data-gaps={record.gapIds.join(' ')}
+          data-spoiler={record.spoilerLevel}
+          data-search={record.searchText}
+          data-stage="untracked"
+        >
+          <header class="research-card__header">
+            <div>
+              <span>{record.typeLabel}</span>
+              <span>{record.regionLabel}</span>
+              <span class={`research-card__priority research-card__priority--${record.priority}`}>
+                {queue.priorities.find((priority) => priority.id === record.priority)?.label ?? record.priority}
+              </span>
+            </div>
+            <span>Patch {record.firstSupportedPatch}+</span>
+          </header>
+
+          <div class="research-card__title">
+            <h3 data-research-title>{masked ? 'Spoiler-hidden research record' : record.title}</h3>
+            {masked && (
+              <button type="button" data-research-reveal data-title={record.title} aria-expanded="false">
+                Reveal identity
+              </button>
+            )}
+          </div>
+          <p>{record.summary}</p>
+
+          <section class="research-card__facts" aria-label="Confirmed facts">
+            <h4>Already confirmed</h4>
+            <dl>
+              {record.confirmedFacts.map((fact) => <div><dt>{fact.label}</dt><dd>{fact.value}</dd></div>)}
+            </dl>
+          </section>
+
+          <section class="research-card__gaps" aria-label="Missing evidence">
+            <h4>Evidence still needed</h4>
+            <ul>
+              {record.gaps.map((gap) => <li title={gap.description}>{gap.label}</li>)}
+            </ul>
+          </section>
+
+          {record.knownBlockers.length > 0 && (
+            <aside class="research-card__blockers">
+              <strong>Historical blocker context</strong>
+              <ul>{record.knownBlockers.map((blocker) => <li>{blocker}</li>)}</ul>
+            </aside>
+          )}
+
+          <details class="research-card__protocol">
+            <summary>Open controlled test protocol</summary>
+            <ol>{record.protocol.map((step) => <li>{step}</li>)}</ol>
+            <h4>Minimum evidence package</h4>
+            <ul>{record.evidenceChecklist.map((item) => <li>{item}</li>)}</ul>
+          </details>
+
+          <section class="research-card__local" aria-label="Private local research state">
+            <div>
+              <label>
+                <span>My stage</span>
+                <select data-record-stage>
+                  <option value="">Not tracked</option>
+                  <option value="planned">Planned</option>
+                  <option value="testing">Testing</option>
+                  <option value="evidence-ready">Evidence ready</option>
+                </select>
+              </label>
+              <label class="research-card__note">
+                <span>Private note</span>
+                <textarea rows="3" maxlength="5000" placeholder="Save route hypotheses, test conditions or evidence still to capture" data-record-note></textarea>
+              </label>
+            </div>
+            <small>Stored only in this browser. Export a backup before clearing site data.</small>
+          </section>
+
+          <footer>
+            <a href={record.guidePath}>Open related guide</a>
+            <div>{record.sources.map((source, index) => <a href={source} target="_blank" rel="noreferrer">Official source {index + 1}</a>)}</div>
+          </footer>
+        </article>
+      );
+    })}
+  </div>
+  <p class="research-queue__empty" data-research-empty hidden>No research records match the current filters.</p>
+</section>
+
+<script id="research-queue-data" type="application/json" set:html={JSON.stringify(queue)}></script>
+
+<script>
+  import {
+    createEmptyResearchQueueState,
+    createResearchQueueExport,
+    loadResearchQueueState,
+    parseResearchQueueImport,
+    saveResearchQueueState,
+    setResearchNote,
+    setResearchStage,
+  } from '../lib/research-queue-state.mjs';
+
+  const bindResearchQueue = () => {
+    const root = document.querySelector('[data-research-queue]');
+    const dataNode = document.querySelector('#research-queue-data');
+    if (!(root instanceof HTMLElement) || !(dataNode instanceof HTMLScriptElement) || root.dataset.bound === 'true') return;
+    root.dataset.bound = 'true';
+
+    const dataset = JSON.parse(dataNode.textContent || '{}');
+    const search = root.querySelector('[data-research-search]');
+    const type = root.querySelector('[data-research-type]');
+    const priority = root.querySelector('[data-research-priority]');
+    const gap = root.querySelector('[data-research-gap]');
+    const stageFilter = root.querySelector('[data-research-stage]');
+    const spoiler = root.querySelector('[data-research-spoiler]');
+    const count = root.querySelector('[data-research-count]');
+    const saved = root.querySelector('[data-research-saved]');
+    const stageCounts = root.querySelector('[data-research-stage-counts]');
+    const status = root.querySelector('[data-research-status]');
+    const empty = root.querySelector('[data-research-empty]');
+    const fileInput = root.querySelector('[data-research-file]');
+    const cards = [...root.querySelectorAll('[data-research-card]')];
+    let state = createEmptyResearchQueueState(dataset);
+
+    const report = (message, error = false) => {
+      if (!(status instanceof HTMLElement)) return;
+      status.textContent = message;
+      status.toggleAttribute('data-error', error);
+    };
+
+    try {
+      const loaded = loadResearchQueueState(window.localStorage, dataset);
+      state = loaded.state;
+      if (loaded.error) report(loaded.error, true);
+    } catch (error) {
+      report(error instanceof Error ? error.message : 'Research state could not be loaded.', true);
+    }
+
+    const selected = (control) => control instanceof HTMLSelectElement ? control.value : 'all';
+    const stageFor = (id) => state.stages[id] ?? 'untracked';
+
+    const saveState = () => {
+      try {
+        state = saveResearchQueueState(window.localStorage, state, dataset).state;
+        report('Private research state saved in this browser.');
+      } catch (error) {
+        report(error instanceof Error ? error.message : 'Research state could not be saved.', true);
+      }
+    };
+
+    const filter = () => {
+      const query = search instanceof HTMLInputElement ? search.value.trim().toLowerCase() : '';
+      let visible = 0;
+      for (const card of cards) {
+        if (!(card instanceof HTMLElement)) continue;
+        const spoilerLevel = card.dataset.spoiler ?? 'none';
+        const spoilerPass = selected(spoiler) === 'all' ||
+          (selected(spoiler) === 'safe' && spoilerLevel === 'none') ||
+          (selected(spoiler) === 'minor' && spoilerLevel !== 'full');
+        const stage = card.dataset.stage ?? 'untracked';
+        const show = (!query || (card.dataset.search ?? '').includes(query)) &&
+          (selected(type) === 'all' || card.dataset.type === selected(type)) &&
+          (selected(priority) === 'all' || card.dataset.priority === selected(priority)) &&
+          (selected(gap) === 'all' || (card.dataset.gaps ?? '').split(' ').includes(selected(gap))) &&
+          (selected(stageFilter) === 'all' || stage === selected(stageFilter)) && spoilerPass;
+        card.hidden = !show;
+        if (show) visible += 1;
+      }
+      if (count) count.textContent = String(visible);
+      if (empty instanceof HTMLElement) empty.hidden = visible !== 0;
+    };
+
+    const renderState = () => {
+      const totals = { planned: 0, testing: 0, 'evidence-ready': 0 };
+      for (const card of cards) {
+        if (!(card instanceof HTMLElement)) continue;
+        const id = card.dataset.recordId ?? '';
+        const stage = stageFor(id);
+        card.dataset.stage = stage;
+        const select = card.querySelector('[data-record-stage]');
+        const note = card.querySelector('[data-record-note]');
+        if (select instanceof HTMLSelectElement) select.value = stage === 'untracked' ? '' : stage;
+        if (note instanceof HTMLTextAreaElement) note.value = state.notes[id] ?? '';
+        if (stage !== 'untracked') totals[stage] += 1;
+      }
+      const savedCount = Object.keys(state.stages).length + Object.keys(state.notes).filter((id) => !state.stages[id]).length;
+      if (saved) saved.textContent = String(savedCount);
+      if (stageCounts) stageCounts.textContent = `${totals.planned} planned · ${totals.testing} testing · ${totals['evidence-ready']} evidence ready`;
+      filter();
+    };
+
+    for (const control of [search, type, priority, gap, stageFilter, spoiler]) {
+      control?.addEventListener(control instanceof HTMLInputElement ? 'input' : 'change', filter);
+    }
+
+    root.querySelector('[data-research-reset-filters]')?.addEventListener('click', () => {
+      if (search instanceof HTMLInputElement) search.value = '';
+      for (const control of [type, priority, gap, stageFilter, spoiler]) if (control instanceof HTMLSelectElement) control.value = 'all';
+      filter();
+      search?.focus();
+    });
+
+    for (const card of cards) {
+      if (!(card instanceof HTMLElement)) continue;
+      const id = card.dataset.recordId ?? '';
+      const stageSelect = card.querySelector('[data-record-stage]');
+      const note = card.querySelector('[data-record-note]');
+      stageSelect?.addEventListener('change', () => {
+        if (!(stageSelect instanceof HTMLSelectElement)) return;
+        try {
+          state = setResearchStage(state, dataset, id, stageSelect.value);
+          saveState();
+          renderState();
+        } catch (error) {
+          report(error instanceof Error ? error.message : 'Research stage could not be saved.', true);
+        }
+      });
+      note?.addEventListener('change', () => {
+        if (!(note instanceof HTMLTextAreaElement)) return;
+        try {
+          state = setResearchNote(state, dataset, id, note.value);
+          saveState();
+          renderState();
+        } catch (error) {
+          report(error instanceof Error ? error.message : 'Research note could not be saved.', true);
+        }
+      });
+    }
+
+    for (const button of root.querySelectorAll('[data-research-reveal]')) {
+      if (!(button instanceof HTMLButtonElement)) continue;
+      button.addEventListener('click', () => {
+        const expanded = button.getAttribute('aria-expanded') === 'true';
+        const title = button.closest('[data-research-card]')?.querySelector('[data-research-title]');
+        button.setAttribute('aria-expanded', String(!expanded));
+        button.textContent = expanded ? 'Reveal identity' : 'Hide identity';
+        if (title) title.textContent = expanded ? 'Spoiler-hidden research record' : button.dataset.title ?? 'Spoiler-hidden research record';
+      });
+    }
+
+    root.querySelector('[data-research-export]')?.addEventListener('click', () => {
+      try {
+        const payload = createResearchQueueExport(state, dataset);
+        const blob = new Blob([`${JSON.stringify(payload, null, 2)}\n`], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `crimson-desert-research-${new Date().toISOString().slice(0, 10)}.json`;
+        link.click();
+        URL.revokeObjectURL(url);
+        report('Research queue backup exported.');
+      } catch (error) {
+        report(error instanceof Error ? error.message : 'Research queue could not be exported.', true);
+      }
+    });
+
+    root.querySelector('[data-research-import]')?.addEventListener('click', () => {
+      if (fileInput instanceof HTMLInputElement) fileInput.click();
+    });
+    fileInput?.addEventListener('change', async () => {
+      if (!(fileInput instanceof HTMLInputElement) || !fileInput.files?.[0]) return;
+      try {
+        const imported = parseResearchQueueImport(JSON.parse(await fileInput.files[0].text()), dataset);
+        state = saveResearchQueueState(window.localStorage, imported, dataset).state;
+        renderState();
+        report('Research queue backup imported.');
+      } catch (error) {
+        report(error instanceof Error ? error.message : 'Research queue backup could not be imported.', true);
+      } finally {
+        fileInput.value = '';
+      }
+    });
+
+    root.querySelector('[data-research-reset]')?.addEventListener('click', () => {
+      if (!window.confirm('Reset all private research stages and notes stored in this browser?')) return;
+      window.localStorage.removeItem(dataset.storageKey);
+      state = createEmptyResearchQueueState(dataset);
+      renderState();
+      report('Private research state reset.');
+    });
+
+    renderState();
+  };
+
+  bindResearchQueue();
+  document.addEventListener('astro:page-load', bindResearchQueue);
+</script>
+
+<style>
+  .research-queue{display:grid;gap:1rem;margin-block:1.5rem 3rem}.research-queue__hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(18rem,.75fr);gap:2rem;padding:clamp(1.2rem,4vw,2.4rem);border:1px solid rgb(213 163 80/30%);border-radius:.9rem;background:radial-gradient(circle at 90% 0,rgb(167 44 25/27%),transparent 34%),linear-gradient(135deg,rgb(18 15 12/97%),rgb(8 8 7/98%));box-shadow:0 1.5rem 4rem rgb(0 0 0/24%)}.research-queue__kicker{margin:0 0 .55rem!important;font-size:.68rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#d6a85f!important}.research-queue__hero h2{margin:0!important;border:0!important;font-size:clamp(1.9rem,4vw,3.2rem)!important;color:#f4dfb5!important}.research-queue__hero p{max-width:48rem;color:#c8b99f!important}.research-queue__hero dl{display:grid;grid-template-columns:repeat(2,1fr);gap:.65rem;margin:0}.research-queue__hero dl div{display:grid;place-content:center;min-height:5rem;padding:.65rem;border:1px solid rgb(213 163 80/20%);border-radius:.5rem;background:rgb(0 0 0/24%);text-align:center}.research-queue__hero dt{font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:#9f917b}.research-queue__hero dd{margin:0;font-family:var(--cd-font-display);font-size:1.55rem;color:#efc979}.research-queue__boundary,.research-queue__workspace{border:1px solid var(--cd-border);border-radius:.75rem;background:var(--cd-surface)}.research-queue__boundary{display:flex;flex-wrap:wrap;gap:.4rem 1rem;align-items:center;padding:.9rem 1rem}.research-queue__boundary strong{color:var(--sl-color-accent-high)}.research-queue__boundary span{flex:1;min-width:16rem;color:var(--sl-color-gray-2)}.research-queue__workspace{display:grid;gap:.75rem;padding:1rem}.research-queue__filters{display:grid;grid-template-columns:minmax(15rem,2fr) repeat(5,minmax(8rem,1fr));gap:.7rem}.research-queue__filters label{display:grid;gap:.3rem;min-width:0}.research-queue__filters label>span,.research-card__local label>span{font-size:.6rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--sl-color-gray-3)}.research-queue__filters :is(input,select),.research-card__local :is(select,textarea){width:100%;min-height:2.55rem;padding:.5rem .65rem;border:1px solid var(--cd-border);border-radius:.45rem;background:color-mix(in srgb,var(--sl-color-black) 82%,transparent);color:var(--sl-color-gray-1)}.research-queue__actions{display:flex;flex-wrap:wrap;gap:.75rem;justify-content:space-between;align-items:center;padding-top:.75rem;border-top:1px solid var(--cd-border)}.research-queue__actions>div:first-child{display:grid;gap:.1rem;font-size:.76rem;color:var(--sl-color-gray-3)}.research-queue__actions>div:last-child{display:flex;flex-wrap:wrap;gap:.45rem}.research-queue__actions button,.research-card__title button{padding:.48rem .68rem;border:1px solid var(--cd-border);border-radius:.4rem;background:color-mix(in srgb,var(--sl-color-black) 78%,transparent);font-size:.68rem;font-weight:800;color:var(--sl-color-accent-high);cursor:pointer}.research-queue__actions .danger{color:#e69a8a}.research-queue__status{min-height:1.2rem;margin:0!important;font-size:.72rem;color:#8fc59b!important}.research-queue__status[data-error]{color:#e69a8a!important}.research-queue__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}.research-card{display:grid;align-content:start;gap:.85rem;min-width:0;padding:1rem;border:1px solid rgb(210 160 78/22%);border-radius:.8rem;background:linear-gradient(145deg,rgb(255 255 255/2.5%),transparent 55%),var(--cd-surface);box-shadow:0 .9rem 2.2rem rgb(0 0 0/10%)}.research-card[hidden]{display:none}.research-card--high{border-color:rgb(193 75 48/48%);box-shadow:inset 3px 0 0 #9d2d20,0 .9rem 2.2rem rgb(0 0 0/10%)}.research-card--medium{border-color:rgb(210 160 78/35%)}.research-card__header{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:space-between}.research-card__header>div{display:flex;flex-wrap:wrap;gap:.35rem}.research-card__header span{padding:.22rem .42rem;border:1px solid var(--cd-border);border-radius:999px;font-size:.55rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--sl-color-gray-3)}.research-card__priority--high{color:#ff9d8f!important}.research-card__priority--medium{color:#edc478!important}.research-card__priority--standard{color:#9fc0d0!important}.research-card__title{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:space-between;align-items:start}.research-card__title h3{min-width:0;margin:0!important;font-size:clamp(1.3rem,2.2vw,1.8rem)!important}.research-card>p{margin:0!important}.research-card h4{margin:0!important;font-size:.67rem!important;letter-spacing:.09em;text-transform:uppercase;color:var(--sl-color-gray-3)!important}.research-card__facts,.research-card__gaps,.research-card__blockers,.research-card__protocol,.research-card__local{padding:.7rem;border:1px solid var(--cd-border);border-radius:.55rem;background:rgb(0 0 0/9%)}.research-card__facts dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.4rem;margin:.55rem 0 0}.research-card__facts dl div{min-width:0;padding:.45rem;border:1px solid color-mix(in srgb,var(--cd-border) 72%,transparent);border-radius:.35rem}.research-card__facts dt{font-size:.52rem;letter-spacing:.06em;text-transform:uppercase;color:var(--sl-color-gray-4)}.research-card__facts dd{margin:.15rem 0 0;font-size:.7rem;overflow-wrap:anywhere}.research-card__gaps ul{display:flex;flex-wrap:wrap;gap:.4rem;margin:.55rem 0 0;padding:0;list-style:none}.research-card__gaps li{padding:.3rem .48rem;border:1px solid rgb(209 155 70/30%);border-radius:999px;background:rgb(154 43 24/11%);font-size:.62rem;color:var(--sl-color-gray-2)}.research-card__blockers strong{font-size:.62rem;letter-spacing:.07em;text-transform:uppercase;color:#e69a8a}.research-card__blockers ul{margin:.45rem 0 0;padding-left:1rem}.research-card__protocol summary{font-weight:800;color:var(--sl-color-accent-high);cursor:pointer}.research-card__protocol :is(ol,ul){margin:.7rem 0 0;padding-left:1.15rem}.research-card__protocol li{margin-block:.35rem;font-size:.78rem;color:var(--sl-color-gray-2)}.research-card__protocol h4{margin-top:1rem!important}.research-card__local>div{display:grid;grid-template-columns:minmax(9rem,.55fr) minmax(0,1.45fr);gap:.7rem}.research-card__local label{display:grid;gap:.3rem;min-width:0}.research-card__local textarea{resize:vertical}.research-card__local small{display:block;margin-top:.5rem;color:var(--sl-color-gray-4)}.research-card footer{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:space-between;padding-top:.7rem;border-top:1px solid var(--cd-border)}.research-card footer div{display:flex;flex-wrap:wrap;gap:.55rem}.research-card footer a{font-size:.7rem;font-weight:750}.research-queue__empty{padding:2rem;border:1px dashed var(--cd-border);border-radius:.7rem;text-align:center}.research-queue__empty[hidden]{display:none}:global(:root[data-theme='light']) .research-queue__hero{background:radial-gradient(circle at 90% 0,rgb(167 44 25/10%),transparent 34%),linear-gradient(135deg,#fffdf9,#f3e7d8)}:global(:root[data-theme='light']) .research-queue__hero h2{color:#2f1c0d!important}:global(:root[data-theme='light']) .research-queue__hero p{color:#4d3e32!important}:global(:root[data-theme='light']) .research-queue__hero dl div,:global(:root[data-theme='light']) .research-card__facts,:global(:root[data-theme='light']) .research-card__gaps,:global(:root[data-theme='light']) .research-card__blockers,:global(:root[data-theme='light']) .research-card__protocol,:global(:root[data-theme='light']) .research-card__local{background:#fffaf3}:global(:root[data-theme='light']) .research-queue__filters :is(input,select),:global(:root[data-theme='light']) .research-card__local :is(select,textarea),:global(:root[data-theme='light']) .research-queue__actions button{background:#fffdf9;color:#2c211a}@media (max-width: 72rem){.research-queue__filters{grid-template-columns:repeat(3,minmax(0,1fr))}.research-queue__grid{grid-template-columns:1fr}}@media (max-width: 48rem){.research-queue__hero{grid-template-columns:1fr;gap:1rem}.research-queue__hero dl{grid-template-columns:repeat(4,minmax(0,1fr))}.research-queue__hero dl div{min-height:4rem;padding:.45rem}.research-queue__hero dd{font-size:1.2rem}.research-queue__filters{grid-template-columns:1fr 1fr}.research-queue__filters label:first-child{grid-column:1/-1}.research-queue__actions{align-items:stretch}.research-queue__actions>div:last-child{display:grid;grid-template-columns:1fr 1fr;width:100%}.research-card__facts dl,.research-card__local>div{grid-template-columns:1fr}.research-card footer{display:grid}}@media (max-width: 24rem){.research-queue__hero dl,.research-queue__filters,.research-queue__actions>div:last-child{grid-template-columns:1fr 1fr}.research-queue__hero dl div{min-height:3.6rem}.research-card{padding:.8rem}}
+</style>
