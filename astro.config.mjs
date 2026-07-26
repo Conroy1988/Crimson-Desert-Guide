@@ -29,7 +29,7 @@ export default defineConfig({
     starlight({
       title: 'Crimson Desert Guide',
       description:
-        'An evidence-backed, patch-aware Crimson Desert guide, database and completion companion.',
+        'An evidence-backed, patch-aware Crimson Desert guide, database and expedition companion.',
       logo: {
         src: './src/assets/logo.svg',
         alt: 'Crimson Desert Guide crest',
@@ -68,6 +68,10 @@ export default defineConfig({
         },
       ],
       sidebar: [
+        {
+          label: 'Expedition Command',
+          items: [{ label: 'Command Centre', slug: 'command-centre' }],
+        },
         {
           label: 'Live updates',
           items: [
