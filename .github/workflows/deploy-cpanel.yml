@@ -1,4 +1,4 @@
-name: Deploy cPanel Production
+name: Publish cPanel Deployment Branch
 
 on:
   workflow_run:
@@ -7,30 +7,20 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-
-env:
-  DEPLOY_PATH: /home/jtdlxqpa/public_html/crimsondesert
-  DEPLOY_SENTINEL: .github-deploy-target
-  DEPLOY_SENTINEL_VALUE: crimson-desert-guide
-  GUIDE_SITE: https://tkb-gaming.scot
-  GUIDE_BASE_PATH: /crimsondesert/
+  contents: write
 
 concurrency:
-  group: cpanel-production
+  group: cpanel-deployment-branch
   cancel-in-progress: false
 
 jobs:
-  deploy:
-    name: Deploy to cPanel
+  publish:
+    name: Build and publish cPanel branch
     if: >-
       github.event_name == 'workflow_dispatch' ||
       (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main')
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    environment:
-      name: cpanel-production
-      url: https://tkb-gaming.scot/crimsondesert/
 
     steps:
       - name: Resolve deployment commit
@@ -59,7 +49,7 @@ jobs:
           git fetch --no-tags --depth=1 origin main
           current_main="$(git rev-parse origin/main)"
           if [[ "$current_main" != "${{ steps.release.outputs.sha }}" ]]; then
-            echo "Refusing stale deployment: ${{ steps.release.outputs.sha }} is not current main ($current_main)."
+            echo "Refusing stale deployment branch publication: ${{ steps.release.outputs.sha }} is not current main ($current_main)."
             exit 1
           fi
 
@@ -74,8 +64,8 @@ jobs:
 
       - name: Build cPanel subpath release
         env:
-          CD_GUIDE_SITE: ${{ env.GUIDE_SITE }}
-          CD_GUIDE_BASE_PATH: ${{ env.GUIDE_BASE_PATH }}
+          CD_GUIDE_SITE: https://tkb-gaming.scot
+          CD_GUIDE_BASE_PATH: /crimsondesert/
           CD_GUIDE_DIST_ROOT: dist-cpanel
         shell: bash
         run: |
@@ -96,101 +86,74 @@ jobs:
             "guide": "Crimson Desert Guide",
             "version": "$(node -p "require('./package.json').version")",
             "commit": "${{ steps.release.outputs.sha }}",
-            "deployedAt": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            "builtAt": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           }
           EOF
-          tar -C "$output" -czf crimson-desert-release.tar.gz .
 
-      - name: Configure verified SSH identity
+      - name: Prepare cPanel deployment repository
         shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf publish
+          mkdir -p publish/site
+          cp -a dist-cpanel/crimsondesert/. publish/site/
+          cat > publish/.cpanel.yml <<'CPANEL'
+          ---
+          deployment:
+            tasks:
+              - /bin/bash -lc 'set -eu; target="/home/jtdlxqpa/public_html/crimsondesert"; test -d "$target"; test -f "$target/.github-deploy-target"; test "$(cat "$target/.github-deploy-target")" = "crimson-desert-guide"; test -f site/index.html; test -f site/command-centre/index.html'
+              - /bin/bash -lc 'set -eu; target="/home/jtdlxqpa/public_html/crimsondesert"; /usr/bin/find "$target" -mindepth 1 -maxdepth 1 ! -name ".github-deploy-target" -exec /bin/rm -rf -- {} +'
+              - /bin/cp -a site/. /home/jtdlxqpa/public_html/crimsondesert/
+              - /bin/bash -lc 'set -eu; test -f /home/jtdlxqpa/public_html/crimsondesert/index.html; test -f /home/jtdlxqpa/public_html/crimsondesert/deployment.json; test -f /home/jtdlxqpa/public_html/crimsondesert/.github-deploy-target'
+          CPANEL
+          cat > publish/README.md <<EOF
+          # Crimson Desert Guide — cPanel deployment branch
+
+          This branch contains generated production files only. Do not edit it manually.
+
+          - Source branch: `main`
+          - Source commit: `${{ steps.release.outputs.sha }}`
+          - Public URL: https://tkb-gaming.scot/crimsondesert/
+          - cPanel target: `/home/jtdlxqpa/public_html/crimsondesert`
+
+          Use cPanel Git Version Control → **Update from Remote** → **Deploy HEAD Commit**.
+          EOF
+
+      - name: Publish generated cPanel branch
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.CPANEL_SSH_PRIVATE_KEY }}
-          SSH_KEY_PASSPHRASE: ${{ secrets.CPANEL_SSH_KEY_PASSPHRASE }}
-          SSH_KNOWN_HOSTS: ${{ secrets.CPANEL_KNOWN_HOSTS }}
-        run: |
-          set -euo pipefail
-          test -n "$SSH_PRIVATE_KEY"
-          test -n "$SSH_KEY_PASSPHRASE"
-          test -n "$SSH_KNOWN_HOSTS"
-          install -d -m 700 ~/.ssh
-          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/cpanel_deploy
-          printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
-          chmod 600 ~/.ssh/cpanel_deploy ~/.ssh/known_hosts
-
-          cat > ~/.ssh/askpass.sh <<'ASKPASS'
-          #!/usr/bin/env bash
-          printf '%s\n' "$SSH_KEY_PASSPHRASE"
-          ASKPASS
-          chmod 700 ~/.ssh/askpass.sh
-
-          eval "$(ssh-agent -s)"
-          echo "SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> "$GITHUB_ENV"
-          echo "SSH_AGENT_PID=$SSH_AGENT_PID" >> "$GITHUB_ENV"
-          export SSH_ASKPASS="$HOME/.ssh/askpass.sh"
-          export SSH_ASKPASS_REQUIRE=force
-          export DISPLAY=:0
-          setsid -w ssh-add ~/.ssh/cpanel_deploy </dev/null
-          rm -f ~/.ssh/askpass.sh
-          ssh-add -l
-
-      - name: Verify protected cPanel target
-        shell: bash
-        env:
-          HOST: ${{ secrets.CPANEL_HOST }}
-          PORT: ${{ secrets.CPANEL_PORT }}
-          USER: ${{ secrets.CPANEL_USER }}
-        run: |
-          set -euo pipefail
-          [[ "$PORT" =~ ^[0-9]+$ ]]
-          test -n "$HOST"
-          test -n "$USER"
-          ssh -p "$PORT" -o BatchMode=yes -o StrictHostKeyChecking=yes "$USER@$HOST" \
-            "set -eu; test '$DEPLOY_PATH' = '/home/jtdlxqpa/public_html/crimsondesert'; test -d '$DEPLOY_PATH'; test -f '$DEPLOY_PATH/$DEPLOY_SENTINEL'; test \"\$(cat '$DEPLOY_PATH/$DEPLOY_SENTINEL')\" = '$DEPLOY_SENTINEL_VALUE'; command -v tar >/dev/null; command -v rsync >/dev/null"
-
-      - name: Upload and synchronise release
-        shell: bash
-        env:
-          HOST: ${{ secrets.CPANEL_HOST }}
-          PORT: ${{ secrets.CPANEL_PORT }}
-          USER: ${{ secrets.CPANEL_USER }}
-        run: |
-          set -euo pipefail
-          release_sha="${{ steps.release.outputs.sha }}"
-          remote_root="/home/jtdlxqpa/.crimson-desert-deploy"
-          remote_archive="$remote_root/$release_sha.tar.gz"
-          remote_stage="$remote_root/$release_sha"
-
-          ssh -p "$PORT" -o BatchMode=yes -o StrictHostKeyChecking=yes "$USER@$HOST" \
-            "set -eu; mkdir -p '$remote_root'; rm -rf '$remote_stage'; mkdir -p '$remote_stage'"
-
-          scp -P "$PORT" -o BatchMode=yes -o StrictHostKeyChecking=yes \
-            crimson-desert-release.tar.gz "$USER@$HOST:$remote_archive"
-
-          ssh -p "$PORT" -o BatchMode=yes -o StrictHostKeyChecking=yes "$USER@$HOST" \
-            "set -eu; \
-             tar -xzf '$remote_archive' -C '$remote_stage'; \
-             test -f '$remote_stage/index.html'; \
-             test -f '$remote_stage/command-centre/index.html'; \
-             rsync -a --delete-delay --exclude='$DEPLOY_SENTINEL' '$remote_stage/' '$DEPLOY_PATH/'; \
-             printf '%s\n' '$DEPLOY_SENTINEL_VALUE' > '$DEPLOY_PATH/$DEPLOY_SENTINEL'; \
-             test -f '$DEPLOY_PATH/index.html'; \
-             rm -rf '$remote_stage' '$remote_archive'"
-
-      - name: Verify live production site
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_SHA: ${{ steps.release.outputs.sha }}
         shell: bash
         run: |
           set -euo pipefail
-          release_sha="${{ steps.release.outputs.sha }}"
-          for attempt in {1..8}; do
-            if curl --fail --silent --show-error --location --max-time 20 \
-              "https://tkb-gaming.scot/crimsondesert/deployment.json?v=$release_sha" \
-              | grep -F "\"commit\": \"$release_sha\"" >/dev/null; then
-              curl --fail --silent --show-error --location --max-time 20 \
-                "https://tkb-gaming.scot/crimsondesert/command-centre/?v=$release_sha" \
-                | grep -F 'Pywel Expedition Command Centre' >/dev/null
-              exit 0
-            fi
-            sleep 10
-          done
-          echo "The production site did not expose the expected deployment commit in time."
-          exit 1
+          remote="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          rm -rf publish-repository
+          git clone --filter=blob:none --no-checkout "$remote" publish-repository
+          cd publish-repository
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git ls-remote --exit-code --heads origin cpanel-deploy >/dev/null 2>&1; then
+            git fetch --depth=1 origin cpanel-deploy
+            git checkout -B cpanel-deploy origin/cpanel-deploy
+            git rm -rf .
+          else
+            git checkout --orphan cpanel-deploy
+            git rm -rf . >/dev/null 2>&1 || true
+          fi
+
+          cp -a ../publish/. .
+          git add -A
+          git commit -m "Publish cPanel build for ${RELEASE_SHA}"
+          git push origin cpanel-deploy
+
+      - name: Record publication summary
+        shell: bash
+        run: |
+          {
+            echo "### cPanel deployment branch published"
+            echo ""
+            echo "- Source commit: \`${{ steps.release.outputs.sha }}\`"
+            echo "- Deployment branch: \`cpanel-deploy\`"
+            echo "- Next step in cPanel: **Update from Remote**, then **Deploy HEAD Commit**"
+          } >> "$GITHUB_STEP_SUMMARY"
