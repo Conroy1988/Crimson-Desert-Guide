@@ -1,0 +1,413 @@
+---
+const base = import.meta.env.BASE_URL;
+const soundtrackSource = `${base}media/hymn-for-the-unsung-blade.m4a`;
+const officialTrack = 'https://open.spotify.com/track/3A82SEymCONlwWKxODggiE';
+const fanGuidelines = 'https://crimsondesert.pearlabyss.com/en-US/Policy?_policyNo=130';
+---
+
+<aside class="soundtrack-player" data-soundtrack-player aria-label="Crimson Desert soundtrack player">
+  <audio
+    data-soundtrack-audio
+    src={soundtrackSource}
+    preload="metadata"
+    aria-hidden="true"
+  ></audio>
+
+  <button
+    class="soundtrack-player__toggle"
+    type="button"
+    data-soundtrack-toggle
+    aria-label="Play Hymn for the Unsung Blade"
+    aria-pressed="false"
+  >
+    <svg class="soundtrack-player__play" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M8 5.5v13l10-6.5L8 5.5Z" />
+    </svg>
+    <svg class="soundtrack-player__pause" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M7 5h3v14H7V5Zm7 0h3v14h-3V5Z" />
+    </svg>
+    <span data-soundtrack-action>Play</span>
+  </button>
+
+  <div class="soundtrack-player__copy">
+    <span>Crimson Desert OST</span>
+    <strong>Hymn for the Unsung Blade</strong>
+    <small>PearlAbyssMusic · featuring Clara Sorace</small>
+  </div>
+
+  <span class="soundtrack-player__meter" aria-hidden="true">
+    <i></i><i></i><i></i><i></i>
+  </span>
+
+  <a
+    class="soundtrack-player__credit"
+    href={officialTrack}
+    target="_blank"
+    rel="noreferrer"
+    title="Open the official soundtrack release"
+  >Credit</a>
+
+  <span class="soundtrack-player__status cd-visually-hidden" data-soundtrack-status aria-live="polite"></span>
+</aside>
+
+<script>
+  const PLAYER_SELECTOR = '[data-soundtrack-player]';
+  const PLAYED_KEY = 'crimson-desert-guide.soundtrack.played.v1';
+  const ACTIVE_KEY = 'crimson-desert-guide.soundtrack.active.v1';
+  const POSITION_KEY = 'crimson-desert-guide.soundtrack.position.v1';
+  const AUTOPLAY_KEY = 'crimson-desert-guide.soundtrack.autoplay-attempted.v1';
+
+  const safeSession = {
+    get(key) {
+      try { return window.sessionStorage.getItem(key); } catch { return null; }
+    },
+    set(key, value) {
+      try { window.sessionStorage.setItem(key, value); } catch { /* Storage can be unavailable. */ }
+    },
+    remove(key) {
+      try { window.sessionStorage.removeItem(key); } catch { /* Storage can be unavailable. */ }
+    },
+  };
+
+  const bindSoundtrackPlayer = (root) => {
+    if (!(root instanceof HTMLElement) || root.dataset.bound === 'true') return;
+    root.dataset.bound = 'true';
+
+    const audio = root.querySelector('[data-soundtrack-audio]');
+    const toggle = root.querySelector('[data-soundtrack-toggle]');
+    const action = root.querySelector('[data-soundtrack-action]');
+    const status = root.querySelector('[data-soundtrack-status]');
+
+    if (!(audio instanceof HTMLAudioElement) || !(toggle instanceof HTMLButtonElement)) return;
+
+    audio.loop = false;
+    audio.volume = 0.62;
+
+    let ended = safeSession.get(PLAYED_KEY) === '1';
+    let lastStoredSecond = -1;
+
+    const announce = (message) => {
+      if (status instanceof HTMLElement) status.textContent = message;
+    };
+
+    const render = () => {
+      const playing = !audio.paused && !audio.ended;
+      root.toggleAttribute('data-playing', playing);
+      root.toggleAttribute('data-ended', ended);
+      toggle.setAttribute('aria-pressed', String(playing));
+      toggle.setAttribute(
+        'aria-label',
+        playing
+          ? 'Pause Hymn for the Unsung Blade'
+          : ended
+            ? 'Play Hymn for the Unsung Blade again'
+            : 'Play Hymn for the Unsung Blade',
+      );
+      if (action instanceof HTMLElement) action.textContent = playing ? 'Pause' : ended ? 'Again' : 'Play';
+    };
+
+    const persistPosition = () => {
+      if (!Number.isFinite(audio.currentTime)) return;
+      safeSession.set(POSITION_KEY, String(Math.max(0, audio.currentTime)));
+    };
+
+    const startPlayback = async ({ restart = false, automatic = false } = {}) => {
+      if (restart || ended || audio.ended) {
+        audio.currentTime = 0;
+        ended = false;
+        safeSession.remove(PLAYED_KEY);
+      }
+
+      try {
+        await audio.play();
+        safeSession.set(ACTIVE_KEY, '1');
+        announce('Playing Hymn for the Unsung Blade.');
+      } catch (error) {
+        safeSession.set(ACTIVE_KEY, '0');
+        if (automatic && error instanceof DOMException && error.name === 'NotAllowedError') {
+          announce('Your browser requires a tap before playing the soundtrack.');
+        } else {
+          announce('The soundtrack could not be started.');
+        }
+      }
+      render();
+    };
+
+    const restorePosition = () => {
+      const stored = Number(safeSession.get(POSITION_KEY));
+      if (!Number.isFinite(stored) || stored <= 0 || !Number.isFinite(audio.duration)) return;
+      if (stored < audio.duration - 0.75) audio.currentTime = stored;
+    };
+
+    toggle.addEventListener('click', () => {
+      if (!audio.paused && !audio.ended) {
+        audio.pause();
+        safeSession.set(ACTIVE_KEY, '0');
+        announce('Soundtrack paused.');
+        render();
+        return;
+      }
+      void startPlayback({ restart: ended || audio.ended });
+    });
+
+    audio.addEventListener('loadedmetadata', () => {
+      restorePosition();
+      render();
+    });
+
+    audio.addEventListener('play', () => {
+      ended = false;
+      safeSession.set(ACTIVE_KEY, '1');
+      render();
+    });
+
+    audio.addEventListener('pause', () => {
+      if (!audio.ended) safeSession.set(ACTIVE_KEY, '0');
+      persistPosition();
+      render();
+    });
+
+    audio.addEventListener('timeupdate', () => {
+      const second = Math.floor(audio.currentTime);
+      if (second !== lastStoredSecond && second % 2 === 0) {
+        lastStoredSecond = second;
+        persistPosition();
+      }
+    });
+
+    audio.addEventListener('ended', () => {
+      ended = true;
+      safeSession.set(PLAYED_KEY, '1');
+      safeSession.set(ACTIVE_KEY, '0');
+      safeSession.set(POSITION_KEY, '0');
+      announce('Soundtrack finished. Use Play again to replay it.');
+      render();
+    });
+
+    audio.addEventListener('error', () => {
+      toggle.disabled = true;
+      root.setAttribute('data-unavailable', '');
+      announce('Soundtrack file is unavailable.');
+      render();
+    });
+
+    window.addEventListener('pagehide', () => {
+      persistPosition();
+      safeSession.set(ACTIVE_KEY, !audio.paused && !audio.ended ? '1' : '0');
+    }, { once: true });
+
+    render();
+
+    const shouldResume = safeSession.get(ACTIVE_KEY) === '1' && !ended;
+    const attempted = safeSession.get(AUTOPLAY_KEY) === '1';
+    if (shouldResume) {
+      void startPlayback({ automatic: true });
+    } else if (!attempted && !ended) {
+      safeSession.set(AUTOPLAY_KEY, '1');
+      void startPlayback({ automatic: true });
+    }
+  };
+
+  const bindSoundtrackPlayers = () => {
+    for (const root of document.querySelectorAll(PLAYER_SELECTOR)) bindSoundtrackPlayer(root);
+  };
+
+  bindSoundtrackPlayers();
+  document.addEventListener('astro:page-load', bindSoundtrackPlayers);
+</script>
+
+<style>
+  .soundtrack-player {
+    position: fixed;
+    top: calc(var(--sl-nav-height) + 0.7rem);
+    right: 0.75rem;
+    z-index: 80;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    gap: 0.65rem;
+    align-items: center;
+    width: min(23rem, calc(100vw - 1.5rem));
+    min-width: 0;
+    padding: 0.48rem 0.55rem;
+    border: 1px solid rgb(219 169 84 / 38%);
+    border-radius: 0.65rem;
+    background:
+      radial-gradient(circle at 0 50%, rgb(152 42 25 / 24%), transparent 42%),
+      linear-gradient(135deg, rgb(18 17 14 / 96%), rgb(7 7 6 / 95%));
+    color: #e8ddc8;
+    box-shadow: 0 0.85rem 2.4rem rgb(0 0 0 / 38%);
+    backdrop-filter: blur(16px) saturate(120%);
+  }
+
+  :global(body:has(.cd-portal-home)) .soundtrack-player {
+    top: 5.35rem;
+    right: auto;
+    left: 0.75rem;
+  }
+
+  .soundtrack-player__toggle {
+    display: inline-flex;
+    gap: 0.42rem;
+    align-items: center;
+    justify-content: center;
+    min-width: 4.55rem;
+    min-height: 2.45rem;
+    padding: 0.42rem 0.62rem;
+    border: 1px solid rgb(218 165 76 / 48%);
+    border-radius: 0.45rem;
+    background: linear-gradient(135deg, #7d231a, #43130f);
+    color: #f5d99b;
+    font-size: 0.67rem;
+    font-weight: 850;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .soundtrack-player__toggle:hover {
+    border-color: #e3bc70;
+    background: linear-gradient(135deg, #942d21, #521713);
+  }
+
+  .soundtrack-player__toggle:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  .soundtrack-player__toggle svg {
+    width: 1rem;
+    height: 1rem;
+    fill: currentColor;
+    stroke: none;
+  }
+
+  .soundtrack-player__pause,
+  .soundtrack-player[data-playing] .soundtrack-player__play {
+    display: none;
+  }
+
+  .soundtrack-player[data-playing] .soundtrack-player__pause {
+    display: block;
+  }
+
+  .soundtrack-player__copy {
+    display: grid;
+    min-width: 0;
+    line-height: 1.18;
+  }
+
+  .soundtrack-player__copy > span {
+    color: #c8923d;
+    font-size: 0.52rem;
+    font-weight: 850;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+  }
+
+  .soundtrack-player__copy strong {
+    overflow: hidden;
+    color: #f0dfbd;
+    font-family: var(--cd-font-display);
+    font-size: 0.82rem;
+    font-weight: 500;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .soundtrack-player__copy small {
+    overflow: hidden;
+    color: #9f9482;
+    font-size: 0.55rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .soundtrack-player__meter {
+    display: flex;
+    gap: 2px;
+    align-items: end;
+    width: 1rem;
+    height: 1.1rem;
+    opacity: 0.42;
+  }
+
+  .soundtrack-player__meter i {
+    width: 2px;
+    height: 35%;
+    border-radius: 999px;
+    background: #d3a653;
+  }
+
+  .soundtrack-player[data-playing] .soundtrack-player__meter {
+    opacity: 1;
+  }
+
+  .soundtrack-player[data-playing] .soundtrack-player__meter i {
+    animation: soundtrack-meter 0.85s ease-in-out infinite alternate;
+  }
+
+  .soundtrack-player[data-playing] .soundtrack-player__meter i:nth-child(2) { animation-delay: -0.25s; }
+  .soundtrack-player[data-playing] .soundtrack-player__meter i:nth-child(3) { animation-delay: -0.55s; }
+  .soundtrack-player[data-playing] .soundtrack-player__meter i:nth-child(4) { animation-delay: -0.15s; }
+
+  .soundtrack-player__credit {
+    color: #d9b66d;
+    font-size: 0.55rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .soundtrack-player__credit:hover {
+    color: #ffe0a3;
+  }
+
+  .soundtrack-player[data-unavailable] .soundtrack-player__meter {
+    display: none;
+  }
+
+  @media (max-width: 42rem) {
+    .soundtrack-player {
+      top: calc(var(--sl-nav-height) + 0.42rem);
+      right: 0.45rem;
+      width: auto;
+      max-width: calc(100vw - 0.9rem);
+      grid-template-columns: auto auto;
+      gap: 0.42rem;
+      padding: 0.35rem;
+      border-radius: 0.52rem;
+    }
+
+    :global(body:has(.cd-portal-home)) .soundtrack-player {
+      top: 4.62rem;
+      right: auto;
+      left: 0.45rem;
+    }
+
+    .soundtrack-player__copy,
+    .soundtrack-player__credit {
+      display: none;
+    }
+
+    .soundtrack-player__toggle {
+      min-width: 4.1rem;
+      min-height: 2.3rem;
+    }
+
+    .soundtrack-player__meter {
+      margin-right: 0.18rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .soundtrack-player__meter i {
+      animation: none !important;
+    }
+  }
+
+  @keyframes soundtrack-meter {
+    0% { height: 28%; }
+    100% { height: 100%; }
+  }
+</style>

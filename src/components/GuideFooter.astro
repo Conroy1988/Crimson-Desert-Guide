@@ -1,6 +1,9 @@
 ---
 import DefaultFooter from '@astrojs/starlight/components/Footer.astro';
+import SoundtrackPlayer from './SoundtrackPlayer.astro';
 ---
+
+<SoundtrackPlayer />
 
 <DefaultFooter><slot /></DefaultFooter>
 
@@ -25,6 +28,17 @@ import DefaultFooter from '@astrojs/starlight/components/Footer.astro';
     This is unofficial content which contains copyrighted materials and IP from Pearl Abyss,
     and is not official or endorsed content.
   </p>
+
+  <div class="guide-footer-note__soundtrack">
+    <span aria-hidden="true">♫</span>
+    <p>
+      <strong>Featured soundtrack:</strong>
+      <a href="https://open.spotify.com/track/3A82SEymCONlwWKxODggiE" target="_blank" rel="noreferrer">“Hymn for the Unsung Blade”</a>
+      by PearlAbyssMusic, featuring vocalist Clara Sorace. © and ℗ 2026 PEARL ABYSS, under license to VOSTOK.
+      Used for this free unofficial fan guide in accordance with the
+      <a href="https://crimsondesert.pearlabyss.com/en-US/Policy?_policyNo=130" target="_blank" rel="noreferrer">Pearl Abyss Fan Content Guidelines</a>.
+    </p>
+  </div>
 </footer>
 
 <style>
@@ -108,9 +122,44 @@ import DefaultFooter from '@astrojs/starlight/components/Footer.astro';
     color: #f1cc83;
   }
 
-  .guide-footer-note p {
+  .guide-footer-note > p {
     max-width: 31rem;
     text-align: right;
+  }
+
+  .guide-footer-note__soundtrack {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.65rem;
+    align-items: start;
+    padding-top: 0.85rem;
+    border-top: 1px solid rgb(201 147 62 / 17%);
+  }
+
+  .guide-footer-note__soundtrack > span {
+    display: grid;
+    place-items: center;
+    width: 1.8rem;
+    aspect-ratio: 1;
+    border: 1px solid rgb(201 147 62 / 28%);
+    border-radius: 50%;
+    background: rgb(157 45 32 / 14%);
+    color: #f1cc83;
+    font-size: 0.8rem;
+  }
+
+  .guide-footer-note__soundtrack p {
+    max-width: none;
+    text-align: left;
+  }
+
+  .guide-footer-note__soundtrack strong {
+    margin-right: 0.2rem;
+    font-family: var(--sl-font);
+    font-size: inherit;
+    font-weight: 800;
+    letter-spacing: 0;
   }
 
   :global(:root[data-theme='light']) .guide-footer-note {
@@ -133,6 +182,16 @@ import DefaultFooter from '@astrojs/starlight/components/Footer.astro';
     color: #5f4e40;
   }
 
+  :global(:root[data-theme='light']) .guide-footer-note__soundtrack {
+    border-top-color: #d4c5b2;
+  }
+
+  :global(:root[data-theme='light']) .guide-footer-note__soundtrack > span {
+    border-color: #c9b79f;
+    background: #f5ece1;
+    color: #633d0b;
+  }
+
   @media (max-width: 64rem) {
     .guide-footer-note {
       grid-template-columns: 1fr 1fr;
@@ -142,7 +201,7 @@ import DefaultFooter from '@astrojs/starlight/components/Footer.astro';
       justify-content: flex-end;
     }
 
-    .guide-footer-note p {
+    .guide-footer-note > p {
       grid-column: 1 / -1;
       max-width: none;
       text-align: left;
@@ -158,7 +217,8 @@ import DefaultFooter from '@astrojs/starlight/components/Footer.astro';
       justify-content: flex-start;
     }
 
-    .guide-footer-note p {
+    .guide-footer-note > p,
+    .guide-footer-note__soundtrack {
       grid-column: auto;
     }
   }
