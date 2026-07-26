@@ -154,7 +154,7 @@ const releaseReady = programmePercent === 100 && missingScripts.length === 0;
 
 const output = {
   schemaVersion: 1,
-  guideVersion: '1.0.0',
+  guideVersion: packageJson.version,
   gamePatch: database.gamePatch,
   lastVerified: '2026-07-26',
   status: releaseReady ? 'ready' : 'blocked',
