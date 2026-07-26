@@ -50,14 +50,14 @@ if (base !== '/') {
   const baseName = base.slice(1);
   const escapedBaseName = escapeRegExp(baseName);
   const attributePattern = new RegExp(
-    `\\b(href|src|action|poster|data|content)=(['"])/(?!/|${escapedBaseName})`,
+    `\\b(href|src|action|poster|data|content)\\s*=\\s*(['"])/(?!/|${escapedBaseName})`,
     'gi',
   );
   const escapedAttributePattern = new RegExp(
-    `\\b(?:href|src|action|poster|data|content)=['"]/(?!/|${escapedBaseName})`,
+    `\\b(?:href|src|action|poster|data|content)\\s*=\\s*['"]/(?!/|${escapedBaseName})`,
     'i',
   );
-  const srcsetPattern = /\bsrcset=(['"])([^'"]*)\1/gi;
+  const srcsetPattern = /\bsrcset\s*=\s*(['"])([^'"]*)\1/gi;
 
   for (const file of await walk(outputDirectory)) {
     if (!file.endsWith('.html') && !file.endsWith('.xml')) continue;
