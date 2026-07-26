@@ -16,17 +16,32 @@ const componentRequirements = [
   'audio.loop = false',
   'audio.volume = 0.62',
   'crimson-desert-guide.soundtrack.played.v1',
-  'crimson-desert-guide.soundtrack.autoplay-attempted.v1',
+  'crimson-desert-guide.soundtrack.autoplay-state.v2',
+  'window.localStorage.getItem',
+  "safeLocal.set(AUTOPLAY_STATE_KEY, 'consumed')",
+  "safeLocal.set(AUTOPLAY_STATE_KEY, 'paused')",
+  "safeLocal.set(AUTOPLAY_STATE_KEY, 'completed')",
+  'const firstVisit = safeLocal.get(AUTOPLAY_STATE_KEY) === null',
+  'let userPaused = false',
+  'armGestureFallback',
   "audio.addEventListener('ended'",
   "window.addEventListener('pagehide'",
   "document.addEventListener('astro:page-load'",
-  "@media (max-width: 42rem)",
+  '@media (max-width: 42rem)',
   'PearlAbyssMusic · featuring Clara Sorace',
   'https://open.spotify.com/track/3A82SEymCONlwWKxODggiE',
 ];
 
 for (const requirement of componentRequirements) {
   if (!component.includes(requirement)) failures.push(`Soundtrack player is missing: ${requirement}`);
+}
+
+if (component.includes('crimson-desert-guide.soundtrack.autoplay-attempted.v1')) {
+  failures.push('Soundtrack still uses session-only autoplay attempt state.');
+}
+
+if (/<audio[^>]*\bautoplay(?:\s|=|>)/i.test(component)) {
+  failures.push('Soundtrack must use preference-aware JavaScript autoplay rather than an unconditional autoplay attribute.');
 }
 
 if (/<audio[^>]*\bloop(?:\s|=|>)/i.test(component)) {
@@ -66,4 +81,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log('Soundtrack player audit passed player behaviour, mobile placement, official attribution and media integrity checks.');
+console.log('Soundtrack player audit passed one-time autoplay preferences, pause persistence, mobile placement, attribution and media integrity checks.');

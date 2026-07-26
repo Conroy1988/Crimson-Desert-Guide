@@ -2,7 +2,6 @@
 const base = import.meta.env.BASE_URL;
 const soundtrackSource = `${base}media/hymn-for-the-unsung-blade.m4a`;
 const officialTrack = 'https://open.spotify.com/track/3A82SEymCONlwWKxODggiE';
-const fanGuidelines = 'https://crimsondesert.pearlabyss.com/en-US/Policy?_policyNo=130';
 ---
 
 <aside class="soundtrack-player" data-soundtrack-player aria-label="Crimson Desert soundtrack player">
@@ -55,7 +54,7 @@ const fanGuidelines = 'https://crimsondesert.pearlabyss.com/en-US/Policy?_policy
   const PLAYED_KEY = 'crimson-desert-guide.soundtrack.played.v1';
   const ACTIVE_KEY = 'crimson-desert-guide.soundtrack.active.v1';
   const POSITION_KEY = 'crimson-desert-guide.soundtrack.position.v1';
-  const AUTOPLAY_KEY = 'crimson-desert-guide.soundtrack.autoplay-attempted.v1';
+  const AUTOPLAY_STATE_KEY = 'crimson-desert-guide.soundtrack.autoplay-state.v2';
 
   const safeSession = {
     get(key) {
@@ -66,6 +65,15 @@ const fanGuidelines = 'https://crimsondesert.pearlabyss.com/en-US/Policy?_policy
     },
     remove(key) {
       try { window.sessionStorage.removeItem(key); } catch { /* Storage can be unavailable. */ }
+    },
+  };
+
+  const safeLocal = {
+    get(key) {
+      try { return window.localStorage.getItem(key); } catch { return null; }
+    },
+    set(key, value) {
+      try { window.localStorage.setItem(key, value); } catch { /* Storage can be unavailable. */ }
     },
   };
 
@@ -85,6 +93,8 @@ const fanGuidelines = 'https://crimsondesert.pearlabyss.com/en-US/Policy?_policy
 
     let ended = safeSession.get(PLAYED_KEY) === '1';
     let lastStoredSecond = -1;
+    let userPaused = false;
+    let gestureFallbackArmed = false;
 
     const announce = (message) => {
       if (status instanceof HTMLElement) status.textContent = message;
@@ -94,6 +104,7 @@ const fanGuidelines = 'https://crimsondesert.pearlabyss.com/en-US/Policy?_policy
       const playing = !audio.paused && !audio.ended;
       root.toggleAttribute('data-playing', playing);
       root.toggleAttribute('data-ended', ended);
+      root.toggleAttribute('data-awaiting-gesture', gestureFallbackArmed);
       toggle.setAttribute('aria-pressed', String(playing));
       toggle.setAttribute(
         'aria-label',
@@ -111,6 +122,20 @@ const fanGuidelines = 'https://crimsondesert.pearlabyss.com/en-US/Policy?_policy
       safeSession.set(POSITION_KEY, String(Math.max(0, audio.currentTime)));
     };
 
+    const rememberFirstPlayback = () => {
+      if (safeLocal.get(AUTOPLAY_STATE_KEY) === null) {
+        safeLocal.set(AUTOPLAY_STATE_KEY, 'consumed');
+      }
+    };
+
+    const disarmGestureFallback = () => {
+      if (!gestureFallbackArmed) return;
+      gestureFallbackArmed = false;
+      document.removeEventListener('click', resumeOnFirstGesture, true);
+      document.removeEventListener('keydown', resumeOnFirstGesture, true);
+      render();
+    };
+
     const startPlayback = async ({ restart = false, automatic = false } = {}) => {
       if (restart || ended || audio.ended) {
         audio.currentTime = 0;
@@ -118,18 +143,41 @@ const fanGuidelines = 'https://crimsondesert.pearlabyss.com/en-US/Policy?_policy
         safeSession.remove(PLAYED_KEY);
       }
 
+      userPaused = false;
+
       try {
         await audio.play();
         safeSession.set(ACTIVE_KEY, '1');
+        rememberFirstPlayback();
+        disarmGestureFallback();
         announce('Playing Hymn for the Unsung Blade.');
       } catch (error) {
         safeSession.set(ACTIVE_KEY, '0');
         if (automatic && error instanceof DOMException && error.name === 'NotAllowedError') {
-          announce('Your browser requires a tap before playing the soundtrack.');
+          announce('Your browser blocked automatic audio. Interact with the page once to start the soundtrack.');
+          armGestureFallback();
         } else {
           announce('The soundtrack could not be started.');
         }
       }
+      render();
+    };
+
+    function resumeOnFirstGesture(event) {
+      const target = event.target;
+      if (target instanceof Element && target.closest(PLAYER_SELECTOR)) return;
+      if (safeLocal.get(AUTOPLAY_STATE_KEY) !== null) {
+        disarmGestureFallback();
+        return;
+      }
+      void startPlayback({ automatic: true });
+    }
+
+    const armGestureFallback = () => {
+      if (gestureFallbackArmed || safeLocal.get(AUTOPLAY_STATE_KEY) !== null) return;
+      gestureFallbackArmed = true;
+      document.addEventListener('click', resumeOnFirstGesture, true);
+      document.addEventListener('keydown', resumeOnFirstGesture, true);
       render();
     };
 
@@ -141,9 +189,11 @@ const fanGuidelines = 'https://crimsondesert.pearlabyss.com/en-US/Policy?_policy
 
     toggle.addEventListener('click', () => {
       if (!audio.paused && !audio.ended) {
+        userPaused = true;
+        safeLocal.set(AUTOPLAY_STATE_KEY, 'paused');
         audio.pause();
         safeSession.set(ACTIVE_KEY, '0');
-        announce('Soundtrack paused.');
+        announce('Soundtrack paused. It will not autoplay on future visits.');
         render();
         return;
       }
@@ -158,11 +208,14 @@ const fanGuidelines = 'https://crimsondesert.pearlabyss.com/en-US/Policy?_policy
     audio.addEventListener('play', () => {
       ended = false;
       safeSession.set(ACTIVE_KEY, '1');
+      rememberFirstPlayback();
+      disarmGestureFallback();
       render();
     });
 
     audio.addEventListener('pause', () => {
       if (!audio.ended) safeSession.set(ACTIVE_KEY, '0');
+      if (userPaused) safeLocal.set(AUTOPLAY_STATE_KEY, 'paused');
       persistPosition();
       render();
     });
@@ -180,11 +233,13 @@ const fanGuidelines = 'https://crimsondesert.pearlabyss.com/en-US/Policy?_policy
       safeSession.set(PLAYED_KEY, '1');
       safeSession.set(ACTIVE_KEY, '0');
       safeSession.set(POSITION_KEY, '0');
+      safeLocal.set(AUTOPLAY_STATE_KEY, 'completed');
       announce('Soundtrack finished. Use Play again to replay it.');
       render();
     });
 
     audio.addEventListener('error', () => {
+      disarmGestureFallback();
       toggle.disabled = true;
       root.setAttribute('data-unavailable', '');
       announce('Soundtrack file is unavailable.');
@@ -192,6 +247,7 @@ const fanGuidelines = 'https://crimsondesert.pearlabyss.com/en-US/Policy?_policy
     });
 
     window.addEventListener('pagehide', () => {
+      disarmGestureFallback();
       persistPosition();
       safeSession.set(ACTIVE_KEY, !audio.paused && !audio.ended ? '1' : '0');
     }, { once: true });
@@ -199,11 +255,10 @@ const fanGuidelines = 'https://crimsondesert.pearlabyss.com/en-US/Policy?_policy
     render();
 
     const shouldResume = safeSession.get(ACTIVE_KEY) === '1' && !ended;
-    const attempted = safeSession.get(AUTOPLAY_KEY) === '1';
+    const firstVisit = safeLocal.get(AUTOPLAY_STATE_KEY) === null;
     if (shouldResume) {
       void startPlayback({ automatic: true });
-    } else if (!attempted && !ended) {
-      safeSession.set(AUTOPLAY_KEY, '1');
+    } else if (firstVisit && !ended) {
       void startPlayback({ automatic: true });
     }
   };
