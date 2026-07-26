@@ -1,4 +1,6 @@
 ---
+import officialMedia from '../../data/official-media.json';
+
 type GuideData = {
   title: string;
   description?: string;
@@ -23,7 +25,9 @@ const isHomepage = route.id === '';
 const routeId = route.id;
 
 const steamRoot = 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3321460';
+const officialById = new Map(officialMedia.assets.map((asset) => [asset.id, asset]));
 const art = {
+  command: officialById.get('official-kliff-launch')?.src ?? `${steamRoot}/669119c3747653f41a46c59f213168448d094e04/ss_669119c3747653f41a46c59f213168448d094e04.1920x1080.jpg?t=1781661893`,
   hero: `${steamRoot}/669119c3747653f41a46c59f213168448d094e04/ss_669119c3747653f41a46c59f213168448d094e04.1920x1080.jpg?t=1781661893`,
   beginner: `${steamRoot}/4b178bdd24ed576458116d8d3383b5352dad0fae/ss_4b178bdd24ed576458116d8d3383b5352dad0fae.1920x1080.jpg?t=1781661893`,
   combat: `${steamRoot}/55e514af688f459364b3d0ffb288faf73580c8e5/ss_55e514af688f459364b3d0ffb288faf73580c8e5.1920x1080.jpg?t=1781661893`,
@@ -33,6 +37,7 @@ const art = {
 };
 
 const themes: Record<string, SectionTheme> = {
+  command: { id: 'command', label: 'Expedition Command', kicker: 'Planner, progress, search and guide-data vault', icon: '⌬', image: art.command },
   updates: { id: 'updates', label: 'Live Intelligence', kicker: 'Patch surveillance and publication record', icon: '✦', image: art.hero },
   start: { id: 'start', label: 'Field Manual', kicker: 'First-hours guidance and safe progression', icon: '◈', image: art.beginner },
   combat: { id: 'combat', label: 'Combat Doctrine', kicker: 'Weapons, defence, encounters and testing', icon: '⚔', image: art.combat },
@@ -47,6 +52,7 @@ const themes: Record<string, SectionTheme> = {
 };
 
 function pickSection(id: string): SectionTheme {
+  if (id === 'command-centre' || id.startsWith('command-centre/')) return themes.command;
   if (id === 'update-log' || id === 'patch-notes') return themes.updates;
   if (id.startsWith('start-here/')) return themes.start;
   if (id.startsWith('systems/gear')) return themes.gear;
