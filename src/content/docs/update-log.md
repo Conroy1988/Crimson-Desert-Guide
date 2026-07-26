@@ -8,6 +8,17 @@ spoilerLevel: none
 patchStatus: current
 ---
 
+## 26 July 2026 — Character mastery, Build Laboratory and v1.0 evidence closure
+
+- Added current-patch capability profiles for Kliff, Oongka and Damiane from official Steam and Patch 1.03–1.15 records.
+- Added eight transparent build archetypes covering field balance, defence, aerial mobility, ranged pressure, heavy impact, unarmed chains, boss reliability and exploration utility.
+- Added a browser-local Build Laboratory with controlled conditions, seven personal observation dimensions, confidence ratings and strict JSON backup/restore.
+- Linked current Greymane faction and Damiane Shield Toss issues directly into character and build guidance.
+- Added audits that prohibit unsupported tier lists, best-build claims, exact DPS, hidden scaling and unrecorded frame data.
+- Added a repository-generated v1.0 readiness report covering 12 guide programmes, every structured dataset, interactive tool and publication path.
+- Classified remaining partial game records as an explicit research queue rather than filling unknown routes, totals, rewards or mechanics with guesses.
+- Promoted the package and Steam Guide to evidence-safe v1.0.0 for Patch 1.15.00.
+
 ## 26 July 2026 — Collectibles, knowledge and challenge catalogue
 
 - Expanded the canonical content database from 67 to 85 evidence-safe records.
