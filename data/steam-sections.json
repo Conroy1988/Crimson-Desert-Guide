@@ -17,6 +17,7 @@
     {"heading":"12. Technical & Performance","source":"steam/technical-performance.md"},
     {"heading":"13. Quests & Activities","source":"steam/quests-activities.md"},
     {"heading":"14. Bosses, Abysses & Strongholds","source":"steam/bosses-strongholds.md"},
-    {"heading":"15. Pywel Atlas & Route Intelligence","source":"steam/pywel-atlas.md"}
+    {"heading":"15. Pywel Atlas & Route Intelligence","source":"steam/pywel-atlas.md"},
+    {"heading":"16. Deep Quest & Encounter Guidance","source":"steam/deep-quest-encounters.md"}
   ]
 }
