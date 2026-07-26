@@ -11,6 +11,7 @@ const [
   catalogue,
   mastery,
   buildLab,
+  researchQueue,
   readiness,
 ] = await Promise.all([
   readFile(new URL('../astro.config.mjs', import.meta.url), 'utf8'),
@@ -23,6 +24,7 @@ const [
   readFile(new URL('../src/components/CollectibleCatalogue.astro', import.meta.url), 'utf8'),
   readFile(new URL('../src/components/CharacterMasteryCentre.astro', import.meta.url), 'utf8'),
   readFile(new URL('../src/components/BuildLaboratory.astro', import.meta.url), 'utf8'),
+  readFile(new URL('../src/components/ResearchQueueCentre.astro', import.meta.url), 'utf8'),
   readFile(new URL('../src/components/V1Readiness.astro', import.meta.url), 'utf8'),
 ]);
 
@@ -77,6 +79,7 @@ const scopes = [
   [catalogue, 'collectible catalogue', ['.collectible-catalogue', '.collectible-catalogue__hero', '.collectible-catalogue__filters', '.collectible-card', ":global(:root[data-theme='light']) .collectible-catalogue__hero", '@media (max-width: 46rem)']],
   [mastery, 'Character Mastery Centre', ['.mastery-centre', '.mastery-hero', '.mastery-grid', '.mastery-card', ":global(:root[data-theme='light']) .mastery-hero", '@media (max-width: 48rem)']],
   [buildLab, 'Build Laboratory', ['.build-lab', '.build-lab__hero', '.build-lab__workspace', '.build-readout', '.saved-tests', ":global(:root[data-theme='light']) .build-lab__hero", '@media (max-width: 48rem)']],
+  [researchQueue, 'Research Queue Centre', ['.research-queue', '.research-queue__hero', '.research-queue__filters', '.research-card', '.research-card__protocol', ":global(:root[data-theme='light']) .research-queue__hero", '@media (max-width: 48rem)']],
   [readiness, 'v1 readiness dashboard', ['.v1-readiness', '.v1-hero', '.v1-programmes', '.v1-metrics', '.v1-research', ":global(:root[data-theme='light']) .v1-hero", '@media (max-width: 48rem)']],
 ];
 for (const [source, label, selectors] of scopes) {
