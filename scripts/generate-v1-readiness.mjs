@@ -39,8 +39,18 @@ const programmes = [
   },
   {
     id: 'database',
-    label: 'Canonical content database',
-    requiredPaths: ['src/content/docs/database/index.mdx', 'src/components/ContentDatabase.astro', 'data/content-database.json', 'scripts/content-database-audit.mjs'],
+    label: 'Canonical content database and research operations',
+    requiredPaths: [
+      'src/content/docs/database/index.mdx',
+      'src/components/ContentDatabase.astro',
+      'data/content-database.json',
+      'scripts/content-database-audit.mjs',
+      'src/content/docs/database/research-queue.mdx',
+      'src/components/ResearchQueueCentre.astro',
+      'data/research-queue.json',
+      'src/lib/research-queue-state.mjs',
+      'scripts/research-queue-audit.mjs',
+    ],
   },
   {
     id: 'atlas',
@@ -88,8 +98,9 @@ async function walk(directory) {
   return output;
 }
 
-const [database, completion, details, catalogue, atlas, technical, mastery, builds, steam, packageJson] = await Promise.all([
+const [database, research, completion, details, catalogue, atlas, technical, mastery, builds, steam, packageJson] = await Promise.all([
   readFile(new URL('data/content-database.json', rootUrl), 'utf8').then(JSON.parse),
+  readFile(new URL('data/research-queue.json', rootUrl), 'utf8').then(JSON.parse),
   readFile(new URL('data/completion.json', rootUrl), 'utf8').then(JSON.parse),
   readFile(new URL('data/guide-details.json', rootUrl), 'utf8').then(JSON.parse),
   readFile(new URL('data/collectible-catalogue.json', rootUrl), 'utf8').then(JSON.parse),
@@ -107,9 +118,9 @@ const verifiedRecords = database.records.filter((record) => record.recordStatus 
 const completedProgrammes = programmes.filter((programme) => programme.status === 'complete').length;
 const programmePercent = Math.round((completedProgrammes / programmes.length) * 100);
 const requiredScripts = [
-  'check:all', 'audit:content', 'audit:database', 'audit:atlas', 'audit:details', 'audit:catalogue',
+  'check:all', 'generate:research', 'audit:content', 'audit:database', 'audit:research', 'audit:atlas', 'audit:details', 'audit:catalogue',
   'audit:characters', 'audit:technical', 'audit:theme', 'audit:site-theme', 'audit:v1',
-  'test:completion', 'test:atlas', 'test:guide-notes', 'test:catalogue', 'test:build-lab',
+  'test:completion', 'test:atlas', 'test:guide-notes', 'test:catalogue', 'test:build-lab', 'test:research',
 ];
 const missingScripts = requiredScripts.filter((script) => !packageJson.scripts?.[script]);
 const releaseReady = programmePercent === 100 && missingScripts.length === 0;
@@ -131,6 +142,7 @@ const output = {
     canonicalRecords: database.records.length,
     verifiedRecords: verifiedRecords.length,
     researchRecords: partialRecords.length,
+    researchQueueRecords: research.records.length,
     completionMilestones: completion.entries.length,
     guideDetailRecords: details.records.length,
     catalogueRecords: catalogue.records.length,
@@ -141,9 +153,9 @@ const output = {
     steamSections: steam.sections.length,
   },
   researchQueue: {
-    count: partialRecords.length,
-    explanation: 'Officially named or otherwise supported records whose route, objective, total, reward, mechanics or exact statistics remain incomplete. They are visible and explicitly excluded from unsupported completion claims.',
-    ids: partialRecords.map((record) => record.id),
+    count: research.records.length,
+    explanation: 'Officially named or otherwise supported records whose route, objective, total, reward, mechanics or exact statistics remain incomplete. They are visible, converted into controlled research protocols and explicitly excluded from unsupported completion claims.',
+    ids: research.records.map((record) => record.id),
   },
   interpretation: {
     programmeCompletion: 'Measures whether every planned guide programme, tool and validation system is present.',
@@ -157,4 +169,4 @@ const output = {
 };
 
 await writeFile(new URL('data/v1-readiness.json', rootUrl), `${JSON.stringify(output, null, 2)}\n`, 'utf8');
-console.log(`Generated v1 readiness: ${programmePercent}% programmes, ${database.records.length} canonical records and ${partialRecords.length} explicit research records.`);
+console.log(`Generated v1 readiness: ${programmePercent}% programmes, ${database.records.length} canonical records and ${research.records.length} controlled research records.`);
