@@ -9,6 +9,7 @@ const files = [
   'bosses-research.json',
   'quests.json',
   'world.json',
+  'knowledge-challenges.json',
 ];
 
 const meta = JSON.parse(

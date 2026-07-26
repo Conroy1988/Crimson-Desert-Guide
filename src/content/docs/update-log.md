@@ -2,11 +2,22 @@
 title: Update Log
 description: Chronological record of material changes made to the Crimson Desert Guide.
 currentPatch: 1.15.00
-lastVerified: "2026-07-25"
+lastVerified: "2026-07-26"
 evidence: verified
 spoilerLevel: none
 patchStatus: current
 ---
+
+## 26 July 2026 — Collectibles, knowledge and challenge catalogue
+
+- Expanded the canonical content database from 67 to 85 evidence-safe records.
+- Added a generated catalogue containing 48 records: 31 category goals and 17 individually named entries or challenges.
+- Added the official 51-entry Collectibles — Contract total without inventing the unpublished individual checklist.
+- Added verified individual knowledge milestones for Irkyn, Hexe Earthen Exploding Spider and Pailune Militiamen.
+- Added officially named research records for restored or previously blocked knowledge entries and two weapon challenges.
+- Added Completion Companion status, personal discovery counts, private notes, research flags and strict JSON backup/restore.
+- Added catalogue generation, cross-dataset validation and local-state tests to the protected Quality Gate.
+- Added a Collectibles, Knowledge & Challenges section to the Steam Guide export.
 
 ## 25 July 2026 — Quest walkthrough and encounter encyclopaedia
 

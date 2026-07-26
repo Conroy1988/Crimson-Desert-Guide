@@ -1,11 +1,12 @@
 import { readFile } from 'node:fs/promises';
 
-const [config, css, pageTitle, footer, atlas] = await Promise.all([
+const [config, css, pageTitle, footer, atlas, catalogue] = await Promise.all([
   readFile(new URL('../astro.config.mjs', import.meta.url), 'utf8'),
   readFile(new URL('../src/styles/site-theme.css', import.meta.url), 'utf8'),
   readFile(new URL('../src/components/PageTitle.astro', import.meta.url), 'utf8'),
   readFile(new URL('../src/components/GuideFooter.astro', import.meta.url), 'utf8'),
   readFile(new URL('../src/components/PywelAtlas.astro', import.meta.url), 'utf8'),
+  readFile(new URL('../src/components/CollectibleCatalogue.astro', import.meta.url), 'utf8'),
 ]);
 
 const failures = [];
@@ -70,6 +71,18 @@ for (const selector of requiredAtlasSelectors) {
   if (!atlas.includes(selector)) failures.push(`Missing Pywel Atlas theme scope: ${selector}`);
 }
 
+const requiredCatalogueSelectors = [
+  '.collectible-catalogue',
+  '.collectible-catalogue__hero',
+  '.collectible-catalogue__filters',
+  '.collectible-card',
+  ":global(:root[data-theme='light']) .collectible-catalogue__hero",
+  '@media (max-width: 46rem)',
+];
+for (const selector of requiredCatalogueSelectors) {
+  if (!catalogue.includes(selector)) failures.push(`Missing collectible catalogue theme scope: ${selector}`);
+}
+
 if (!pageTitle.includes('shared.akamai.steamstatic.com/store_item_assets/steam/apps/3321460')) {
   failures.push('PageTitle does not use the approved official Steam media source');
 }
@@ -88,5 +101,5 @@ if (failures.length) {
 }
 
 console.log(
-  `Site theme audit passed ${requiredShellSelectors.length} shell scopes, ${requiredSections.length} section heroes and ${requiredAtlasSelectors.length} atlas scopes.`,
+  `Site theme audit passed ${requiredShellSelectors.length} shell scopes, ${requiredSections.length} section heroes, ${requiredAtlasSelectors.length} atlas scopes and ${requiredCatalogueSelectors.length} catalogue scopes.`,
 );
