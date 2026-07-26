@@ -1,0 +1,236 @@
+---
+import mastery from '../../data/character-mastery.json';
+import technical from '../../data/technical-issues.json';
+
+const activeIssues = new Map(
+  technical.records
+    .filter((record) => record.kind === 'official-issue' && record.status === 'active')
+    .map((record) => [record.id, record]),
+);
+---
+
+<section class="mastery-centre" aria-labelledby="mastery-title">
+  <header class="mastery-hero">
+    <div>
+      <p class="mastery-kicker">Playable-character intelligence · Patch {mastery.gamePatch}</p>
+      <h2 id="mastery-title">Character Mastery Centre</h2>
+      <p>
+        Current capabilities for Kliff, Oongka and Damiane are reconstructed from official game and patch records.
+        Availability does not imply identical performance, hidden scaling or an optimal rotation.
+      </p>
+    </div>
+    <dl>
+      <div><dt>Playable characters</dt><dd>{mastery.characters.length}</dd></div>
+      <div><dt>Capability records</dt><dd>{mastery.characters.reduce((sum, character) => sum + character.capabilities.length, 0)}</dd></div>
+      <div><dt>Active linked issues</dt><dd>{new Set(mastery.characters.flatMap((character) => character.activeIssueIds)).size}</dd></div>
+    </dl>
+  </header>
+
+  <div class="mastery-principle">
+    <strong>No tier list.</strong>
+    The centre identifies tools, restrictions and testing questions. It does not claim one character is universally stronger.
+  </div>
+
+  <form class="mastery-filters" data-mastery-filters>
+    <label>
+      <span>Search capabilities</span>
+      <input type="search" name="search" placeholder="Shield, flight, Abyss, unarmed…" autocomplete="off" />
+    </label>
+    <label>
+      <span>Character</span>
+      <select name="character">
+        <option value="all">All characters</option>
+        {mastery.characters.map((character) => <option value={character.id}>{character.name}</option>)}
+      </select>
+    </label>
+    <label>
+      <span>Current issue state</span>
+      <select name="issues">
+        <option value="all">All profiles</option>
+        <option value="active">Has active issue</option>
+        <option value="clear">No character-specific active issue</option>
+      </select>
+    </label>
+  </form>
+
+  <p class="mastery-result" data-mastery-result aria-live="polite">Showing {mastery.characters.length} profiles</p>
+
+  <div class="mastery-grid" data-mastery-grid>
+    {mastery.characters.map((character) => {
+      const issues = character.activeIssueIds.map((id) => activeIssues.get(id)).filter(Boolean);
+      const searchable = [
+        character.name,
+        character.role,
+        character.summary,
+        ...character.capabilities.flatMap((item) => [item.label, item.detail]),
+        ...character.verifiedTools,
+        ...character.currentCautions,
+      ].join(' ').toLowerCase();
+      return (
+        <article
+          class="mastery-card"
+          data-mastery-card
+          data-character={character.id}
+          data-issues={issues.length ? 'active' : 'clear'}
+          data-search={searchable}
+        >
+          <header>
+            <div class="mastery-card__crest" aria-hidden="true">{character.name.slice(0, 1)}</div>
+            <div>
+              <p>{character.role}</p>
+              <h3>{character.name}</h3>
+            </div>
+          </header>
+
+          <p class="mastery-card__summary">{character.summary}</p>
+          <p class="mastery-card__availability"><strong>Availability:</strong> {character.storyAvailability}</p>
+
+          <section aria-labelledby={`${character.id}-capabilities`}>
+            <h4 id={`${character.id}-capabilities`}>Official capability matrix</h4>
+            <div class="capability-list">
+              {character.capabilities.map((capability) => (
+                <details>
+                  <summary>{capability.label}<span>Official</span></summary>
+                  <p>{capability.detail}</p>
+                </details>
+              ))}
+            </div>
+          </section>
+
+          <section aria-labelledby={`${character.id}-tools`}>
+            <h4 id={`${character.id}-tools`}>Verified tool families</h4>
+            <div class="mastery-tags">
+              {character.verifiedTools.map((tool) => <span>{tool.replaceAll('-', ' ')}</span>)}
+            </div>
+          </section>
+
+          {issues.length > 0 ? (
+            <section class="mastery-issues" aria-labelledby={`${character.id}-issues`}>
+              <h4 id={`${character.id}-issues`}>Active Patch {mastery.gamePatch} issues</h4>
+              {issues.map((issue) => (
+                <article>
+                  <strong>{issue.title}</strong>
+                  <p>{issue.summary}</p>
+                  <ul>{issue.safeActions.map((action) => <li>{action}</li>)}</ul>
+                  <a href="/technical/">Open Technical Centre</a>
+                </article>
+              ))}
+            </section>
+          ) : (
+            <p class="mastery-clear">No character-specific active issue is linked in the current official Known Issues set.</p>
+          )}
+
+          <section aria-labelledby={`${character.id}-cautions`}>
+            <h4 id={`${character.id}-cautions`}>Testing cautions</h4>
+            <ul>{character.currentCautions.map((caution) => <li>{caution}</li>)}</ul>
+          </section>
+
+          <details class="mastery-timeline">
+            <summary>Patch capability timeline</summary>
+            <ol>
+              {character.patchTimeline.map((event) => (
+                <li>
+                  <span>{event.patch}</span>
+                  <p>{event.change}</p>
+                  <a href={event.source} target="_blank" rel="noreferrer">Official patch ↗</a>
+                </li>
+              ))}
+            </ol>
+          </details>
+
+          <footer>
+            <a href="/systems/build-lab/">Open Build Laboratory</a>
+            <a href={character.sources[0]} target="_blank" rel="noreferrer">Official game description ↗</a>
+          </footer>
+        </article>
+      );
+    })}
+  </div>
+
+  <p class="mastery-empty" hidden data-mastery-empty>No character profile matches these filters.</p>
+</section>
+
+<script>
+  const root = document.querySelector('.mastery-centre');
+  if (root) {
+    const filters = root.querySelector('[data-mastery-filters]');
+    const cards = [...root.querySelectorAll('[data-mastery-card]')];
+    const result = root.querySelector('[data-mastery-result]');
+    const empty = root.querySelector('[data-mastery-empty]');
+    const apply = () => {
+      const data = new FormData(filters);
+      const search = String(data.get('search') ?? '').trim().toLowerCase();
+      const character = String(data.get('character') ?? 'all');
+      const issues = String(data.get('issues') ?? 'all');
+      let visible = 0;
+      for (const card of cards) {
+        const matches = (!search || card.dataset.search.includes(search))
+          && (character === 'all' || card.dataset.character === character)
+          && (issues === 'all' || card.dataset.issues === issues);
+        card.hidden = !matches;
+        if (matches) visible += 1;
+      }
+      if (result) result.textContent = `Showing ${visible} of ${cards.length} profiles`;
+      if (empty) empty.hidden = visible !== 0;
+    };
+    filters?.addEventListener('input', apply);
+    filters?.addEventListener('change', apply);
+    apply();
+  }
+</script>
+
+<style>
+  .mastery-centre { display: grid; gap: 1.25rem; }
+  .mastery-hero { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(18rem, .75fr); gap: 1.5rem; padding: clamp(1.4rem, 4vw, 2.6rem); border: 1px solid rgb(210 160 78 / 35%); border-radius: 1rem; background: radial-gradient(circle at 88% 10%, rgb(157 44 28 / 30%), transparent 38%), linear-gradient(135deg, #13110f, #080807); box-shadow: 0 1.5rem 4rem rgb(0 0 0 / 28%); }
+  .mastery-kicker { margin: 0; font-size: .68rem; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; color: #d7a657 !important; }
+  .mastery-hero h2 { margin: .25rem 0 .7rem; font-family: var(--cd-font-display); font-size: clamp(2rem, 5vw, 4.2rem); line-height: .96; color: #fff4de; }
+  .mastery-hero p { color: #cdbda3; }
+  .mastery-hero dl { display: grid; gap: .65rem; align-content: center; margin: 0; }
+  .mastery-hero dl div { padding: .85rem; border: 1px solid rgb(218 168 84 / 24%); border-radius: .6rem; background: rgb(0 0 0 / 34%); }
+  .mastery-hero dt { font-size: .62rem; letter-spacing: .09em; text-transform: uppercase; color: #9f917c; }
+  .mastery-hero dd { margin: .15rem 0 0; font-family: var(--cd-font-display); font-size: 1.7rem; color: #f1ca82; }
+  .mastery-principle { padding: .9rem 1rem; border-left: .22rem solid #b43b27; background: rgb(137 38 24 / 12%); }
+  .mastery-filters { display: grid; grid-template-columns: 2fr 1fr 1.2fr; gap: .75rem; padding: 1rem; border: 1px solid var(--sl-color-gray-5); border-radius: .8rem; background: var(--sl-color-gray-6); }
+  .mastery-filters label { display: grid; gap: .35rem; }
+  .mastery-filters span { font-size: .64rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--sl-color-gray-2); }
+  .mastery-filters input, .mastery-filters select { min-height: 2.65rem; padding: .6rem .7rem; border: 1px solid var(--sl-color-gray-4); border-radius: .5rem; background: var(--sl-color-black); color: var(--sl-color-white); }
+  .mastery-result { margin: 0; color: var(--sl-color-gray-2); }
+  .mastery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr)); gap: 1rem; }
+  .mastery-card { display: grid; align-content: start; gap: 1rem; padding: 1.1rem; border: 1px solid rgb(210 160 78 / 25%); border-radius: .85rem; background: linear-gradient(145deg, rgb(25 23 20 / 97%), rgb(10 10 9 / 99%)); box-shadow: 0 .9rem 2.2rem rgb(0 0 0 / 20%); }
+  .mastery-card[hidden] { display: none; }
+  .mastery-card > header { display: flex; gap: .8rem; align-items: center; }
+  .mastery-card__crest { display: grid; place-items: center; width: 3rem; aspect-ratio: 1; border: 1px solid #a97c39; border-radius: 50%; font-family: var(--cd-font-display); font-size: 1.4rem; color: #f1c978; background: rgb(137 38 24 / 22%); }
+  .mastery-card header p { margin: 0 0 .2rem; font-size: .65rem; letter-spacing: .07em; text-transform: uppercase; color: #a99a83; }
+  .mastery-card h3 { margin: 0; font-family: var(--cd-font-display); font-size: 2rem; color: #fff0d4; }
+  .mastery-card h4 { margin: 0 0 .55rem; font-family: var(--cd-font-display); color: var(--sl-color-gray-1); }
+  .mastery-card__summary, .mastery-card__availability { margin: 0; color: var(--sl-color-gray-2); }
+  .capability-list { display: grid; gap: .4rem; }
+  .capability-list details { padding: .65rem .7rem; border: 1px solid var(--sl-color-gray-5); border-radius: .5rem; }
+  .capability-list summary { display: flex; justify-content: space-between; gap: .6rem; cursor: pointer; font-weight: 750; }
+  .capability-list summary span { padding: .18rem .36rem; border-radius: 999px; background: rgb(139 98 36 / 24%); font-size: .58rem; letter-spacing: .06em; text-transform: uppercase; color: #dfb76e; }
+  .capability-list p { margin: .55rem 0 0; color: var(--sl-color-gray-2); }
+  .mastery-tags { display: flex; flex-wrap: wrap; gap: .4rem; }
+  .mastery-tags span { padding: .3rem .48rem; border: 1px solid rgb(210 160 78 / 27%); border-radius: 999px; font-size: .66rem; text-transform: capitalize; color: #d7c3a3; }
+  .mastery-issues { display: grid; gap: .6rem; padding: .8rem; border: 1px solid rgb(181 58 39 / 38%); border-radius: .6rem; background: rgb(125 35 25 / 13%); }
+  .mastery-issues article p { margin: .35rem 0; }
+  .mastery-issues ul { margin-bottom: .35rem; padding-left: 1.1rem; }
+  .mastery-clear { margin: 0; padding: .65rem .75rem; border: 1px solid rgb(64 128 78 / 30%); border-radius: .5rem; color: #9dccaa; background: rgb(47 93 57 / 12%); }
+  .mastery-card ul { padding-left: 1.15rem; }
+  .mastery-timeline { border-top: 1px solid var(--sl-color-gray-5); padding-top: .7rem; }
+  .mastery-timeline summary { cursor: pointer; font-weight: 750; }
+  .mastery-timeline ol { display: grid; gap: .65rem; padding-left: 1.4rem; }
+  .mastery-timeline li span { font-weight: 800; color: #deb36a; }
+  .mastery-timeline li p { margin: .15rem 0; }
+  .mastery-card footer { display: flex; flex-wrap: wrap; gap: .7rem; justify-content: space-between; padding-top: .7rem; border-top: 1px solid var(--sl-color-gray-5); }
+  .mastery-empty { padding: 2rem; text-align: center; }
+  :global(:root[data-theme='light']) .mastery-hero { border-color: #b99c70; background: radial-gradient(circle at 88% 10%, rgb(157 44 28 / 14%), transparent 38%), linear-gradient(135deg, #fffaf1, #ede0cc); box-shadow: 0 1.2rem 3rem rgb(91 55 32 / 15%); }
+  :global(:root[data-theme='light']) .mastery-hero h2 { color: #2d1b12; }
+  :global(:root[data-theme='light']) .mastery-hero p { color: #514032; }
+  :global(:root[data-theme='light']) .mastery-hero dl div { border-color: #c1a477; background: rgb(255 253 249 / 76%); }
+  :global(:root[data-theme='light']) .mastery-hero dd { color: #613807; }
+  :global(:root[data-theme='light']) .mastery-card { border-color: #c1a477; background: linear-gradient(145deg, #fffdf8, #f0e4d2); box-shadow: 0 .7rem 1.6rem rgb(91 55 32 / 12%); }
+  :global(:root[data-theme='light']) .mastery-card h3 { color: #2d1b12; }
+  :global(:root[data-theme='light']) .mastery-tags span { color: #573f27; }
+  @media (max-width: 48rem) { .mastery-hero { grid-template-columns: 1fr; } .mastery-hero dl { grid-template-columns: repeat(3, 1fr); } .mastery-filters { grid-template-columns: 1fr; } }
+  @media (max-width: 32rem) { .mastery-hero dl { grid-template-columns: 1fr; } .mastery-card footer { display: grid; } }
+</style>

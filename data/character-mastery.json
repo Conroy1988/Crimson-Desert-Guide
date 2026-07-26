@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "datasetVersion": "1.0.0",
+  "gamePatch": "1.15.00",
+  "lastVerified": "2026-07-26",
+  "characters": [
+    {
+      "id": "kliff",
+      "name": "Kliff",
+      "role": "Primary story character and Greymane field leader",
+      "summary": "The official game description centres the main story on Kliff. Current patch history documents aerial Focus techniques, Force skills, Charge support and expanded unarmed chains.",
+      "storyAvailability": "The story centres on Kliff; exact unlock timing for later character switching is intentionally not duplicated here.",
+      "spoilerLevel": "minor",
+      "capabilities": [
+        {"id":"focused-aerial-roll","label":"Focused Aerial Roll","status":"official","detail":"Added in Patch 1.03.00. Official prerequisites are Focus Lv. 3, Flight Lv. 2 and Aerial Roll."},
+        {"id":"force-current","label":"Force Current","status":"official","detail":"Patch 1.04.00 improved ledge safety so Kliff no longer falls when using it."},
+        {"id":"charge","label":"Charge","status":"official","detail":"Patch 1.04.00 fixed compatibility with certain weapons; exact character-by-weapon coverage is not enumerated by the notice."},
+        {"id":"blinding-flash","label":"Blinding Flash","status":"official","detail":"Patch 1.06.00 allowed Blinding Flash without a weapon equipped."},
+        {"id":"blinding-flash-finisher","label":"Blinding Flash Finisher","status":"official","detail":"Added for Kliff's unarmed combat in Patch 1.07.00."},
+        {"id":"expanded-equipment","label":"Expanded equipment access","status":"official","detail":"Patches 1.12.00 and 1.13.00 added Kliff headgear, Greymane Light Armor, shared Kliff/Oongka equipment and Kuku equipment access."}
+      ],
+      "verifiedTools": ["unarmed","aerial-mobility","force-control","general-weapons"],
+      "activeIssueIds": [],
+      "currentCautions": [
+        "PC Hold evasion remapping can still respond to the original key; test controls before a repeatable combat trial.",
+        "Character-specific weapon compatibility and hidden scaling must be confirmed in-game rather than inferred from general weapon availability."
+      ],
+      "patchTimeline": [
+        {"patch":"1.03.00","change":"Added Focused Aerial Roll with published skill prerequisites.","source":"https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=81&pubDate=20260411"},
+        {"patch":"1.04.00","change":"Improved Force Current ledge safety and fixed Charge with certain weapons.","source":"https://crimsondesert.pearlabyss.com/en-us/News/Notice/Detail?_boardNo=84"},
+        {"patch":"1.06.00","change":"Improved unarmed combat flow and allowed Blinding Flash without a weapon.","source":"https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511"},
+        {"patch":"1.07.00","change":"Added Blinding Flash Finisher for unarmed combat.","source":"https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=92"},
+        {"patch":"1.12.00","change":"Added five headgear items and Greymane Light Armor for Kliff.","source":"https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=100"},
+        {"patch":"1.13.00","change":"Expanded Kliff/Oongka equipment and added Kuku equipment compatibility.","source":"https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=105"}
+      ],
+      "sources": [
+        "https://store.steampowered.com/app/3321460/Crimson_Desert/",
+        "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=81&pubDate=20260411",
+        "https://crimsondesert.pearlabyss.com/en-us/News/Notice/Detail?_boardNo=84",
+        "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511",
+        "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=92",
+        "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=100",
+        "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=105"
+      ]
+    },
+    {
+      "id": "oongka",
+      "name": "Oongka",
+      "role": "Playable specialist with aerial movement, blaster pressure and heavy-weapon support",
+      "summary": "Oongka is one of the two additional playable characters named by the official game description. Patch history documents Vertical Flight, blaster and Scatter Shot support, Force-equivalent abilities, Ambush, Aerial Stab, Abyss access and expanded equipment compatibility.",
+      "storyAvailability": "Oongka joins as the story unfolds. Exact spoiler-sensitive unlock timing remains outside the low-spoiler profile.",
+      "spoilerLevel": "minor",
+      "capabilities": [
+        {"id":"vertical-flight","label":"Vertical Flight","status":"official","detail":"Official patches document Vertical Flight controls, movement fixes and related open-world utility."},
+        {"id":"blaster","label":"Blaster and Scatter Shot","status":"official","detail":"Patch 1.04.00 enabled blaster fire during Flight and corrected Scatter Shot ammunition behaviour."},
+        {"id":"axiom-force","label":"Axiom Force and Nature's Snare","status":"official","detail":"Added for Oongka and Damiane in Patch 1.03.00."},
+        {"id":"ambush","label":"Ambush and Focused Force Palm equivalent","status":"official","detail":"Added for Oongka and Damiane in Patch 1.04.00."},
+        {"id":"aerial-stab","label":"Aerial Stab","status":"official","detail":"Added for Oongka and Damiane in Patch 1.07.00."},
+        {"id":"finisher-equivalent","label":"Blinding Flash Finisher-equivalent skill","status":"official","detail":"Patch 1.09.00 added a skill using the same input as Kliff's Blinding Flash Finisher."},
+        {"id":"abyss-world-access","label":"Abyss, Visiones, memories and Blackstar access","status":"official","detail":"Patches 1.12.00 and 1.13.00 added Visiones/memory support, Blackstar mounting and Abyss entry."},
+        {"id":"greathammer","label":"Greathammer skill support","status":"official","detail":"Patch 1.13.00 corrected Oongka Greathammer skill descriptions, confirming character-specific skill support without establishing performance rankings."},
+        {"id":"expanded-equipment","label":"Expanded equipment and outfit access","status":"official","detail":"Patch 1.13.00 added shared Kliff/Oongka equipment, most Kliff outfits for Oongka and Kuku equipment compatibility."}
+      ],
+      "verifiedTools": ["aerial-mobility","ranged-pressure","force-control","greathammer","general-weapons"],
+      "activeIssueIds": ["greymane-faction-companion-progression"],
+      "currentCautions": [
+        "Greymane faction quests may stall as Oongka on Patch 1.15.00; switch to Kliff before continuing the affected objective.",
+        "Descriptions corrected in older patches prove intended input text, not exact damage, recovery or stagger values."
+      ],
+      "patchTimeline": [
+        {"patch":"1.03.00","change":"Added Axiom Force, Nature's Snare and related open-world abilities; adjusted Vertical Flight input.","source":"https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=81&pubDate=20260411"},
+        {"patch":"1.04.00","change":"Added Ambush and a Focused Force Palm-equivalent skill; improved blaster use during Flight.","source":"https://crimsondesert.pearlabyss.com/en-us/News/Notice/Detail?_boardNo=84"},
+        {"patch":"1.07.00","change":"Added Aerial Stab.","source":"https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=92"},
+        {"patch":"1.09.00","change":"Added a skill using the same input as Kliff's Blinding Flash Finisher.","source":"https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=94&pubDate=20260612"},
+        {"patch":"1.12.00","change":"Added Visiones, memory reading, Blackstar mounting and chain attacks while sliding.","source":"https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=100"},
+        {"patch":"1.13.00","change":"Added Abyss access, equipment/outfit expansion and corrected Greathammer skill descriptions.","source":"https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=105"},
+        {"patch":"1.15.00","change":"Fixed persistence of equipped-gear lock status for Oongka and Damiane.","source":"https://crimsondesert.pearlabyss.com/en-us/News/Notice/Detail?_boardNo=109"}
+      ],
+      "sources": [
+        "https://store.steampowered.com/app/3321460/Crimson_Desert/",
+        "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=81&pubDate=20260411",
+        "https://crimsondesert.pearlabyss.com/en-us/News/Notice/Detail?_boardNo=84",
+        "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=92",
+        "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=94&pubDate=20260612",
+        "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=100",
+        "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=105",
+        "https://crimsondesert.pearlabyss.com/en-us/News/Notice/Detail?_boardNo=109"
+      ]
+    },
+    {
+      "id": "damiane",
+      "name": "Damiane",
+      "role": "Playable specialist with shield control, ranged support and mobility tools",
+      "summary": "Damiane is one of the two additional playable characters named by the official game description. Patch history documents Shield Toss, Skystep, Quick Reload, unarmed skills, Force-equivalent abilities, Abyss access and character-specific equipment expansion.",
+      "storyAvailability": "Damiane joins as the story unfolds. Exact spoiler-sensitive unlock timing remains outside the low-spoiler profile.",
+      "spoilerLevel": "minor",
+      "capabilities": [
+        {"id":"shield-toss","label":"Shield Toss and shield control","status":"official","detail":"Official patches document Shield Toss's Force Palm-equivalent effect and the current death-state known issue."},
+        {"id":"skystep","label":"Skystep mobility","status":"official","detail":"Patch 1.03.00 changed Skystep's control input as part of open-world capability improvements."},
+        {"id":"axiom-force","label":"Axiom Force and Nature's Snare","status":"official","detail":"Added for Damiane and Oongka in Patch 1.03.00."},
+        {"id":"ambush","label":"Ambush and Focused Force Palm equivalent","status":"official","detail":"Added for Damiane and Oongka in Patch 1.04.00."},
+        {"id":"quick-reload","label":"Quick Reload","status":"official","detail":"Patch 1.04.00 made Quick Reload obtainable through skill observation or Abyss Artifacts."},
+        {"id":"unarmed","label":"Unarmed combat skills","status":"official","detail":"Added under Fists in the skill menu in Patch 1.07.00."},
+        {"id":"aerial-stab","label":"Aerial Stab","status":"official","detail":"Added for Damiane and Oongka in Patch 1.07.00."},
+        {"id":"finisher-equivalent","label":"Blinding Flash Finisher-equivalent skill","status":"official","detail":"Patch 1.09.00 added a skill using the same input as Kliff's Blinding Flash Finisher."},
+        {"id":"abyss-world-access","label":"Abyss, Visiones, memories and Blackstar access","status":"official","detail":"Patches 1.12.00 and 1.13.00 added Visiones/memory support, Blackstar mounting and Abyss entry."},
+        {"id":"expanded-equipment","label":"Expanded armor and boss-equipment access","status":"official","detail":"Patch 1.13.00 added eight armor pieces and specified supported boss-equipment sets."}
+      ],
+      "verifiedTools": ["shield-control","ranged-pressure","aerial-mobility","force-control","unarmed","general-weapons"],
+      "activeIssueIds": ["greymane-faction-companion-progression","damiane-shield-toss-death-state"],
+      "currentCautions": [
+        "Greymane faction quests may stall as Damiane on Patch 1.15.00; switch to Kliff before continuing the affected objective.",
+        "Dying immediately after Shield Toss can disable shield actions; save and reload before another fight.",
+        "Quick Reload acquisition options prove availability, not a universal ranged-build advantage."
+      ],
+      "patchTimeline": [
+        {"patch":"1.03.00","change":"Added Axiom Force, Nature's Snare and related abilities; adjusted Skystep input and Shield Toss utility.","source":"https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=81&pubDate=20260411"},
+        {"patch":"1.04.00","change":"Added Ambush and a Focused Force Palm-equivalent skill; expanded Quick Reload acquisition.","source":"https://crimsondesert.pearlabyss.com/en-us/News/Notice/Detail?_boardNo=84"},
+        {"patch":"1.07.00","change":"Added unarmed combat skills and Aerial Stab.","source":"https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=92"},
+        {"patch":"1.09.00","change":"Added a skill using the same input as Kliff's Blinding Flash Finisher.","source":"https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=94&pubDate=20260612"},
+        {"patch":"1.12.00","change":"Added Visiones, memory reading, Blackstar mounting and chain attacks while sliding.","source":"https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=100"},
+        {"patch":"1.13.00","change":"Added Abyss access and expanded armor and boss-equipment compatibility.","source":"https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=105"},
+        {"patch":"1.15.00","change":"Fixed persistence of equipped-gear lock status for Oongka and Damiane.","source":"https://crimsondesert.pearlabyss.com/en-us/News/Notice/Detail?_boardNo=109"}
+      ],
+      "sources": [
+        "https://store.steampowered.com/app/3321460/Crimson_Desert/",
+        "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=81&pubDate=20260411",
+        "https://crimsondesert.pearlabyss.com/en-us/News/Notice/Detail?_boardNo=84",
+        "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=92",
+        "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=94&pubDate=20260612",
+        "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=100",
+        "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=105",
+        "https://crimsondesert.pearlabyss.com/en-us/News/Notice/Detail?_boardNo=109"
+      ]
+    }
+  ]
+}

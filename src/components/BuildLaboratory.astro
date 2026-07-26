@@ -1,0 +1,433 @@
+---
+import mastery from '../../data/character-mastery.json';
+import builds from '../../data/build-archetypes.json';
+import technical from '../../data/technical-issues.json';
+
+const activeIssues = technical.records.filter((record) => record.kind === 'official-issue' && record.status === 'active');
+---
+
+<section class="build-lab" aria-labelledby="build-lab-title">
+  <header class="build-lab__hero">
+    <div>
+      <p class="build-lab__kicker">Controlled optimisation · Patch {builds.gamePatch}</p>
+      <h2 id="build-lab-title">Build Laboratory</h2>
+      <p>
+        Choose a transparent archetype, hold test conditions constant and record your own results.
+        The laboratory does not publish a tier list or convert personal observations into guide facts.
+      </p>
+    </div>
+    <dl>
+      <div><dt>Characters</dt><dd>{mastery.characters.length}</dd></div>
+      <div><dt>Archetypes</dt><dd>{builds.archetypes.length}</dd></div>
+      <div><dt>Test dimensions</dt><dd>{builds.dimensions.length}</dd></div>
+      <div><dt>Saved locally</dt><dd data-saved-count>0</dd></div>
+    </dl>
+  </header>
+
+  <div class="build-lab__warning">
+    <strong>Compatibility check required.</strong>
+    General weapon availability does not prove every character can use every family. Confirm the selected setup in-game before recording a trial.
+  </div>
+
+  <div class="build-lab__workspace">
+    <form class="build-sheet" data-build-form>
+      <input type="hidden" name="testId" />
+      <div class="build-sheet__grid">
+        <label>
+          <span>Test name</span>
+          <input name="name" maxlength="100" required placeholder="e.g. Bonepit rematch baseline" />
+        </label>
+        <label>
+          <span>Character</span>
+          <select name="characterId" required>
+            {mastery.characters.map((character) => <option value={character.id}>{character.name}</option>)}
+          </select>
+        </label>
+        <label>
+          <span>Build archetype</span>
+          <select name="archetypeId" required>
+            {builds.archetypes.map((archetype) => <option value={archetype.id}>{archetype.title}</option>)}
+          </select>
+        </label>
+        <label>
+          <span>Weapon or tool family</span>
+          <select name="weaponFamilyId" required>
+            {builds.weaponFamilies.map((family) => <option value={family.id}>{family.label}</option>)}
+          </select>
+        </label>
+        <label>
+          <span>Encounter</span>
+          <select name="encounterId" required>
+            {builds.encounters.map((encounter) => <option value={encounter.id}>{encounter.label}</option>)}
+          </select>
+        </label>
+        <label>
+          <span>Defensive preference</span>
+          <select name="defencePreference" required>
+            <option value="balanced">Balanced</option>
+            <option value="guard">Guard or shield</option>
+            <option value="evasion">Evasion</option>
+            <option value="distance">Distance management</option>
+            <option value="control">Crowd control</option>
+          </select>
+        </label>
+      </div>
+
+      <section class="build-readout" aria-live="polite">
+        <header>
+          <div><span>Selected framework</span><h3 data-archetype-title></h3></div>
+          <a href="/systems/characters/">Character profile</a>
+        </header>
+        <p data-archetype-objective></p>
+        <div class="build-readout__columns">
+          <div><h4>Priority dimensions</h4><ul data-archetype-priorities></ul></div>
+          <div><h4>Trade-offs</h4><ul data-archetype-tradeoffs></ul></div>
+          <div><h4>Repeatable protocol</h4><ol data-archetype-protocol></ol></div>
+        </div>
+        <div class="build-readout__capabilities">
+          <h4>Character capability evidence</h4>
+          <ul data-character-capabilities></ul>
+        </div>
+        <div class="build-readout__issues" data-character-issues></div>
+      </section>
+
+      <label>
+        <span>Fixed test conditions</span>
+        <textarea name="conditions" maxlength="5000" rows="3" placeholder="Save, equipment state, arena, target, difficulty, route and inputs held constant"></textarea>
+      </label>
+
+      <fieldset class="build-metrics">
+        <legend>Observed dimensions — personal score, not canonical statistics</legend>
+        <div>
+          {builds.dimensions.map((dimension) => (
+            <label title={dimension.question}>
+              <span>{dimension.label}</span>
+              <select name={`metric-${dimension.id}`}>
+                <option value="">Not rated</option>
+                <option value="1">1 — Poor in this trial</option>
+                <option value="2">2 — Limited</option>
+                <option value="3">3 — Adequate</option>
+                <option value="4">4 — Strong</option>
+                <option value="5">5 — Very strong in this trial</option>
+              </select>
+              <small>{dimension.question}</small>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+
+      <div class="build-sheet__grid build-sheet__grid--notes">
+        <label>
+          <span>Observations</span>
+          <textarea name="observations" maxlength="5000" rows="5" placeholder="Record failures, recovery windows, healing, resource pressure and terrain problems—not only successful hits"></textarea>
+        </label>
+        <label>
+          <span>Confidence</span>
+          <select name="confidence">
+            <option value="unrated">Unrated</option>
+            <option value="low">Low — one trial or changing conditions</option>
+            <option value="medium">Medium — repeatable but limited sample</option>
+            <option value="high">High — repeated under controlled conditions</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="build-sheet__actions">
+        <button type="submit">Save controlled test</button>
+        <button type="button" data-new-test>Start new sheet</button>
+        <button type="button" data-export-tests>Export tests</button>
+        <button type="button" data-import-tests>Import tests</button>
+        <button type="button" class="danger" data-reset-tests>Reset all tests</button>
+        <input type="file" accept="application/json,.json" hidden data-test-file />
+      </div>
+      <p class="build-lab__status" data-build-status aria-live="polite"></p>
+    </form>
+
+    <aside class="saved-tests" aria-labelledby="saved-tests-title">
+      <header><span>Private test ledger</span><h3 id="saved-tests-title">Saved tests</h3></header>
+      <div data-saved-tests></div>
+      <p data-no-tests>No tests saved in this browser.</p>
+    </aside>
+  </div>
+</section>
+
+<script id="build-lab-data" type="application/json" set:html={JSON.stringify(builds)}></script>
+<script id="character-mastery-data" type="application/json" set:html={JSON.stringify(mastery)}></script>
+<script id="build-lab-issues" type="application/json" set:html={JSON.stringify(activeIssues)}></script>
+
+<script>
+  import {
+    createBuildLabExport,
+    createEmptyBuildLabState,
+    loadBuildLabState,
+    parseBuildLabImport,
+    removeBuildTest,
+    saveBuildLabState,
+    upsertBuildTest,
+  } from '../lib/build-lab-state.mjs';
+
+  const root = document.querySelector('.build-lab');
+  const dataNode = document.querySelector('#build-lab-data');
+  const masteryNode = document.querySelector('#character-mastery-data');
+  const issuesNode = document.querySelector('#build-lab-issues');
+  if (root && dataNode && masteryNode && issuesNode) {
+    const dataset = JSON.parse(dataNode.textContent || '{}');
+    const mastery = JSON.parse(masteryNode.textContent || '{}');
+    const issues = JSON.parse(issuesNode.textContent || '[]');
+    const characters = mastery.characters;
+    const form = root.querySelector('[data-build-form]');
+    const status = root.querySelector('[data-build-status]');
+    const savedRoot = root.querySelector('[data-saved-tests]');
+    const noTests = root.querySelector('[data-no-tests]');
+    const savedCount = root.querySelector('[data-saved-count]');
+    const fileInput = root.querySelector('[data-test-file]');
+    let state = createEmptyBuildLabState(dataset);
+
+    const report = (message, error = false) => {
+      if (!status) return;
+      status.textContent = message;
+      status.toggleAttribute('data-error', error);
+    };
+
+    try {
+      const loaded = loadBuildLabState(window.localStorage, dataset, characters);
+      state = loaded.state;
+      if (loaded.error) report(loaded.error, true);
+    } catch (error) {
+      report(error instanceof Error ? error.message : 'Build tests could not be loaded.', true);
+    }
+
+    const byId = (values, id) => values.find((value) => value.id === id);
+    const makeId = () => `test-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 9)}`;
+
+    const currentArchetype = () => byId(dataset.archetypes, form.elements.archetypeId.value) ?? dataset.archetypes[0];
+    const currentCharacter = () => byId(characters, form.elements.characterId.value) ?? characters[0];
+
+    const renderReadout = () => {
+      const archetype = currentArchetype();
+      const character = currentCharacter();
+      root.querySelector('[data-archetype-title]').textContent = archetype.title;
+      root.querySelector('[data-archetype-objective]').textContent = archetype.objective;
+      const fill = (selector, values, ordered = false) => {
+        const node = root.querySelector(selector);
+        node.replaceChildren(...values.map((value) => {
+          const item = document.createElement('li');
+          item.textContent = value;
+          return item;
+        }));
+      };
+      fill('[data-archetype-priorities]', archetype.priorityDimensions.map((id) => byId(dataset.dimensions, id)?.label ?? id));
+      fill('[data-archetype-tradeoffs]', archetype.tradeoffs);
+      fill('[data-archetype-protocol]', archetype.protocol, true);
+      fill('[data-character-capabilities]', character.capabilities.map((item) => `${item.label}: ${item.detail}`));
+      const issueRoot = root.querySelector('[data-character-issues]');
+      const characterIssues = issues.filter((issue) => character.activeIssueIds.includes(issue.id));
+      issueRoot.replaceChildren();
+      if (characterIssues.length) {
+        const heading = document.createElement('h4');
+        heading.textContent = 'Current issue constraints';
+        issueRoot.append(heading);
+        for (const issue of characterIssues) {
+          const article = document.createElement('article');
+          const strong = document.createElement('strong');
+          strong.textContent = issue.title;
+          const paragraph = document.createElement('p');
+          paragraph.textContent = issue.summary;
+          article.append(strong, paragraph);
+          issueRoot.append(article);
+        }
+      }
+    };
+
+    const persist = () => {
+      try {
+        state = saveBuildLabState(window.localStorage, state, dataset, characters).state;
+        report('Build tests saved locally.');
+      } catch (error) {
+        report(error instanceof Error ? error.message : 'Build tests could not be saved.', true);
+      }
+    };
+
+    const renderSaved = () => {
+      savedRoot.replaceChildren();
+      for (const test of [...state.tests].sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))) {
+        const card = document.createElement('article');
+        card.className = 'saved-test';
+        card.dataset.testId = test.id;
+        const heading = document.createElement('h4');
+        heading.textContent = test.name;
+        const meta = document.createElement('p');
+        meta.textContent = `${byId(characters, test.characterId)?.name ?? test.characterId} · ${byId(dataset.archetypes, test.archetypeId)?.title ?? test.archetypeId} · ${test.confidence} confidence`;
+        const actions = document.createElement('div');
+        const load = document.createElement('button');
+        load.type = 'button'; load.dataset.loadTest = test.id; load.textContent = 'Load';
+        const remove = document.createElement('button');
+        remove.type = 'button'; remove.dataset.deleteTest = test.id; remove.textContent = 'Delete'; remove.className = 'danger';
+        actions.append(load, remove);
+        card.append(heading, meta, actions);
+        savedRoot.append(card);
+      }
+      noTests.hidden = state.tests.length > 0;
+      savedCount.textContent = String(state.tests.length);
+    };
+
+    const resetForm = () => {
+      form.reset();
+      form.elements.testId.value = '';
+      renderReadout();
+      report('New test sheet ready.');
+    };
+
+    const loadTest = (test) => {
+      form.elements.testId.value = test.id;
+      for (const field of ['name', 'characterId', 'archetypeId', 'weaponFamilyId', 'encounterId', 'defencePreference', 'conditions', 'observations', 'confidence']) {
+        form.elements[field].value = test[field] ?? '';
+      }
+      for (const dimension of dataset.dimensions) form.elements[`metric-${dimension.id}`].value = test.metrics[dimension.id] ?? '';
+      renderReadout();
+      form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      report(`Loaded ${test.name}.`);
+    };
+
+    form.addEventListener('change', (event) => {
+      if (event.target.matches('[name="characterId"], [name="archetypeId"]')) renderReadout();
+    });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const data = new FormData(form);
+      const existingId = String(data.get('testId') ?? '');
+      const existing = state.tests.find((test) => test.id === existingId);
+      const now = new Date().toISOString();
+      const metrics = {};
+      for (const dimension of dataset.dimensions) {
+        const value = data.get(`metric-${dimension.id}`);
+        if (value) metrics[dimension.id] = Number(value);
+      }
+      try {
+        state = upsertBuildTest(state, {
+          id: existingId || makeId(),
+          name: String(data.get('name') ?? ''),
+          characterId: String(data.get('characterId') ?? ''),
+          archetypeId: String(data.get('archetypeId') ?? ''),
+          weaponFamilyId: String(data.get('weaponFamilyId') ?? ''),
+          encounterId: String(data.get('encounterId') ?? ''),
+          defencePreference: String(data.get('defencePreference') ?? ''),
+          conditions: String(data.get('conditions') ?? ''),
+          observations: String(data.get('observations') ?? ''),
+          metrics,
+          confidence: String(data.get('confidence') ?? 'unrated'),
+          createdAt: existing?.createdAt ?? now,
+          updatedAt: now,
+        }, dataset, characters);
+        persist();
+        renderSaved();
+        const saved = state.tests.find((test) => test.id === (existingId || state.tests.at(-1)?.id));
+        if (saved) form.elements.testId.value = saved.id;
+      } catch (error) {
+        report(error instanceof Error ? error.message : 'Test could not be saved.', true);
+      }
+    });
+
+    root.addEventListener('click', (event) => {
+      const button = event.target.closest('button');
+      if (!button) return;
+      if (button.matches('[data-new-test]')) resetForm();
+      if (button.dataset.loadTest) {
+        const test = state.tests.find((entry) => entry.id === button.dataset.loadTest);
+        if (test) loadTest(test);
+      }
+      if (button.dataset.deleteTest && window.confirm('Delete this private build test?')) {
+        state = removeBuildTest(state, button.dataset.deleteTest, dataset, characters);
+        persist(); renderSaved();
+      }
+      if (button.matches('[data-export-tests]')) {
+        const backup = createBuildLabExport(state, dataset, characters);
+        const blob = new Blob([`${JSON.stringify(backup, null, 2)}\n`], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url; link.download = `crimson-desert-build-tests-${new Date().toISOString().slice(0, 10)}.json`; link.click();
+        URL.revokeObjectURL(url); report('Build Laboratory backup exported.');
+      }
+      if (button.matches('[data-import-tests]')) fileInput.click();
+      if (button.matches('[data-reset-tests]') && window.confirm('Reset all private Build Laboratory tests?')) {
+        state = createEmptyBuildLabState(dataset); persist(); renderSaved(); resetForm();
+      }
+    });
+
+    fileInput.addEventListener('change', async () => {
+      const file = fileInput.files?.[0];
+      if (!file) return;
+      try {
+        state = parseBuildLabImport(JSON.parse(await file.text()), dataset, characters);
+        persist(); renderSaved(); resetForm(); report('Build Laboratory backup imported.');
+      } catch (error) {
+        report(error instanceof Error ? error.message : 'Build Laboratory backup could not be imported.', true);
+      } finally { fileInput.value = ''; }
+    });
+
+    renderReadout();
+    renderSaved();
+  }
+</script>
+
+<style>
+  .build-lab { display: grid; gap: 1.25rem; }
+  .build-lab__hero { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(18rem, .8fr); gap: 1.5rem; padding: clamp(1.4rem, 4vw, 2.6rem); border: 1px solid rgb(210 160 78 / 35%); border-radius: 1rem; background: radial-gradient(circle at 90% 8%, rgb(153 45 28 / 31%), transparent 39%), linear-gradient(135deg, #12110f, #080807); box-shadow: 0 1.5rem 4rem rgb(0 0 0 / 28%); }
+  .build-lab__kicker { margin: 0; font-size: .68rem; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; color: #d8a85a !important; }
+  .build-lab__hero h2 { margin: .25rem 0 .7rem; font-family: var(--cd-font-display); font-size: clamp(2rem, 5vw, 4.2rem); line-height: .96; color: #fff4de; }
+  .build-lab__hero p { color: #cdbda3; }
+  .build-lab__hero dl { display: grid; grid-template-columns: repeat(2, 1fr); gap: .65rem; align-content: center; margin: 0; }
+  .build-lab__hero dl div { padding: .8rem; border: 1px solid rgb(218 168 84 / 24%); border-radius: .6rem; background: rgb(0 0 0 / 34%); }
+  .build-lab__hero dt { font-size: .6rem; letter-spacing: .09em; text-transform: uppercase; color: #a0927c; }
+  .build-lab__hero dd { margin: .15rem 0 0; font-family: var(--cd-font-display); font-size: 1.65rem; color: #f1ca82; }
+  .build-lab__warning { padding: .9rem 1rem; border-left: .22rem solid #b63b27; background: rgb(137 38 24 / 12%); }
+  .build-lab__workspace { display: grid; grid-template-columns: minmax(0, 1fr) minmax(17rem, .32fr); gap: 1rem; align-items: start; }
+  .build-sheet, .saved-tests { display: grid; gap: 1rem; padding: 1rem; border: 1px solid rgb(210 160 78 / 24%); border-radius: .8rem; background: linear-gradient(145deg, rgb(24 22 19 / 97%), rgb(10 10 9 / 99%)); }
+  .build-sheet__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .75rem; }
+  .build-sheet__grid--notes { grid-template-columns: 2fr 1fr; align-items: start; }
+  .build-sheet label { display: grid; gap: .35rem; }
+  .build-sheet label > span, .build-metrics legend { font-size: .64rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--sl-color-gray-2); }
+  .build-sheet input, .build-sheet select, .build-sheet textarea, .build-lab button { min-height: 2.65rem; border: 1px solid var(--sl-color-gray-4); border-radius: .5rem; background: var(--sl-color-black); color: var(--sl-color-white); font: inherit; }
+  .build-sheet input, .build-sheet select, .build-sheet textarea { padding: .6rem .7rem; }
+  .build-lab button { padding: .55rem .8rem; cursor: pointer; }
+  .build-lab button:hover { border-color: #d8a85a; }
+  .build-lab button.danger { border-color: rgb(183 58 39 / 55%); }
+  .build-readout { display: grid; gap: .8rem; padding: 1rem; border: 1px solid rgb(210 160 78 / 29%); border-radius: .65rem; background: radial-gradient(circle at 95% 0, rgb(135 36 24 / 20%), transparent 37%), rgb(9 9 8 / 65%); }
+  .build-readout > header { display: flex; flex-wrap: wrap; gap: .7rem; justify-content: space-between; align-items: end; }
+  .build-readout header span { font-size: .61rem; letter-spacing: .08em; text-transform: uppercase; color: #a0927c; }
+  .build-readout h3 { margin: .1rem 0 0; font-family: var(--cd-font-display); font-size: 1.8rem; color: #f5d08a; }
+  .build-readout h4 { margin: 0 0 .45rem; font-family: var(--cd-font-display); color: var(--sl-color-gray-1); }
+  .build-readout__columns { display: grid; grid-template-columns: repeat(3, 1fr); gap: .75rem; }
+  .build-readout__columns > div, .build-readout__capabilities, .build-readout__issues { padding: .7rem; border: 1px solid var(--sl-color-gray-5); border-radius: .5rem; }
+  .build-readout ul, .build-readout ol { margin-bottom: 0; padding-left: 1.15rem; }
+  .build-readout__issues:empty { display: none; }
+  .build-readout__issues article + article { margin-top: .6rem; padding-top: .6rem; border-top: 1px solid var(--sl-color-gray-5); }
+  .build-readout__issues p { margin: .25rem 0 0; }
+  .build-metrics { margin: 0; padding: .9rem; border: 1px solid var(--sl-color-gray-5); border-radius: .6rem; }
+  .build-metrics > div { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: .7rem; }
+  .build-metrics small { color: var(--sl-color-gray-3); line-height: 1.35; }
+  .build-sheet__actions { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .build-lab__status { min-height: 1.3rem; margin: 0; color: #96cda4; }
+  .build-lab__status[data-error] { color: #ed8f82; }
+  .saved-tests { position: sticky; top: 5rem; max-height: calc(100vh - 6rem); overflow: auto; }
+  .saved-tests header span { font-size: .62rem; letter-spacing: .09em; text-transform: uppercase; color: #a0927c; }
+  .saved-tests h3 { margin: .15rem 0 0; font-family: var(--cd-font-display); color: #f4ce86; }
+  .saved-test { padding: .75rem; border: 1px solid var(--sl-color-gray-5); border-radius: .55rem; }
+  .saved-test + .saved-test { margin-top: .65rem; }
+  .saved-test h4 { margin: 0; color: var(--sl-color-gray-1); }
+  .saved-test p { margin: .3rem 0 .55rem; font-size: .82rem; color: var(--sl-color-gray-2); }
+  .saved-test div { display: flex; gap: .4rem; }
+  .saved-test button { min-height: 2.2rem; font-size: .78rem; }
+  :global(:root[data-theme='light']) .build-lab__hero { border-color: #b99c70; background: radial-gradient(circle at 90% 8%, rgb(153 45 28 / 14%), transparent 39%), linear-gradient(135deg, #fffaf1, #ede0cc); box-shadow: 0 1.2rem 3rem rgb(91 55 32 / 15%); }
+  :global(:root[data-theme='light']) .build-lab__hero h2 { color: #2d1b12; }
+  :global(:root[data-theme='light']) .build-lab__hero p { color: #514032; }
+  :global(:root[data-theme='light']) .build-lab__hero dl div { border-color: #c1a477; background: rgb(255 253 249 / 76%); }
+  :global(:root[data-theme='light']) .build-lab__hero dd { color: #613807; }
+  :global(:root[data-theme='light']) .build-sheet, :global(:root[data-theme='light']) .saved-tests { border-color: #c1a477; background: linear-gradient(145deg, #fffdf8, #f0e4d2); }
+  :global(:root[data-theme='light']) .build-readout { border-color: #b99c70; background: radial-gradient(circle at 95% 0, rgb(135 36 24 / 10%), transparent 37%), rgb(255 253 249 / 72%); }
+  :global(:root[data-theme='light']) .build-readout h3, :global(:root[data-theme='light']) .saved-tests h3 { color: #623807; }
+  @media (max-width: 64rem) { .build-lab__workspace { grid-template-columns: 1fr; } .saved-tests { position: static; max-height: none; } }
+  @media (max-width: 48rem) { .build-lab__hero { grid-template-columns: 1fr; } .build-sheet__grid, .build-readout__columns { grid-template-columns: 1fr; } .build-sheet__grid--notes { grid-template-columns: 1fr; } }
+  @media (max-width: 32rem) { .build-lab__hero dl { grid-template-columns: 1fr; } .build-sheet__actions { display: grid; } .saved-test div { display: grid; } }
+</style>

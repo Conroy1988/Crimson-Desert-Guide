@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "datasetVersion": "1.0.0",
+  "gamePatch": "1.15.00",
+  "lastVerified": "2026-07-26",
+  "storageKey": "crimson-desert-guide.build-lab.v1",
+  "weaponFamilies": [
+    {"id":"sword","label":"Sword","scope":"official-general"},
+    {"id":"spear","label":"Spear","scope":"official-general"},
+    {"id":"shield","label":"Shield","scope":"character-specific-confirmation-required"},
+    {"id":"bow","label":"Bow","scope":"official-general"},
+    {"id":"two-handed","label":"Two-handed weapon","scope":"official-general"},
+    {"id":"rapier-shield","label":"Rapier and shield","scope":"official-general"},
+    {"id":"firearms","label":"Firearms","scope":"official-general"},
+    {"id":"cannon","label":"Cannon","scope":"official-general"},
+    {"id":"unarmed","label":"Unarmed","scope":"character-specific"},
+    {"id":"greathammer","label":"Greathammer","scope":"character-specific"}
+  ],
+  "encounters": [
+    {"id":"open-world","label":"Open-world route"},
+    {"id":"single-boss","label":"Single boss"},
+    {"id":"group-battle","label":"Group battle"},
+    {"id":"stronghold","label":"Stronghold or liberation"},
+    {"id":"abyss","label":"Abyss or puzzle-combat sequence"},
+    {"id":"challenge","label":"Weapon or mastery challenge"}
+  ],
+  "dimensions": [
+    {"id":"reach","label":"Reach","question":"Can the setup act safely at the required distance?"},
+    {"id":"recovery","label":"Recovery","question":"How safely can the character defend or move after committing?"},
+    {"id":"resource","label":"Resource pressure","question":"Does the setup preserve stamina, Spirit, ammunition or consumables?"},
+    {"id":"control","label":"Control","question":"Can it interrupt, reposition or contain the target group?"},
+    {"id":"mobility","label":"Mobility","question":"Can it enter, exit and reposition without losing control?"},
+    {"id":"defence","label":"Defensive safety","question":"How reliably does it survive missed reads and crowded terrain?"},
+    {"id":"terrain","label":"Terrain tolerance","question":"Does it remain usable on slopes, ledges, interiors and uneven ground?"}
+  ],
+  "archetypes": [
+    {
+      "id":"field-balanced",
+      "title":"Field-Balanced",
+      "objective":"Maintain a dependable mix of defence, movement, reach and resource control during general exploration.",
+      "suggestedCharacters":["kliff","oongka","damiane"],
+      "priorityDimensions":["recovery","mobility","defence","terrain"],
+      "tradeoffs":["Does not maximise a single pressure tool.","Must be re-tested when the terrain or target count changes."],
+      "protocol":["Use the same open-world route three times.","Record healing, stamina/Spirit pressure and forced disengagements.","Change only one weapon or skill choice between trials."],
+      "evidence":"editorial-framework"
+    },
+    {
+      "id":"defensive-control",
+      "title":"Defensive Control",
+      "objective":"Prioritise safe reads, guard or shield utility, target containment and low-risk recovery.",
+      "suggestedCharacters":["damiane","kliff"],
+      "priorityDimensions":["defence","control","recovery"],
+      "tradeoffs":["Can reduce mobility or ranged coverage.","Shield-specific behaviour is currently affected by Damiane's Shield Toss death-state issue."],
+      "protocol":["Test against the same aggressive target without changing difficulty or arena.","Record failed guards, emergency healing and unsafe recovery windows.","Repeat after a save/reload when testing Damiane shield behaviour."],
+      "evidence":"editorial-framework"
+    },
+    {
+      "id":"aerial-mobility",
+      "title":"Aerial Mobility",
+      "objective":"Use confirmed character movement tools to preserve positioning and terrain access.",
+      "suggestedCharacters":["kliff","oongka","damiane"],
+      "priorityDimensions":["mobility","terrain","recovery"],
+      "tradeoffs":["Aerial movement does not itself prove higher damage or safety.","Inputs and useful follow-ups differ by character and patch history."],
+      "protocol":["Choose one terrain route with elevation changes.","Record failed transitions, unsafe landings and actions available immediately after movement.","Repeat without the aerial tool to identify the actual utility gained."],
+      "evidence":"official-capability-editorial-test"
+    },
+    {
+      "id":"ranged-pressure",
+      "title":"Ranged Pressure",
+      "objective":"Create distance, maintain target access and test ammunition or reload pressure without assuming a universal damage advantage.",
+      "suggestedCharacters":["oongka","damiane"],
+      "priorityDimensions":["reach","resource","mobility"],
+      "tradeoffs":["Ammunition, reload and target-selection behaviour can dominate results.","Close terrain or small targets may invalidate an otherwise stable test."],
+      "protocol":["Fix target, range and ammunition before each trial.","Record missed targeting, reload interruptions and forced melee transitions.","Re-test while sliding only after a stationary baseline exists."],
+      "evidence":"official-capability-editorial-test"
+    },
+    {
+      "id":"heavy-impact",
+      "title":"Heavy Impact",
+      "objective":"Test commitment-heavy attacks, crowd displacement and large-target pressure under controlled recovery conditions.",
+      "suggestedCharacters":["oongka","kliff"],
+      "priorityDimensions":["control","reach","recovery","resource"],
+      "tradeoffs":["Long commitments can create unsafe recovery windows.","Heavy-object and weapon behaviour changed across patches, so old performance clips are not canonical evidence."],
+      "protocol":["Use one repeatable group or large target.","Record interruptions, recovery punishment and resource depletion rather than only successful hits.","Do not compare damage unless equipment, target state and inputs are held constant."],
+      "evidence":"editorial-framework"
+    },
+    {
+      "id":"unarmed-chain",
+      "title":"Unarmed Chain",
+      "objective":"Evaluate bare-hand chains, kicks and finishers for control, recovery and weapon-independent reliability.",
+      "suggestedCharacters":["kliff","damiane"],
+      "priorityDimensions":["control","recovery","mobility"],
+      "tradeoffs":["Confirmed skill availability does not establish equal character performance.","Range and crowd exposure must be tested separately from combo completion."],
+      "protocol":["Test a fixed short chain before adding finishers.","Record dropped inputs, target displacement and post-chain safety.","Compare against the same character's weapon baseline rather than another character."],
+      "evidence":"official-capability-editorial-test"
+    },
+    {
+      "id":"boss-reliability",
+      "title":"Boss Reliability",
+      "objective":"Prefer repeatable defence, camera control, healing access and consistent punish windows over peak unverified output.",
+      "suggestedCharacters":["kliff","oongka","damiane"],
+      "priorityDimensions":["defence","recovery","resource","reach"],
+      "tradeoffs":["A conservative setup may extend the encounter.","Boss arena, camera and phase behaviour can invalidate cross-boss comparisons."],
+      "protocol":["Use the same boss or Memory Fragment rematch for at least three trials.","Record deaths, healing use, missed punish windows and camera failures.","Change one loadout element only after a repeatable baseline is established."],
+      "evidence":"editorial-framework"
+    },
+    {
+      "id":"exploration-utility",
+      "title":"Exploration Utility",
+      "objective":"Balance traversal, interaction access, safe combat and low interruption cost during long world routes.",
+      "suggestedCharacters":["kliff","oongka","damiane"],
+      "priorityDimensions":["mobility","terrain","resource","defence"],
+      "tradeoffs":["Story or faction progression may still require Kliff.","Traversal access and combat efficiency should be measured separately."],
+      "protocol":["Use a route containing travel, gathering and one combat interruption.","Record character-switch requirements, traversal failures and inventory/resource stops.","Do not score route speed until path and interaction order are identical."],
+      "evidence":"official-capability-editorial-test"
+    }
+  ],
+  "sources": [
+    "https://store.steampowered.com/app/3321460/Crimson_Desert/",
+    "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=81&pubDate=20260411",
+    "https://crimsondesert.pearlabyss.com/en-us/News/Notice/Detail?_boardNo=84",
+    "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=90&pubDate=20260511",
+    "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=92",
+    "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=94&pubDate=20260612",
+    "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=100",
+    "https://crimsondesert.pearlabyss.com/en-US/News/Notice/Detail?_boardNo=105",
+    "https://crimsondesert.pearlabyss.com/en-us/News/Notice/Detail?_boardNo=109"
+  ]
+}
