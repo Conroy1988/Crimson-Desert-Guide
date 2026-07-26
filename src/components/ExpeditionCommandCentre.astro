@@ -1,0 +1,464 @@
+---
+import dataset from '../../data/command-centre.json';
+
+const assetById = new Map(dataset.media.assets.map((asset) => [asset.id, asset]));
+const hero = assetById.get('official-kliff-launch') ?? dataset.media.assets[0];
+const categoryAssets = [
+  assetById.get('official-boss-forest-colossus'),
+  assetById.get('official-weapon-pickaxe'),
+  assetById.get('official-pywel-horse'),
+  assetById.get('official-settlement-lakeside'),
+].filter(Boolean);
+---
+
+<section class="expedition-command" data-expedition-command style={`--command-hero: url('${hero.src}')`}>
+  <script id="expedition-command-data" type="application/json" set:html={JSON.stringify(dataset)}></script>
+
+  <header class="command-hero">
+    <div class="command-hero__shade" aria-hidden="true"></div>
+    <div class="command-hero__content">
+      <p class="command-kicker">Personal operations layer · Patch {dataset.gamePatch}</p>
+      <h2>Pywel Expedition Command Centre</h2>
+      <p>Plan the next session, resume recent guidance, search the full evidence archive and back up every supported local guide state from one control room.</p>
+      <div class="command-hero__actions">
+        <a href="#expedition-planner">Build expedition</a>
+        <a href="#command-search">Search command index</a>
+      </div>
+    </div>
+    <dl class="command-hero__metrics">
+      <div><dt>Search records</dt><dd>{dataset.metrics.searchableRecords}</dd></div>
+      <div><dt>Planner targets</dt><dd>{dataset.metrics.plannerRecords}</dd></div>
+      <div><dt>Official assets</dt><dd>{dataset.metrics.officialAssets}</dd></div>
+      <div><dt>Guide patch</dt><dd>{dataset.gamePatch}</dd></div>
+    </dl>
+    <a class="command-hero__credit" href={hero.sourcePage} target="_blank" rel="noreferrer">Official artwork · Pearl Abyss</a>
+  </header>
+
+  <div class="command-resume" data-command-resume hidden>
+    <div><span>Continue your adventure</span><strong data-resume-title></strong><small data-resume-time></small></div>
+    <a data-resume-link>Resume guide →</a>
+  </div>
+
+  <section class="command-section" aria-labelledby="progress-overview-title">
+    <header class="command-section__heading">
+      <div><span>Unified local state</span><h3 id="progress-overview-title">Guide progress overview</h3></div>
+      <p>These figures are read from this browser only. No account, telemetry or server-side profile is created.</p>
+    </header>
+    <div class="command-progress">
+      {dataset.stateSources.map((source) => (
+        <a class="progress-card" href={source.href} data-progress-source={source.id} data-progress-total={source.total}>
+          <span>{source.label}</span>
+          <strong><i data-progress-current>0</i><small data-progress-unit> / {source.total}</small></strong>
+          <div aria-hidden="true"><i data-progress-bar></i></div>
+          <small data-progress-detail>No local state yet</small>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <div class="command-grid">
+    <section class="command-panel command-panel--search" id="command-search" aria-labelledby="command-search-title">
+      <header>
+        <div><span>Command index</span><h3 id="command-search-title">Search the entire guide</h3></div>
+        <kbd>/</kbd>
+      </header>
+      <div class="command-search-controls">
+        <label><span>Search</span><input type="search" placeholder="Boss, weapon, mount, quest, location or guide…" data-command-search /></label>
+        <label><span>Type</span><select data-command-type><option value="all">All records</option><option value="tool">Tools</option><option value="guide">Guides</option><option value="content">Quests & content</option><option value="location">Locations</option><option value="boss">Bosses</option><option value="weapon">Weapons</option><option value="build">Builds</option><option value="character">Characters</option></select></label>
+      </div>
+      <div class="command-search-summary"><span><strong data-command-count>0</strong> records shown</span><button type="button" data-command-clear>Clear</button></div>
+      <div class="command-results" data-command-results></div>
+      <p class="command-empty" data-command-empty hidden>No command records match the current filters.</p>
+    </section>
+
+    <aside class="command-panel command-profile" aria-labelledby="spoiler-profile-title">
+      <header><div><span>Guide-wide preference</span><h3 id="spoiler-profile-title">Spoiler profile</h3></div></header>
+      <p>Compatible databases, catalogues and Atlas filters inherit this browser-level preference on page load.</p>
+      <label><span>Profile</span><select data-spoiler-profile>{dataset.spoilerProfiles.map((profile) => <option value={profile.id}>{profile.label}</option>)}</select></label>
+      <div data-spoiler-description></div>
+      <small>Manual reveal controls still remain available where the guide protects major identities.</small>
+    </aside>
+  </div>
+
+  <section class="command-section command-planner" id="expedition-planner" aria-labelledby="expedition-planner-title">
+    <header class="command-section__heading">
+      <div><span>Private session preparation</span><h3 id="expedition-planner-title">Expedition planner</h3></div>
+      <div class="planner-heading__actions"><strong><i data-planner-done>0</i>/<i data-planner-total>0</i> complete</strong><button type="button" data-planner-reset>Clear plan</button></div>
+    </header>
+    <div class="planner-add">
+      <label><span>Add verified or research objective</span><select data-planner-select><option value="">Choose an objective</option>{dataset.plannerRecords.map((record) => <option value={record.id}>{record.typeLabel} · {record.title}</option>)}</select></label>
+      <button type="button" data-planner-add>Add to expedition</button>
+    </div>
+    <div class="planner-list" data-planner-list></div>
+    <p class="planner-empty" data-planner-empty>No objectives yet. Add a command-search result or choose an objective above.</p>
+  </section>
+
+  <div class="command-grid command-grid--vault">
+    <section class="command-panel guide-vault" aria-labelledby="guide-vault-title">
+      <header><div><span>Local-first resilience</span><h3 id="guide-vault-title">Complete guide data vault</h3></div><strong>Validated JSON</strong></header>
+      <p>Back up the Expedition Planner, spoiler profile, Completion Companion, Atlas, Collectible Catalogue, Research Queue, Build Laboratory and last-viewed guide in one file.</p>
+      <div class="guide-vault__actions">
+        <button type="button" data-vault-export>Export complete vault</button>
+        <button type="button" data-vault-import>Restore vault</button>
+        <input type="file" accept="application/json,.json" hidden data-vault-file />
+      </div>
+      <p class="command-status" data-command-status aria-live="polite"></p>
+    </section>
+
+    <aside class="command-panel media-provenance" aria-labelledby="media-provenance-title">
+      <header><div><span>Visual provenance</span><h3 id="media-provenance-title">Official asset registry</h3></div><strong>{dataset.media.assets.length}</strong></header>
+      <p>Boss, weapon, mount, character and world visuals are restricted to official Pearl Abyss or official storefront media.</p>
+      <div class="media-provenance__strip">
+        {categoryAssets.map((asset) => <a href={asset.sourcePage} target="_blank" rel="noreferrer" title={asset.title}><img src={asset.src} alt={asset.alt} loading="lazy" /></a>)}
+      </div>
+      <nav><a href={dataset.media.mediaPage} target="_blank" rel="noreferrer">Official media library</a><a href={dataset.media.fanKit} target="_blank" rel="noreferrer">Official fan kit</a><a href={dataset.media.fanGuidelines} target="_blank" rel="noreferrer">Fan Content Guidelines</a></nav>
+    </aside>
+  </div>
+</section>
+
+<script>
+  import {
+    addExpeditionTask,
+    createEmptyCommandCentreState,
+    createGuideVault,
+    loadCommandCentreState,
+    moveExpeditionTask,
+    removeExpeditionTask,
+    restoreGuideVault,
+    saveCommandCentreState,
+    setSpoilerProfile,
+    updateExpeditionTask,
+  } from '../lib/command-centre-state.mjs';
+
+  const bindExpeditionCommand = () => {
+    for (const root of document.querySelectorAll('[data-expedition-command]')) {
+      if (!(root instanceof HTMLElement) || root.dataset.bound === 'true') continue;
+      root.dataset.bound = 'true';
+      const dataNode = root.querySelector('#expedition-command-data');
+      if (!(dataNode instanceof HTMLScriptElement)) continue;
+      const dataset = JSON.parse(dataNode.textContent || '{}');
+      const records = new Map(dataset.records.map((record) => [record.id, record]));
+      const assets = new Map(dataset.media.assets.map((asset) => [asset.id, asset]));
+      const status = root.querySelector('[data-command-status]');
+      const search = root.querySelector('[data-command-search]');
+      const type = root.querySelector('[data-command-type]');
+      const results = root.querySelector('[data-command-results]');
+      const count = root.querySelector('[data-command-count]');
+      const empty = root.querySelector('[data-command-empty]');
+      const profile = root.querySelector('[data-spoiler-profile]');
+      const profileDescription = root.querySelector('[data-spoiler-description]');
+      const plannerSelect = root.querySelector('[data-planner-select]');
+      const plannerList = root.querySelector('[data-planner-list]');
+      const plannerEmpty = root.querySelector('[data-planner-empty]');
+      const plannerDone = root.querySelector('[data-planner-done]');
+      const plannerTotal = root.querySelector('[data-planner-total]');
+      const vaultFile = root.querySelector('[data-vault-file]');
+
+      const announce = (message, failure = false) => {
+        if (!(status instanceof HTMLElement)) return;
+        status.textContent = message;
+        status.toggleAttribute('data-failure', failure);
+      };
+
+      let state = createEmptyCommandCentreState(dataset);
+      try {
+        const loaded = loadCommandCentreState(window.localStorage, dataset);
+        state = loaded.state;
+        const storedProfile = window.localStorage.getItem(dataset.spoilerKey);
+        if (dataset.spoilerProfiles.some((item) => item.id === storedProfile)) state.spoilerProfile = storedProfile;
+        if (loaded.error) announce(loaded.error, true);
+      } catch (error) {
+        announce(error instanceof Error ? error.message : 'Command Centre state could not be loaded.', true);
+      }
+
+      const persist = () => {
+        const saved = saveCommandCentreState(window.localStorage, state, dataset);
+        state = saved.state;
+      };
+
+      const spoilerAllowed = (record) => {
+        if (state.spoilerProfile === 'full') return true;
+        if (state.spoilerProfile === 'minor') return record.spoilerLevel !== 'full';
+        return record.spoilerLevel === 'none';
+      };
+
+      const displayTitle = (record) => spoilerAllowed(record) ? record.title : record.spoilerLevel === 'full' ? 'Major-spoiler objective' : 'Spoiler-controlled objective';
+
+      const readStored = (key) => {
+        try {
+          const raw = window.localStorage.getItem(key);
+          return raw ? JSON.parse(raw) : null;
+        } catch { return null; }
+      };
+
+      const progressValue = (source, stored) => {
+        if (!stored) return { current: 0, detail: 'No local state yet' };
+        if (source.id === 'completion') return { current: Array.isArray(stored.completed) ? stored.completed.length : 0, detail: 'verified milestones completed' };
+        if (source.id === 'atlas') return { current: Array.isArray(stored.visited) ? stored.visited.length : 0, detail: 'locations visited' };
+        if (source.id === 'collectibles') {
+          const ids = new Set([...Object.keys(stored.counts ?? {}), ...(Array.isArray(stored.research) ? stored.research : [])]);
+          return { current: ids.size, detail: 'catalogue records tracked' };
+        }
+        if (source.id === 'research') return { current: Object.keys(stored.stages ?? {}).length, detail: 'research records staged' };
+        if (source.id === 'builds') return { current: Array.isArray(stored.tests) ? stored.tests.length : 0, detail: 'controlled tests saved', noRatio: true };
+        return { current: 0, detail: 'local state detected' };
+      };
+
+      const renderProgress = () => {
+        for (const card of root.querySelectorAll('[data-progress-source]')) {
+          if (!(card instanceof HTMLElement)) continue;
+          const source = dataset.stateSources.find((item) => item.id === card.dataset.progressSource);
+          if (!source) continue;
+          const value = progressValue(source, readStored(source.storageKey));
+          const current = card.querySelector('[data-progress-current]');
+          const unit = card.querySelector('[data-progress-unit]');
+          const detail = card.querySelector('[data-progress-detail]');
+          const bar = card.querySelector('[data-progress-bar]');
+          if (current) current.textContent = String(value.current);
+          if (unit && value.noRatio) unit.textContent = '';
+          if (detail) detail.textContent = value.detail;
+          if (bar instanceof HTMLElement) bar.style.width = `${Math.min(100, Math.round((value.current / source.total) * 100))}%`;
+        }
+      };
+
+      const renderResume = () => {
+        const stored = readStored(dataset.lastRouteKey);
+        const resume = root.querySelector('[data-command-resume]');
+        if (!(resume instanceof HTMLElement) || !stored?.href || !stored?.title) return;
+        const titleNode = resume.querySelector('[data-resume-title]');
+        const timeNode = resume.querySelector('[data-resume-time]');
+        const link = resume.querySelector('[data-resume-link]');
+        if (titleNode) titleNode.textContent = stored.title;
+        if (timeNode) timeNode.textContent = stored.visitedAt ? `Last opened ${new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(stored.visitedAt))}` : 'Recently opened';
+        if (link instanceof HTMLAnchorElement) link.href = stored.href;
+        resume.hidden = false;
+      };
+
+      const makeResult = (record) => {
+        const asset = assets.get(record.assetId);
+        const article = document.createElement('article');
+        article.className = 'command-result';
+        article.dataset.spoiler = record.spoilerLevel;
+        const image = document.createElement('img');
+        image.src = asset?.src ?? '';
+        image.alt = asset?.alt ?? '';
+        image.loading = 'lazy';
+        const copy = document.createElement('div');
+        const meta = document.createElement('span');
+        meta.textContent = `${record.typeLabel} · ${record.evidence}`;
+        const heading = document.createElement('h4');
+        heading.textContent = displayTitle(record);
+        const paragraph = document.createElement('p');
+        paragraph.textContent = spoilerAllowed(record) ? record.summary : 'This record is masked by the current guide-wide spoiler profile.';
+        const actions = document.createElement('div');
+        const open = document.createElement('a');
+        open.href = record.href;
+        open.textContent = 'Open';
+        actions.append(open);
+        if (record.plannerEligible) {
+          const add = document.createElement('button');
+          add.type = 'button';
+          add.textContent = state.tasks.some((task) => task.recordId === record.id) ? 'Added' : 'Add to expedition';
+          add.disabled = state.tasks.some((task) => task.recordId === record.id);
+          add.addEventListener('click', () => {
+            state = addExpeditionTask(state, dataset, record.id);
+            persist();
+            renderPlanner();
+            renderSearch();
+            announce(`${displayTitle(record)} added to the expedition.`);
+          });
+          actions.append(add);
+        }
+        copy.append(meta, heading, paragraph, actions);
+        article.append(image, copy);
+        return article;
+      };
+
+      const renderSearch = () => {
+        if (!(results instanceof HTMLElement)) return;
+        const query = search instanceof HTMLInputElement ? search.value.trim().toLowerCase() : '';
+        const selectedType = type instanceof HTMLSelectElement ? type.value : 'all';
+        const matches = dataset.records.filter((record) => {
+          const typePass = selectedType === 'all' || record.kind === selectedType || record.type === selectedType;
+          const queryPass = !query || record.searchText.includes(query) || record.title.toLowerCase().includes(query);
+          return typePass && queryPass;
+        }).slice(0, 24);
+        results.replaceChildren(...matches.map(makeResult));
+        if (count) count.textContent = String(matches.length);
+        if (empty instanceof HTMLElement) empty.hidden = matches.length !== 0;
+      };
+
+      const renderProfile = () => {
+        if (profile instanceof HTMLSelectElement) profile.value = state.spoilerProfile;
+        const selected = dataset.spoilerProfiles.find((item) => item.id === state.spoilerProfile);
+        if (profileDescription instanceof HTMLElement) profileDescription.textContent = selected?.description ?? '';
+        document.documentElement.dataset.spoilerProfile = state.spoilerProfile;
+      };
+
+      const renderPlanner = () => {
+        if (!(plannerList instanceof HTMLElement)) return;
+        const nodes = state.tasks.map((task, index) => {
+          const record = records.get(task.recordId);
+          const asset = assets.get(record.assetId);
+          const article = document.createElement('article');
+          article.className = 'planner-task';
+          article.toggleAttribute('data-done', task.done);
+          const image = document.createElement('img');
+          image.src = asset?.src ?? '';
+          image.alt = asset?.alt ?? '';
+          image.loading = 'lazy';
+          const body = document.createElement('div');
+          const header = document.createElement('header');
+          const check = document.createElement('input');
+          check.type = 'checkbox';
+          check.checked = task.done;
+          check.setAttribute('aria-label', `Mark ${displayTitle(record)} complete`);
+          check.addEventListener('change', () => { state = updateExpeditionTask(state, dataset, task.id, { done: check.checked }); persist(); renderPlanner(); });
+          const title = document.createElement('div');
+          const meta = document.createElement('span');
+          meta.textContent = `${index + 1}. ${record.typeLabel}`;
+          const heading = document.createElement('h4');
+          heading.textContent = displayTitle(record);
+          title.append(meta, heading);
+          const controls = document.createElement('div');
+          for (const [label, direction] of [['↑', 'up'], ['↓', 'down']]) {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.textContent = label;
+            button.title = direction === 'up' ? 'Move objective up' : 'Move objective down';
+            button.disabled = direction === 'up' ? index === 0 : index === state.tasks.length - 1;
+            button.addEventListener('click', () => { state = moveExpeditionTask(state, dataset, task.id, direction); persist(); renderPlanner(); });
+            controls.append(button);
+          }
+          const remove = document.createElement('button');
+          remove.type = 'button';
+          remove.textContent = 'Remove';
+          remove.addEventListener('click', () => { state = removeExpeditionTask(state, dataset, task.id); persist(); renderPlanner(); renderSearch(); });
+          controls.append(remove);
+          header.append(check, title, controls);
+          const note = document.createElement('textarea');
+          note.rows = 2;
+          note.maxLength = 2000;
+          note.placeholder = 'Private session note, route reminder or equipment preparation…';
+          note.value = task.note;
+          note.addEventListener('change', () => { state = updateExpeditionTask(state, dataset, task.id, { note: note.value }); persist(); announce('Expedition note saved locally.'); });
+          const open = document.createElement('a');
+          open.href = record.href;
+          open.textContent = 'Open related guide →';
+          body.append(header, note, open);
+          article.append(image, body);
+          return article;
+        });
+        plannerList.replaceChildren(...nodes);
+        if (plannerEmpty instanceof HTMLElement) plannerEmpty.hidden = state.tasks.length !== 0;
+        if (plannerDone) plannerDone.textContent = String(state.tasks.filter((task) => task.done).length);
+        if (plannerTotal) plannerTotal.textContent = String(state.tasks.length);
+        if (plannerSelect instanceof HTMLSelectElement) {
+          for (const option of plannerSelect.options) option.disabled = option.value !== '' && state.tasks.some((task) => task.recordId === option.value);
+          if (plannerSelect.selectedOptions[0]?.disabled) plannerSelect.value = '';
+        }
+      };
+
+      search?.addEventListener('input', renderSearch);
+      type?.addEventListener('change', renderSearch);
+      root.querySelector('[data-command-clear]')?.addEventListener('click', () => {
+        if (search instanceof HTMLInputElement) search.value = '';
+        if (type instanceof HTMLSelectElement) type.value = 'all';
+        renderSearch();
+        search?.focus();
+      });
+
+      profile?.addEventListener('change', () => {
+        if (!(profile instanceof HTMLSelectElement)) return;
+        state = setSpoilerProfile(state, dataset, profile.value);
+        persist();
+        renderProfile();
+        renderSearch();
+        renderPlanner();
+        window.dispatchEvent(new CustomEvent('crimson-desert:spoiler-profile'));
+        announce(`Spoiler profile changed to ${profile.selectedOptions[0]?.textContent ?? profile.value}.`);
+      });
+
+      root.querySelector('[data-planner-add]')?.addEventListener('click', () => {
+        if (!(plannerSelect instanceof HTMLSelectElement) || !plannerSelect.value) return;
+        const record = records.get(plannerSelect.value);
+        state = addExpeditionTask(state, dataset, plannerSelect.value);
+        persist();
+        plannerSelect.value = '';
+        renderPlanner();
+        renderSearch();
+        announce(`${displayTitle(record)} added to the expedition.`);
+      });
+
+      root.querySelector('[data-planner-reset]')?.addEventListener('click', () => {
+        if (!window.confirm('Clear every objective from the current expedition plan?')) return;
+        state.tasks = [];
+        persist();
+        renderPlanner();
+        renderSearch();
+        announce('Expedition plan cleared.');
+      });
+
+      root.querySelector('[data-vault-export]')?.addEventListener('click', () => {
+        try {
+          const vault = createGuideVault(window.localStorage, state, dataset);
+          const blob = new Blob([JSON.stringify(vault, null, 2)], { type: 'application/json' });
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(blob);
+          link.download = `crimson-desert-guide-vault-${new Date().toISOString().slice(0, 10)}.json`;
+          link.click();
+          URL.revokeObjectURL(link.href);
+          announce(`Complete guide vault exported with ${Object.keys(vault.entries).length} supported state sources.`);
+        } catch (error) {
+          announce(error instanceof Error ? error.message : 'Guide vault could not be exported.', true);
+        }
+      });
+
+      root.querySelector('[data-vault-import]')?.addEventListener('click', () => vaultFile?.click());
+      vaultFile?.addEventListener('change', async () => {
+        if (!(vaultFile instanceof HTMLInputElement) || !vaultFile.files?.[0]) return;
+        try {
+          const raw = JSON.parse(await vaultFile.files[0].text());
+          state = restoreGuideVault(window.localStorage, raw, dataset);
+          renderProfile();
+          renderProgress();
+          renderResume();
+          renderPlanner();
+          renderSearch();
+          window.dispatchEvent(new CustomEvent('crimson-desert:spoiler-profile'));
+          announce('Guide vault validated and restored. Reload other open guide tabs before continuing work.');
+        } catch (error) {
+          announce(error instanceof Error ? error.message : 'Guide vault could not be restored.', true);
+        } finally {
+          vaultFile.value = '';
+        }
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key !== '/' || event.ctrlKey || event.metaKey || event.altKey) return;
+        const target = event.target;
+        if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || target instanceof HTMLSelectElement) return;
+        event.preventDefault();
+        search?.focus();
+      });
+
+      renderProfile();
+      renderProgress();
+      renderResume();
+      renderPlanner();
+      renderSearch();
+    }
+  };
+
+  bindExpeditionCommand();
+  document.addEventListener('astro:page-load', bindExpeditionCommand);
+</script>
+
+<style>
+  .expedition-command{display:grid;gap:1.2rem;margin-block:1.5rem 3rem}.command-hero{position:relative;isolation:isolate;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(18rem,.75fr);gap:2rem;min-height:27rem;overflow:hidden;padding:clamp(1.4rem,4vw,2.7rem);border:1px solid rgb(214 163 79/34%);border-radius:1rem;background:#090908;box-shadow:0 2rem 5rem rgb(0 0 0/35%)}.command-hero::before{position:absolute;inset:0;z-index:-3;content:'';background-image:var(--command-hero);background-position:center;background-size:cover}.command-hero::after{position:absolute;inset:0;z-index:-2;content:'';background:linear-gradient(90deg,rgb(7 7 6/98%) 0%,rgb(8 8 7/91%) 45%,rgb(8 8 7/38%) 100%),linear-gradient(0deg,rgb(6 6 5/90%),transparent 58%),radial-gradient(circle at 74% 10%,rgb(151 39 25/28%),transparent 38%)}.command-hero__shade{position:absolute;inset:.6rem;z-index:-1;border:1px solid rgb(226 179 93/16%);border-radius:.68rem}.command-hero__content{display:grid;align-content:end;max-width:47rem}.command-kicker{margin:0 0 auto!important;font-size:.67rem;font-weight:850;letter-spacing:.14em;text-transform:uppercase;color:#d2a451!important}.command-hero h2{max-width:13ch;margin:clamp(3rem,10vw,7rem) 0 .8rem!important;border:0!important;font-family:var(--cd-font-display);font-size:clamp(2.5rem,6vw,5rem)!important;font-weight:500;line-height:.94;color:#fff3dc!important}.command-hero__content>p:not(.command-kicker){max-width:42rem;margin:0!important;font-size:clamp(.95rem,1.4vw,1.08rem);line-height:1.65;color:#d2c4ae!important}.command-hero__actions{display:flex;flex-wrap:wrap;gap:.65rem;margin-top:1.2rem}.command-hero__actions a{padding:.62rem .85rem;border:1px solid rgb(219 166 78/34%);border-radius:.45rem;background:rgb(7 7 6/64%);font-size:.72rem;font-weight:800;text-decoration:none;color:#efcb83}.command-hero__metrics{align-self:end;display:grid;grid-template-columns:repeat(2,1fr);gap:.65rem;margin:0}.command-hero__metrics div{display:grid;place-items:center;min-height:5.4rem;padding:.7rem;border:1px solid rgb(216 164 80/22%);border-radius:.6rem;background:rgb(4 4 4/58%);backdrop-filter:blur(10px);text-align:center}.command-hero__metrics dt{font-size:.57rem;letter-spacing:.1em;text-transform:uppercase;color:#9d907c}.command-hero__metrics dd{margin:.15rem 0 0;font-family:var(--cd-font-display);font-size:1.5rem;color:#f0cc84}.command-hero__credit{position:absolute;right:1rem;bottom:.7rem;font-size:.55rem;text-decoration:none;color:#ad9b7d}.command-resume{display:flex;gap:1rem;align-items:center;justify-content:space-between;padding:1rem 1.1rem;border:1px solid rgb(205 151 64/34%);border-radius:.75rem;background:linear-gradient(90deg,rgb(120 31 21/18%),transparent 55%),var(--cd-surface)}.command-resume div{display:grid;gap:.14rem}.command-resume span,.command-section__heading span,.command-panel header span{font-size:.58rem;font-weight:850;letter-spacing:.11em;text-transform:uppercase;color:var(--sl-color-accent-high)}.command-resume strong{font-family:var(--cd-font-display);font-size:1.15rem}.command-resume small{color:var(--sl-color-gray-3)}.command-resume a{white-space:nowrap;font-weight:800}.command-section,.command-panel{border:1px solid var(--cd-border);border-radius:.8rem;background:var(--cd-surface)}.command-section{display:grid;gap:1rem;padding:1rem}.command-section__heading,.command-panel>header{display:flex;gap:1rem;align-items:flex-start;justify-content:space-between}.command-section__heading div,.command-panel>header div{display:grid;gap:.2rem}.command-section__heading h3,.command-panel h3{margin:0!important;font-size:clamp(1.25rem,2.4vw,1.8rem)!important}.command-section__heading p{max-width:39rem;margin:0!important;color:var(--sl-color-gray-3)}.command-progress{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.7rem}.progress-card{display:grid;gap:.55rem;padding:.85rem;border:1px solid var(--cd-border);border-radius:.6rem;background:rgb(0 0 0/12%);text-decoration:none}.progress-card>span{font-size:.63rem;font-weight:800;color:var(--sl-color-gray-2)}.progress-card>strong{font-family:var(--cd-font-display);font-size:1.45rem;color:var(--sl-color-accent-high)}.progress-card>strong small{font-family:var(--sl-font);font-size:.68rem;font-weight:600;color:var(--sl-color-gray-4)}.progress-card>div{height:.25rem;overflow:hidden;border-radius:999px;background:rgb(128 116 97/22%)}.progress-card>div i{display:block;width:0;height:100%;border-radius:inherit;background:linear-gradient(90deg,#8f281d,#d6a34c);transition:width .3s ease}.progress-card>small{font-size:.59rem;color:var(--sl-color-gray-4)}.command-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(17rem,.45fr);gap:1rem}.command-panel{display:grid;align-content:start;gap:1rem;padding:1rem}.command-panel kbd{padding:.22rem .45rem;border:1px solid var(--cd-border);border-bottom-width:2px;border-radius:.35rem;background:rgb(0 0 0/12%);font-size:.7rem}.command-search-controls{display:grid;grid-template-columns:minmax(15rem,1fr) minmax(10rem,.35fr);gap:.7rem}.command-search-controls label,.command-profile label,.planner-add label{display:grid;gap:.3rem}.command-search-controls label>span,.command-profile label>span,.planner-add label>span{font-size:.58rem;font-weight:850;letter-spacing:.09em;text-transform:uppercase;color:var(--sl-color-gray-3)}.command-search-controls :is(input,select),.command-profile select,.planner-add select,.planner-task textarea{width:100%;min-height:2.55rem;padding:.52rem .65rem;border:1px solid var(--cd-border);border-radius:.45rem;background:color-mix(in srgb,var(--sl-color-black) 82%,transparent);color:var(--sl-color-gray-1)}.command-search-summary{display:flex;justify-content:space-between;font-size:.7rem;color:var(--sl-color-gray-3)}.command-search-summary button{border:0;background:transparent;font-weight:800;color:var(--sl-color-accent-high);cursor:pointer}.command-results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.7rem}.command-result{display:grid;grid-template-columns:6.5rem minmax(0,1fr);min-width:0;overflow:hidden;border:1px solid var(--cd-border);border-radius:.6rem;background:rgb(0 0 0/10%)}.command-result>img{width:100%;height:100%;min-height:8.5rem;object-fit:cover}.command-result>div{display:grid;align-content:start;gap:.35rem;min-width:0;padding:.65rem}.command-result span{font-size:.54rem;font-weight:850;letter-spacing:.07em;text-transform:uppercase;color:var(--sl-color-gray-4)}.command-result h4{margin:0!important;font-size:1rem!important}.command-result p{display:-webkit-box;overflow:hidden;margin:0!important;font-size:.68rem;line-height:1.45;-webkit-box-orient:vertical;-webkit-line-clamp:3}.command-result div>div{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:auto}.command-result :is(a,button),.planner-heading__actions button,.planner-add button,.guide-vault__actions button,.planner-task button{padding:.38rem .55rem;border:1px solid rgb(210 156 68/32%);border-radius:.35rem;background:rgb(127 34 24/15%);font-size:.62rem;font-weight:800;text-decoration:none;color:var(--sl-color-accent-high);cursor:pointer}.command-result button:disabled{opacity:.5;cursor:default}.command-empty,.planner-empty{margin:0!important;padding:1.5rem;border:1px dashed var(--cd-border);border-radius:.5rem;text-align:center;color:var(--sl-color-gray-3)}.command-profile>p{margin:0!important}.command-profile [data-spoiler-description]{padding:.75rem;border-left:2px solid #b4482d;background:rgb(144 45 27/10%);font-size:.76rem;color:var(--sl-color-gray-2)}.command-profile>small{color:var(--sl-color-gray-4)}.planner-heading__actions{display:flex;gap:.7rem;align-items:center}.planner-heading__actions strong{font-size:.68rem;color:var(--sl-color-gray-2)}.planner-add{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.7rem;align-items:end}.planner-add button{min-height:2.55rem;padding-inline:.9rem}.planner-list{display:grid;gap:.7rem}.planner-task{display:grid;grid-template-columns:8rem minmax(0,1fr);overflow:hidden;border:1px solid var(--cd-border);border-radius:.65rem;background:rgb(0 0 0/10%)}.planner-task[data-done]{opacity:.72}.planner-task>img{width:100%;height:100%;min-height:9.5rem;object-fit:cover}.planner-task>div{display:grid;gap:.65rem;padding:.75rem}.planner-task header{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:.65rem;align-items:start}.planner-task header input{width:1.1rem;height:1.1rem;margin-top:.25rem}.planner-task header>div:nth-child(2){display:grid}.planner-task header span{font-size:.54rem;font-weight:850;letter-spacing:.08em;text-transform:uppercase;color:var(--sl-color-gray-4)}.planner-task h4{margin:0!important;font-size:1.08rem!important}.planner-task header>div:last-child{display:flex;flex-wrap:wrap;gap:.3rem;justify-content:flex-end}.planner-task textarea{min-height:4.2rem;resize:vertical}.planner-task>a{width:fit-content;font-size:.66rem;font-weight:800}.command-grid--vault{grid-template-columns:1fr 1fr}.guide-vault>p,.media-provenance>p{margin:0!important}.guide-vault>header>strong,.media-provenance>header>strong{padding:.25rem .45rem;border:1px solid var(--cd-border);border-radius:999px;font-size:.58rem;color:var(--sl-color-accent-high)}.guide-vault__actions{display:flex;flex-wrap:wrap;gap:.55rem}.guide-vault__actions button{min-height:2.5rem}.command-status{min-height:1.2rem;margin:0!important;font-size:.7rem;color:#8fc59b}.command-status[data-failure]{color:#e38b78}.media-provenance__strip{display:grid;grid-template-columns:repeat(4,1fr);gap:.45rem}.media-provenance__strip a{overflow:hidden;border:1px solid var(--cd-border);border-radius:.45rem}.media-provenance__strip img{width:100%;height:5.3rem;object-fit:cover;transition:transform .2s ease}.media-provenance__strip a:hover img{transform:scale(1.04)}.media-provenance nav{display:flex;flex-wrap:wrap;gap:.55rem}.media-provenance nav a{font-size:.66rem;font-weight:800}.command-empty[hidden],.planner-empty[hidden],.command-resume[hidden]{display:none}.cd-visually-hidden{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;white-space:nowrap!important}.command-result img,.planner-task img,.media-provenance img{background:#171512}
+  :global(:root[data-theme='light']) .command-hero{border-color:#bba078;background:#f6eee3;box-shadow:0 1.4rem 3rem rgb(91 55 32/16%)}:global(:root[data-theme='light']) .command-hero::before{filter:sepia(.1) saturate(.76) brightness(1.08)}:global(:root[data-theme='light']) .command-hero::after{background:linear-gradient(90deg,rgb(255 252 247/98%) 0%,rgb(250 242 232/93%) 50%,rgb(250 242 232/42%) 100%),linear-gradient(0deg,rgb(255 251 246/91%),transparent 58%)}:global(:root[data-theme='light']) .command-kicker{color:#78351e!important}:global(:root[data-theme='light']) .command-hero h2{color:#2f1b10!important;text-shadow:none}:global(:root[data-theme='light']) .command-hero__content>p:not(.command-kicker){color:#554437!important;text-shadow:none}:global(:root[data-theme='light']) .command-hero__metrics div,:global(:root[data-theme='light']) .command-hero__actions a{border-color:#bda47e;background:rgb(255 253 249/78%)}:global(:root[data-theme='light']) .command-hero__metrics dt,:global(:root[data-theme='light']) .command-hero__credit{color:#655548}:global(:root[data-theme='light']) .command-hero__metrics dd,:global(:root[data-theme='light']) .command-hero__actions a{color:#633d0b}:global(:root[data-theme='light']) .progress-card,:global(:root[data-theme='light']) .command-result,:global(:root[data-theme='light']) .planner-task{background:#fffdf9}:global(:root[data-theme='light']) .command-search-controls :is(input,select),:global(:root[data-theme='light']) .command-profile select,:global(:root[data-theme='light']) .planner-add select,:global(:root[data-theme='light']) .planner-task textarea{background:#fffdf9;color:#3f3025}
+  @media(max-width:72rem){.command-progress{grid-template-columns:repeat(3,minmax(0,1fr))}.command-results{grid-template-columns:1fr}}
+  @media(max-width:54rem){.command-hero{grid-template-columns:1fr}.command-hero__metrics{grid-template-columns:repeat(4,1fr)}.command-grid,.command-grid--vault{grid-template-columns:1fr}.command-progress{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media(max-width:42rem){.command-hero{min-height:auto;padding:1rem}.command-hero h2{margin-top:4rem!important;font-size:clamp(2.2rem,12vw,3.3rem)!important}.command-hero__metrics{grid-template-columns:repeat(2,1fr)}.command-resume,.command-section__heading,.command-panel>header{align-items:flex-start;flex-direction:column}.command-resume a{white-space:normal}.command-progress{grid-template-columns:1fr}.command-search-controls,.planner-add{grid-template-columns:1fr}.command-result{grid-template-columns:5.3rem minmax(0,1fr)}.planner-task{grid-template-columns:1fr}.planner-task>img{height:8rem;min-height:0}.planner-task header{grid-template-columns:auto minmax(0,1fr)}.planner-task header>div:last-child{grid-column:1/-1;justify-content:flex-start}.media-provenance__strip{grid-template-columns:repeat(2,1fr)}.planner-heading__actions{flex-wrap:wrap}}
+  @media(prefers-reduced-motion:reduce){.progress-card>div i,.media-provenance__strip img{transition:none}}
+</style>

@@ -6,6 +6,7 @@ const metricLabels: Record<string, string> = {
   canonicalRecords: 'Canonical records',
   verifiedRecords: 'Verified records',
   researchRecords: 'Research records',
+  researchQueueRecords: 'Research protocols',
   completionMilestones: 'Completion milestones',
   guideDetailRecords: 'Quest & encounter details',
   catalogueRecords: 'Catalogue records',
@@ -13,6 +14,9 @@ const metricLabels: Record<string, string> = {
   technicalRecords: 'Technical records',
   playableCharacters: 'Playable characters',
   buildArchetypes: 'Build archetypes',
+  commandSearchRecords: 'Command search records',
+  commandPlannerRecords: 'Planner targets',
+  officialMediaAssets: 'Official media assets',
   steamSections: 'Steam sections',
 };
 ---
@@ -82,6 +86,21 @@ const metricLabels: Record<string, string> = {
     </dl>
   </section>
 
+  <section class="v1-command" aria-labelledby="v1-command">
+    <div>
+      <span>Personal operations layer</span>
+      <h3 id="v1-command">Pywel Expedition Command Centre</h3>
+      <p>{readiness.commandCentre.explanation}</p>
+      <a href="/command-centre/">Open Command Centre →</a>
+    </div>
+    <dl>
+      <div><dt>Search records</dt><dd>{readiness.commandCentre.searchRecords}</dd></div>
+      <div><dt>Planner targets</dt><dd>{readiness.commandCentre.plannerRecords}</dd></div>
+      <div><dt>Vault sources</dt><dd>{readiness.commandCentre.vaultSources}</dd></div>
+      <div><dt>Official assets</dt><dd>{readiness.commandCentre.officialAssets}</dd></div>
+    </dl>
+  </section>
+
   <section class="v1-research" aria-labelledby="v1-research">
     <div>
       <span>Explicit research queue</span>
@@ -106,9 +125,10 @@ const metricLabels: Record<string, string> = {
   <footer class="v1-footer">
     <div>
       <strong>Current conclusion</strong>
-      <p>The guide is complete as an evidence-safe v1.0 platform for Patch {readiness.gamePatch}. Patch surveillance and the research queue continue after release.</p>
+      <p>The guide is complete as an evidence-safe v1.0 platform for Patch {readiness.gamePatch}. Patch surveillance, controlled research and personal expedition planning continue after release.</p>
     </div>
     <nav aria-label="v1 readiness links">
+      <a href="/command-centre/">Command Centre</a>
       <a href="/standards/evidence-policy/">Evidence policy</a>
       <a href="/update-log/">Update Log</a>
       <a href="/technical/">Technical Centre</a>
@@ -128,10 +148,10 @@ const metricLabels: Record<string, string> = {
   .v1-score small { margin-top: .2rem; font-size: .62rem; letter-spacing: .08em; text-transform: uppercase; color: #a0937d; }
   .v1-interpretation { display: grid; grid-template-columns: repeat(3, 1fr); gap: .75rem; }
   .v1-interpretation article { padding: 1rem; border: 1px solid var(--sl-color-gray-5); border-radius: .65rem; background: var(--sl-color-gray-6); }
-  .v1-interpretation span, .v1-heading span, .v1-research > div > span { font-size: .63rem; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: #c49850; }
+  .v1-interpretation span, .v1-heading span, .v1-research > div > span, .v1-command > div > span { font-size: .63rem; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: #c49850; }
   .v1-interpretation p { margin: .4rem 0 0; }
   .v1-heading { display: flex; flex-wrap: wrap; gap: .8rem; align-items: end; justify-content: space-between; margin-bottom: .75rem; }
-  .v1-heading h3, .v1-research h3 { margin: .1rem 0 0; font-family: var(--cd-font-display); font-size: 1.8rem; color: var(--sl-color-gray-1); }
+  .v1-heading h3, .v1-research h3, .v1-command h3 { margin: .1rem 0 0; font-family: var(--cd-font-display); font-size: 1.8rem; color: var(--sl-color-gray-1); }
   .v1-heading p { margin: 0; color: var(--sl-color-gray-2); }
   .v1-programmes { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr)); gap: .65rem; }
   .v1-programmes article { display: grid; grid-template-columns: auto 1fr auto; gap: .7rem; align-items: center; padding: .8rem; border: 1px solid rgb(210 160 78 / 22%); border-radius: .6rem; background: linear-gradient(145deg, rgb(23 21 18 / 96%), rgb(10 10 9 / 98%)); }
@@ -145,6 +165,13 @@ const metricLabels: Record<string, string> = {
   .v1-metrics div { padding: .85rem; border: 1px solid var(--sl-color-gray-5); border-radius: .6rem; text-align: center; }
   .v1-metrics dt { font-size: .61rem; letter-spacing: .07em; text-transform: uppercase; color: var(--sl-color-gray-3); }
   .v1-metrics dd { margin: .2rem 0 0; font-family: var(--cd-font-display); font-size: 1.8rem; color: #dfb76b; }
+  .v1-command { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(18rem, .75fr); gap: 1rem; padding: 1rem; border: 1px solid rgb(192 139 64 / 38%); border-radius: .7rem; background: radial-gradient(circle at 100% 0, rgb(136 36 24 / 18%), transparent 45%), var(--sl-color-gray-6); }
+  .v1-command p { color: var(--sl-color-gray-2); }
+  .v1-command > div > a { font-weight: 800; }
+  .v1-command dl { display: grid; grid-template-columns: repeat(2, 1fr); gap: .55rem; margin: 0; }
+  .v1-command dl div { display: grid; place-content: center; min-height: 4.8rem; padding: .6rem; border: 1px solid var(--sl-color-gray-5); border-radius: .55rem; text-align: center; }
+  .v1-command dt { font-size: .57rem; letter-spacing: .07em; text-transform: uppercase; color: var(--sl-color-gray-3); }
+  .v1-command dd { margin: .1rem 0 0; font-family: var(--cd-font-display); font-size: 1.4rem; color: #dfb76b; }
   .v1-research { display: grid; grid-template-columns: 1.2fr 1fr; gap: 1rem; padding: 1rem; border: 1px solid rgb(175 98 45 / 38%); border-radius: .7rem; background: rgb(119 65 31 / 12%); }
   .v1-research p { color: var(--sl-color-gray-2); }
   .v1-research details { align-self: center; }
@@ -162,6 +189,7 @@ const metricLabels: Record<string, string> = {
   :global(:root[data-theme='light']) .v1-score { border-color: #ad8e5d; background: radial-gradient(circle, rgb(154 42 27 / 12%), rgb(255 253 249 / 75%) 65%); }
   :global(:root[data-theme='light']) .v1-score span { color: #653b08; }
   :global(:root[data-theme='light']) .v1-programmes article { border-color: #c1a477; background: linear-gradient(145deg, #fffdf8, #f0e4d2); }
-  @media (max-width: 48rem) { .v1-hero { grid-template-columns: 1fr; } .v1-score { width: min(16rem, 100%); justify-self: center; } .v1-interpretation { grid-template-columns: 1fr; } .v1-research { grid-template-columns: 1fr; } }
-  @media (max-width: 30rem) { .v1-programmes article { grid-template-columns: auto 1fr; } .v1-state { grid-column: 2; width: fit-content; } .v1-footer nav { display: grid; } }
+  :global(:root[data-theme='light']) .v1-command { border-color: #b99c70; background: radial-gradient(circle at 100% 0, rgb(154 42 27 / 10%), transparent 45%), #fffaf1; }
+  @media (max-width: 48rem) { .v1-hero { grid-template-columns: 1fr; } .v1-score { width: min(16rem, 100%); justify-self: center; } .v1-interpretation { grid-template-columns: 1fr; } .v1-command, .v1-research { grid-template-columns: 1fr; } }
+  @media (max-width: 30rem) { .v1-programmes article { grid-template-columns: auto 1fr; } .v1-state { grid-column: 2; width: fit-content; } .v1-command dl { grid-template-columns: 1fr; } .v1-footer nav { display: grid; } }
 </style>
