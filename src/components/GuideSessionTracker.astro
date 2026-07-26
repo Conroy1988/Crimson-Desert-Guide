@@ -1,0 +1,73 @@
+<script>
+  const LAST_ROUTE_KEY = 'crimson-desert-guide.last-route.v1';
+  const SPOILER_KEY = 'crimson-desert-guide.spoiler-profile.v1';
+  const allowedProfiles = new Set(['safe', 'minor', 'full']);
+
+  const safeLocal = {
+    get(key) {
+      try { return window.localStorage.getItem(key); } catch { return null; }
+    },
+    set(key, value) {
+      try { window.localStorage.setItem(key, value); } catch { /* Storage may be unavailable. */ }
+    },
+  };
+
+  const selectMappings = [
+    ['[data-db-spoiler]', { safe: 'safe', minor: 'minor', full: 'all' }],
+    ['[data-research-spoiler]', { safe: 'safe', minor: 'minor', full: 'all' }],
+    ['[data-catalogue-spoiler]', { safe: 'safe', minor: 'minor', full: 'all' }],
+    ['[data-atlas-spoiler]', { safe: 'safe', minor: 'safe', full: 'all' }],
+    ['[data-completion-spoiler]', { safe: 'safe', minor: 'minor', full: 'all' }],
+    ['[data-detail-spoiler]', { safe: 'safe', minor: 'minor', full: 'all' }],
+  ];
+
+  const optionExists = (select, value) => [...select.options].some((option) => option.value === value);
+
+  const applySpoilerProfile = () => {
+    const stored = safeLocal.get(SPOILER_KEY);
+    const profile = allowedProfiles.has(stored) ? stored : 'minor';
+    document.documentElement.dataset.spoilerProfile = profile;
+
+    window.setTimeout(() => {
+      for (const [selector, mapping] of selectMappings) {
+        for (const control of document.querySelectorAll(selector)) {
+          if (!(control instanceof HTMLSelectElement)) continue;
+          const preferred = mapping[profile];
+          const next = optionExists(control, preferred)
+            ? preferred
+            : optionExists(control, profile)
+              ? profile
+              : optionExists(control, 'all') && profile === 'full'
+                ? 'all'
+                : null;
+          if (!next || control.value === next) continue;
+          control.value = next;
+          control.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+      }
+    }, 0);
+  };
+
+  const recordCurrentRoute = () => {
+    const path = window.location.pathname;
+    if (/\.(?:css|js|json|svg|png|jpe?g|webp|m4a|ico)$/i.test(path)) return;
+    if (path.includes('/command-centre')) return;
+    const heading = document.querySelector('main h1, .guide-title h1, .portal-hero h1');
+    const title = heading?.textContent?.replace(/\s+/g, ' ').trim() || document.title.replace(/\s*\|.*$/, '').trim();
+    if (!title) return;
+    safeLocal.set(LAST_ROUTE_KEY, JSON.stringify({
+      href: `${window.location.pathname}${window.location.search}${window.location.hash}`,
+      title,
+      visitedAt: new Date().toISOString(),
+    }));
+  };
+
+  const bindGuideSession = () => {
+    applySpoilerProfile();
+    recordCurrentRoute();
+  };
+
+  bindGuideSession();
+  document.addEventListener('astro:page-load', bindGuideSession);
+  window.addEventListener('crimson-desert:spoiler-profile', applySpoilerProfile);
+</script>
