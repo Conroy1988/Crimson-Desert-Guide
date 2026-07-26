@@ -75,7 +75,17 @@ const programmes = [
   {
     id: 'publishing-quality',
     label: 'Publishing, accessibility and protected validation',
-    requiredPaths: ['data/steam-sections.json', 'scripts/deployment-smoke.mjs', 'scripts/light-theme-contrast-audit.mjs', 'scripts/site-theme-audit.mjs', '.github/workflows/ci.yml', '.github/workflows/codeql.yml'],
+    requiredPaths: [
+      'data/steam-sections.json',
+      'scripts/deployment-smoke.mjs',
+      'scripts/light-theme-contrast-audit.mjs',
+      'scripts/site-theme-audit.mjs',
+      'src/components/SoundtrackPlayer.astro',
+      'scripts/soundtrack-player-audit.mjs',
+      'public/media/hymn-for-the-unsung-blade.m4a',
+      '.github/workflows/ci.yml',
+      '.github/workflows/codeql.yml',
+    ],
   },
 ];
 
@@ -119,7 +129,7 @@ const completedProgrammes = programmes.filter((programme) => programme.status ==
 const programmePercent = Math.round((completedProgrammes / programmes.length) * 100);
 const requiredScripts = [
   'check:all', 'generate:research', 'audit:content', 'audit:database', 'audit:research', 'audit:atlas', 'audit:details', 'audit:catalogue',
-  'audit:characters', 'audit:technical', 'audit:theme', 'audit:site-theme', 'audit:v1',
+  'audit:characters', 'audit:technical', 'audit:theme', 'audit:site-theme', 'audit:soundtrack', 'audit:v1',
   'test:completion', 'test:atlas', 'test:guide-notes', 'test:catalogue', 'test:build-lab', 'test:research',
 ];
 const missingScripts = requiredScripts.filter((script) => !packageJson.scripts?.[script]);
