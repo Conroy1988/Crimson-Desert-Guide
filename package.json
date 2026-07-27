@@ -53,8 +53,8 @@
     "check:ci": "npm run check:all && npm run check:subpath"
   },
   "dependencies": {
-    "@astrojs/starlight": "0.39.2",
-    "astro": "6.3.8",
+    "@astrojs/starlight": "0.41.4",
+    "astro": "7.1.3",
     "sharp": "0.34.5"
   }
 }
