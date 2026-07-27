@@ -100,6 +100,7 @@ jobs:
         run: |
           set -euo pipefail
           marker="$(mktemp)"
+          rm -f "$marker"
           trap 'rm -f "$marker"' EXIT
 
           lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "ftp://$FTP_SERVER:21" <<LFTP
@@ -206,6 +207,7 @@ jobs:
           set -euo pipefail
           marker="$(mktemp)"
           metadata="$(mktemp)"
+          rm -f "$marker" "$metadata"
           trap 'rm -f "$marker" "$metadata"' EXIT
 
           lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "ftp://$FTP_SERVER:21" <<LFTP
