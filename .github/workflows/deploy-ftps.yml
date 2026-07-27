@@ -1,6 +1,9 @@
 name: Manual FTPS Production Deployment
 
 on:
+  push:
+    branches:
+      - codex/ftps-deploy-f49382c
   workflow_dispatch:
     inputs:
       action:
@@ -25,15 +28,15 @@ concurrency:
 
 jobs:
   deploy:
-    name: ${{ inputs.action == 'deploy' && 'Deploy current main over FTPS' || 'Validate FTPS connection' }}
+    name: ${{ (github.event_name == 'push' || inputs.action == 'deploy') && 'Deploy current main over FTPS' || 'Validate FTPS connection' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
     steps:
       - name: Validate deployment request
         env:
-          DEPLOY_ACTION: ${{ inputs.action }}
-          DEPLOY_CONFIRMATION: ${{ inputs.confirmation }}
+          DEPLOY_ACTION: ${{ github.event_name == 'push' && 'deploy' || inputs.action }}
+          DEPLOY_CONFIRMATION: ${{ github.event_name == 'push' && 'DEPLOY' || inputs.confirmation }}
         shell: bash
         run: |
           set -euo pipefail
@@ -121,18 +124,18 @@ jobs:
           fi
 
       - name: Set up Node.js
-        if: ${{ inputs.action == 'deploy' }}
+        if: ${{ github.event_name == 'push' || inputs.action == 'deploy' }}
         uses: actions/setup-node@v6
         with:
           node-version: 22.12.0
           package-manager-cache: false
 
       - name: Install dependencies
-        if: ${{ inputs.action == 'deploy' }}
+        if: ${{ github.event_name == 'push' || inputs.action == 'deploy' }}
         run: npm install --no-audit --no-fund
 
       - name: Build canonical production release
-        if: ${{ inputs.action == 'deploy' }}
+        if: ${{ github.event_name == 'push' || inputs.action == 'deploy' }}
         env:
           CD_GUIDE_SITE: https://tkb-gaming.scot
           CD_GUIDE_BASE_PATH: /games/crimson-desert/guides/
@@ -170,7 +173,7 @@ jobs:
           EOF
 
       - name: Upload release through explicit FTPS
-        if: ${{ inputs.action == 'deploy' }}
+        if: ${{ github.event_name == 'push' || inputs.action == 'deploy' }}
         env:
           FTP_SERVER: ${{ secrets.FTP_SERVER }}
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
@@ -195,7 +198,7 @@ jobs:
           LFTP
 
       - name: Verify uploaded FTPS metadata
-        if: ${{ inputs.action == 'deploy' }}
+        if: ${{ github.event_name == 'push' || inputs.action == 'deploy' }}
         env:
           FTP_SERVER: ${{ secrets.FTP_SERVER }}
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
@@ -227,7 +230,7 @@ jobs:
           test "$uploaded_commit" = "$RELEASE_SHA"
 
       - name: Verify public production release
-        if: ${{ inputs.action == 'deploy' }}
+        if: ${{ github.event_name == 'push' || inputs.action == 'deploy' }}
         env:
           RELEASE_SHA: ${{ steps.release.outputs.sha }}
         shell: bash
@@ -260,7 +263,7 @@ jobs:
       - name: Record result
         if: always()
         env:
-          DEPLOY_ACTION: ${{ inputs.action }}
+          DEPLOY_ACTION: ${{ github.event_name == 'push' && 'deploy' || inputs.action }}
           RELEASE_SHA: ${{ steps.release.outputs.sha }}
         shell: bash
         run: |
